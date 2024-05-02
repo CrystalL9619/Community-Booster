@@ -1,0 +1,49 @@
+﻿@model MyPassionProject.Models.CategoryDto
+@{
+    ViewBag.Title = "Home Page";
+    @*<a href="~/Content/bootstrap-utilities.min.css.map">~/Content/bootstrap-utilities.min.css.map</a>*@
+}
+
+<nav class="mainnav">
+    <a href="#">Fun</a>
+    <a href="#">Fare</a>
+    <div class="animation"></div>
+</nav>
+<div class="main">
+    <div class="eachone">
+        <div class="event">
+            <div class="card">
+                <div class="content">
+                    <h2 id="eventTitle">Mary's Party</h2>
+                    <h3> Location : </h3>
+                    <p id="eventLocation">2** Pleasent Ave.</p>
+                    <h3>Date: </h3>
+                    <p id="eventDate">2023-12-24</p>
+                    <h3> Capacity:</h3>
+                    <p id="eventCapacity">10</p>
+                </div>
+            </div>
+            <div class="details">
+                <p class="threeD">Details:</p>
+                <ul class="breakdown threeD">
+                    <li>No dressing code</li>
+                    <li>Start at 7pm</li>
+                    <li>Pets welcome</li>
+                    <li>Tell us if you need Non-alcohol drinks</li>
+                </ul>
+            </div><!--end of details-->
+        </div><!--end of event-->
+        <div class="list">
+            <h2>List</h2>
+            <p id="listInput"></p>
+            <div class="register">
+                <form name="myForm" id="myForm">
+                    <p>Reserve your spot here:</p>
+                    <label for="regisName">Name : </label>
+                    <input type="text" id="regisName" name="regisName" placeholder="i.e.: James Lee">
+                    <button type="submit" id="button">Add</button>
+                </form>
+            </div>
+        </div><!--end of list-->
+    </div><!--end of eachone-->
+</div>

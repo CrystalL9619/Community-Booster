@@ -1,0 +1,27 @@
+﻿@model IEnumerable<MyPassionProject.Models.EventDto>
+
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>List</h2>
+
+@foreach (var Event in Model)
+{
+    <div>
+        <a href="/Event/Find/@Event.EventId"> @Event.Title</a>
+        <br />
+        
+        @if (Event.ImagePath != null)
+        {
+            <img src=@Event.ImagePath />
+        }
+        
+    </div>
+
+}
+
+
+<div>
+    <a href="/Event/New" class="btn btn-primary">Post Your Own Event</a>
+</div>
