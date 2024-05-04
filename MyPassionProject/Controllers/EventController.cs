@@ -10,6 +10,7 @@ using System.Web.Script.Serialization;
 using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 using System;
+using Microsoft.AspNet.Identity;
 
 
 
@@ -65,23 +66,30 @@ namespace MyPassionProject.Controllers
             ViewModel.SelectedEvent = SelectedEvent;
 
             //show associated AppUsers with this Event
-          
+          /*
             url = "AppUserData/ListAppUsersForEvent/" + convertedId;
             response = client.GetAsync(url).Result;
 
             IEnumerable<AppUserDto> ParticipatingUsers = response.Content.ReadAsAsync<List<AppUserDto>>().Result;
 
             ViewModel.ParticipatingUsers = ParticipatingUsers;
+          
 
-
+           
             url = "AppUserData/ListAppUserNotForEvent/" + convertedId;
           
             response = client.GetAsync(url).Result;
 
             IEnumerable<AppUserDto> NotPaticipatingUsers = response.Content.ReadAsAsync<IEnumerable<AppUserDto>>().Result;
 
-                ViewModel.NotPaticipatingUsers = NotPaticipatingUsers;
-            
+            ViewModel.NotPaticipatingUsers = NotPaticipatingUsers;
+            */
+
+            // Get current user
+            // Current user object pass into view model
+            string currentUserId = User.Identity.GetUserId();
+            ViewModel.CurrentUserId = currentUserId;
+
             return View(ViewModel);
         }
 
@@ -96,16 +104,16 @@ namespace MyPassionProject.Controllers
 
         //POST: Event/Associate/{EventId}/{UserId}
         [HttpPost]
-        public ActionResult Associate(int EventId, int UserId)
+        public ActionResult Associate(int EventId, string CurrentUserId)
         {
 
-            Debug.WriteLine("Attempting to associate event:" + EventId + " with AppUser " + UserId);
+            Debug.WriteLine("Attempting to associate event:" + EventId + " with AppUser " + CurrentUserId);
     
             //call our api to associate event with AppUser
             string convertedEventId = EventId.ToString();
-            string convertedUserId = UserId.ToString();
+            //string convertedUserId = CurrentUserId.ToString();
 
-            string url = "EventData/AssociateEventWithAppUser/" + convertedEventId + "/" + convertedUserId;
+            string url = "EventData/AssociateEventWithAppUser/" + convertedEventId + "/" + CurrentUserId;
             HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";
             HttpResponseMessage response = client.PostAsync(url, content).Result;

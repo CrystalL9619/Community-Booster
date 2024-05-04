@@ -233,6 +233,10 @@
     <Compile Include="Migrations\202405021901456_UpdateEventImagePathField.designer.cs">
       <DependentUpon>202405021901456_UpdateEventImagePathField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405040003300_AddAspNetUserNEvent.cs" />
+    <Compile Include="Migrations\202405040003300_AddAspNetUserNEvent.designer.cs">
+      <DependentUpon>202405040003300_AddAspNetUserNEvent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppUser.cs" />
@@ -406,6 +410,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405021901456_UpdateEventImagePathField.resx">
       <DependentUpon>202405021901456_UpdateEventImagePathField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405040003300_AddAspNetUserNEvent.resx">
+      <DependentUpon>202405040003300_AddAspNetUserNEvent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

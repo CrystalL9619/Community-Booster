@@ -18,7 +18,7 @@ namespace MyPassionProject.Models
         public string PhoneNumber { get; set; }
         
         //A AppUser has many events
-        public ICollection<Event> Events { get; set; }
+        //public ICollection<Event> Events { get; set; }
 
     }
     public class AppUserDto

@@ -17,6 +17,7 @@ namespace MyPassionProject.Controllers
 {
     public class AppUserDataController : ApiController
     {
+        /*
         //Utlizing the database connection 
         private ApplicationDbContext db = new ApplicationDbContext();
         private object modelBuilder;
@@ -217,6 +218,7 @@ namespace MyPassionProject.Controllers
 
 
 
-
+        */
     }
+
 }

@@ -29,26 +29,35 @@
 
 
 <div>
-    <h2>Paticipant in this @Model.SelectedEvent.Title:</h2>
-    @foreach (var AppUser in Model.ParticipatingUsers)
-    {
-        <a href="/AppUser/Find/@AppUser.UserId">@AppUser.UserName</a>
-        <a href="/Event/UnAssociate/@Model.SelectedEvent.EventId?UserId=@AppUser.UserId">[x]</a><br />
-    }
-</div>
+    @*
 
-<div>
-    <h4>Add new paticipant to this Event: @Model.SelectedEvent.Title</h4>
+
+        <h2>Paticipant in this @Model.SelectedEvent.Title:</h2>
+            @foreach (var AppUser in Model.ParticipatingUsers)
+            {
+                <a href="/AppUser/Find/@AppUser.UserId">@AppUser.UserName</a>
+                <a href="/Event/UnAssociate/@Model.SelectedEvent.EventId?UserId=@AppUser.UserId">[x]</a><br />
+            }
+        </div>
+
+        <div>
+            <h4>Add new paticipant to this Event: @Model.SelectedEvent.Title</h4>
+            <form method="POST" action="/Event/Associate">
+                <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
+                <label for="UserId">Select User:</label>
+                <select name="UserId" id="UserId">
+                    @foreach (var AppUser in Model.NotPaticipatingUsers)
+                    {
+                        <option value="@AppUser.UserId">@AppUser.UserName</option>
+                    }
+                </select>
+                <input type="submit" value="Associate AppUser" />
+            </form>
+    *@
     <form method="POST" action="/Event/Associate">
         <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
-        <label for="UserId">Select User:</label>
-        <select name="UserId" id="UserId">
-            @foreach (var AppUser in Model.NotPaticipatingUsers)
-            {
-                <option value="@AppUser.UserId">@AppUser.UserName</option>
-            }
-        </select>
-        <input type="submit" value="Associate AppUser" />
+        <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
+        <input type="submit" value="Join" />
     </form>
 </div>
 

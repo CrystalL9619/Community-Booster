@@ -16,6 +16,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 
 namespace MyPassionProject.Controllers
@@ -23,6 +27,7 @@ namespace MyPassionProject.Controllers
 
     public class EventDataController : ApiController
     {
+        
         //Utlizing the database connection 
         private ApplicationDbContext db = new ApplicationDbContext();
         private object modelBuilder;
@@ -84,6 +89,8 @@ namespace MyPassionProject.Controllers
         /// <returns>
         ///</returns>
         ///GET:api/EventData/ListEventsForAppUser/1
+        
+        /*
         [HttpGet]
         [ResponseType(typeof(EventDto))]
         public IHttpActionResult ListEventsForAppUser(int id)
@@ -94,6 +101,7 @@ namespace MyPassionProject.Controllers
             //where eventAppUsers.UserId={USERID}
 
             //all events that have users which match with our ID
+            
             List<Event> Events = db.Events.Where(
                 e => e.AppUsers.Any(
                     a => a.UserId == id
@@ -113,18 +121,27 @@ namespace MyPassionProject.Controllers
             }));
 
             return Ok(EventDtos);
+           
         }
+       
+        */
 
         //AssociateEventWithAppUser
         //api/eventData/AssociateEventWithAppUser/9/1
         [HttpPost]
-        [Route("api/EventData/AssociateEventWithAppUser/{EventId}/{UserId}")]
-        public IHttpActionResult AssociateEventWithAppUser(int EventId, int UserId)
+        [Route("api/EventData/AssociateEventWithAppUser/{EventId}/{CurrentUserId}")]
+        public IHttpActionResult AssociateEventWithAppUser(int EventId, string CurrentUserId)
         {
+            Debug.WriteLine("");
 
-            Event SelectedEvent = db.Events.Include(e => e.AppUsers).FirstOrDefault(e => e.EventId == EventId);
-            AppUser SelectedAppUser = db.AppUsers.Find(UserId);
+            Debug.WriteLine("EventDataControll.AssociateEventWithAppUser: Attempting to associate event:" + EventId + " with AppUser " + CurrentUserId);
+            Event SelectedEvent = db.Events.Include(e => e.ApplicationUser).FirstOrDefault(e => e.EventId == EventId);
+            //AppUser SelectedAppUser = db.AppUsers.Find(UserId);
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
+
+            //Fetch the User Details by UserId using the FindById method
+            ApplicationUser SelectedAppUser = UserManager.FindById(CurrentUserId);
             if (SelectedEvent == null || SelectedAppUser == null)
             {
                 return NotFound();
@@ -132,13 +149,13 @@ namespace MyPassionProject.Controllers
 
             Debug.WriteLine("input EventId  is: " + EventId);
             Debug.WriteLine("selected Event Title is: " + SelectedEvent.Title);
-            Debug.WriteLine("input UserId is: " + UserId);
+            Debug.WriteLine("input UserId is: " + SelectedAppUser.Id);
             Debug.WriteLine("selected UserName is: " + SelectedAppUser.UserName);
 
             //SQL equivalent:
             //insert into EventAppUsers (EventId,UserId) values ({EventId}/{UserId})
 
-            SelectedEvent.AppUsers.Add(SelectedAppUser);
+            SelectedEvent.ApplicationUser.Add(SelectedAppUser);
             db.SaveChanges();
 
             return Ok();
@@ -150,7 +167,7 @@ namespace MyPassionProject.Controllers
         [Route("api/EventData/UnAssociateEventWithAppUser/{EventId}/{UserId}")]
         public IHttpActionResult UnAssociateEventWithAppUser(int EventId, int UserId)
         {
-
+            /*
             Event SelectedEvent = db.Events.Include(e => e.AppUsers).FirstOrDefault(e => e.EventId == EventId);
             AppUser SelectedAppUser = db.AppUsers.Find(UserId);
 
@@ -162,7 +179,7 @@ namespace MyPassionProject.Controllers
 
             SelectedEvent.AppUsers.Remove(SelectedAppUser);
             db.SaveChanges();
-
+            */
             return Ok();
         }
 
@@ -388,7 +405,11 @@ namespace MyPassionProject.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+         
     }
+
 }
 
 

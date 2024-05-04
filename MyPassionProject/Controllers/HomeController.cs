@@ -10,6 +10,13 @@ namespace MyPassionProject.Controllers
     {
         public ActionResult Index()
         {
+            //send request event data controller -> list event
+            // receieve a list of events
+            // make two variable
+            // one for fun type event , one for fare type event
+            // Then pass these two variable into a view model
+            // return this view model to view
+
             return View();
         }
 

@@ -28,7 +28,9 @@ namespace MyPassionProject.Models
         public string ImagePath { get; set; }
 
         //Many AppUsers involved in an event
-        public ICollection<AppUser> AppUsers { get; set; }
+        //public ICollection<AppUser> AppUsers { get; set; }
+
+        public ICollection<ApplicationUser> ApplicationUser { get; set; }
 
         //A event belongs to one category
         //A category has many events
