@@ -65,25 +65,25 @@ namespace MyPassionProject.Controllers
 
             ViewModel.SelectedEvent = SelectedEvent;
 
-            //show associated AppUsers with this Event
-          /*
-            url = "AppUserData/ListAppUsersForEvent/" + convertedId;
-            response = client.GetAsync(url).Result;
+            //show associated ApplicationUsers with this Event
+            /*
+              url = "ApplicationUserData/ListApplicationUsersForEvent/" + convertedId;
+              response = client.GetAsync(url).Result;
 
-            IEnumerable<AppUserDto> ParticipatingUsers = response.Content.ReadAsAsync<List<AppUserDto>>().Result;
+              IEnumerable<ApplicationUser> ParticipatingUsers = response.Content.ReadAsAsync<List<ApplicationUser>>().Result;
 
-            ViewModel.ParticipatingUsers = ParticipatingUsers;
-          
+              ViewModel.ParticipatingUsers = ParticipatingUsers;
 
-           
-            url = "AppUserData/ListAppUserNotForEvent/" + convertedId;
-          
-            response = client.GetAsync(url).Result;
 
-            IEnumerable<AppUserDto> NotPaticipatingUsers = response.Content.ReadAsAsync<IEnumerable<AppUserDto>>().Result;
 
-            ViewModel.NotPaticipatingUsers = NotPaticipatingUsers;
-            */
+              url = "ApplicationUserData/ListApplicationUserNotForEvent/" + convertedId;
+
+              response = client.GetAsync(url).Result;
+
+              IEnumerable<ApplicationUser> NotPaticipatingUsers = response.Content.ReadAsAsync<IEnumerable<ApplicationUser>>().Result;
+
+              ViewModel.NotPaticipatingUsers = NotPaticipatingUsers;
+              */
 
             // Get current user
             // Current user object pass into view model
@@ -107,13 +107,13 @@ namespace MyPassionProject.Controllers
         public ActionResult Associate(int EventId, string CurrentUserId)
         {
 
-            Debug.WriteLine("Attempting to associate event:" + EventId + " with AppUser " + CurrentUserId);
-    
-            //call our api to associate event with AppUser
+            Debug.WriteLine("Attempting to associate event:" + EventId + " with ApplicationUser " + CurrentUserId);
+
+            //call our api to associate event with ApplicationUser
             string convertedEventId = EventId.ToString();
             //string convertedUserId = CurrentUserId.ToString();
 
-            string url = "EventData/AssociateEventWithAppUser/" + convertedEventId + "/" + CurrentUserId;
+            string url = "EventData/AssociateEventWithApplicationUser/" + convertedEventId + "/" + CurrentUserId;
             HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";
             HttpResponseMessage response = client.PostAsync(url, content).Result;
@@ -130,7 +130,7 @@ namespace MyPassionProject.Controllers
             string convertedEventId = id.ToString();
             string convertedUserId = UserId.ToString();
 
-            string url = "EventData/UnAssociateEventWithAppUser/" + convertedEventId + "/" + convertedUserId;
+            string url = "EventData/UnAssociateEventWithApplicationUser/" + convertedEventId + "/" + convertedUserId;
             
             HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";
@@ -178,7 +178,7 @@ namespace MyPassionProject.Controllers
             //update request is successful, and we have image data
             if (response.IsSuccessStatusCode && EventImage != null)
             {
-
+                
                 // Read the response content as a string
                 var responseData = response.Content.ReadAsAsync<Event>().Result;
 
@@ -219,8 +219,10 @@ namespace MyPassionProject.Controllers
             }
         }
 
-    
+
         // GET: Event/Edit/9
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             //grab the event information
@@ -253,6 +255,7 @@ namespace MyPassionProject.Controllers
 
         // POST: Event/UpdateEvent/9
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Update(int id, Event newEvent)
         {
             
@@ -291,6 +294,7 @@ namespace MyPassionProject.Controllers
 
         //GET : /Event/DeleteConfirm/{id}
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirm(int id)
         {
             string convertedId = id.ToString();//super important!!!!
@@ -313,6 +317,7 @@ namespace MyPassionProject.Controllers
 
         //Post: Event/Delete/{id}
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             Debug.WriteLine("The Event is ");

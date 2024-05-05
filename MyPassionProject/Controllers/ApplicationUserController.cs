@@ -11,8 +11,8 @@ using System.Web.UI.WebControls;
 using MyPassionProject.Models.ViewModels;
 
 namespace MyPassionProject.Controllers
-{
-    public class AppUserController : Controller
+{/*
+    public class AppUuserController : Controller
     {
         private static readonly HttpClient client;
         private JavaScriptSerializer jss = new JavaScriptSerializer();
@@ -34,7 +34,7 @@ namespace MyPassionProject.Controllers
           
             string url = "AppUserData/ListAppUsers";// In order to work , need a router like:" https://localhost:44317/api/"before string
             HttpResponseMessage response = client.GetAsync(url).Result;//According to your method, use GetAsync,PostAsync,or ReadAsAsync.
-            List<AppUserDto> AppUsers = response.Content.ReadAsAsync<List<AppUserDto>>().Result;
+            List<ApplicationUser> AppUsers = response.Content.ReadAsAsync<List<AppUserDto>>().Result;
 
             //Views/AppUser/List.cshtml
             return View(AppUsers);
@@ -224,7 +224,7 @@ namespace MyPassionProject.Controllers
  
         }
 
-
+    */
 
 
     }

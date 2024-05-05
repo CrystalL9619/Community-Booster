@@ -3,9 +3,14 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AppUser : DbMigration
+    public partial class DropAppUserTable : DbMigration
     {
         public override void Up()
+        {
+            DropTable("dbo.AppUsers");
+        }
+        
+        public override void Down()
         {
             CreateTable(
                 "dbo.AppUsers",
@@ -19,11 +24,6 @@
                     })
                 .PrimaryKey(t => t.UserId);
             
-        }
-        
-        public override void Down()
-        {
-            DropTable("dbo.AppUsers");
         }
     }
 }

@@ -8,7 +8,7 @@
         public override void Up()
         {
             AddColumn("dbo.Events", "EventHasPic", c => c.Boolean(nullable: false));
-            DropColumn("dbo.Events", "AnimalHasPic");
+           
         }
         
         public override void Down()

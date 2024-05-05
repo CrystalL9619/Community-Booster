@@ -88,22 +88,22 @@ namespace MyPassionProject.Controllers
         /// <param name="id">UserId</param>
         /// <returns>
         ///</returns>
-        ///GET:api/EventData/ListEventsForAppUser/1
-        
+        ///GET:api/EventData/ListEventsForApplicationUser/1
+
         /*
         [HttpGet]
         [ResponseType(typeof(EventDto))]
-        public IHttpActionResult ListEventsForAppUser(int id)
+        public IHttpActionResult ListEventsForApplicationUser(int id)
         {
             //SQL equivalent:
-            //select events.*,eventAppUsers.* from events INNER JOIN 
-            //eventAppUsers on events.eventId = eventAppUsers.eventId
-            //where eventAppUsers.UserId={USERID}
+            //select events.*,eventApplicationUsers.* from events INNER JOIN 
+            //eventApplicationUsers on events.eventId = eventApplicationUsers.eventId
+            //where eventApplicationUsers.UserId={USERID}
 
             //all events that have users which match with our ID
             
             List<Event> Events = db.Events.Where(
-                e => e.AppUsers.Any(
+                e => e.ApplicationUser.Any(
                     a => a.UserId == id
                 )).ToList();
             List<EventDto> EventDtos = new List<EventDto>();
@@ -126,58 +126,58 @@ namespace MyPassionProject.Controllers
        
         */
 
-        //AssociateEventWithAppUser
-        //api/eventData/AssociateEventWithAppUser/9/1
+        //AssociateEventWithApplicationUser
+        //api/eventData/AssociateEventWithApplicationUser/9/1
         [HttpPost]
-        [Route("api/EventData/AssociateEventWithAppUser/{EventId}/{CurrentUserId}")]
-        public IHttpActionResult AssociateEventWithAppUser(int EventId, string CurrentUserId)
+        [Route("api/EventData/AssociateEventWithApplicationUser/{EventId}/{CurrentUserId}")]
+        public IHttpActionResult AssociateEventWithApplicationUser(int EventId, string CurrentUserId)
         {
             Debug.WriteLine("");
 
-            Debug.WriteLine("EventDataControll.AssociateEventWithAppUser: Attempting to associate event:" + EventId + " with AppUser " + CurrentUserId);
+            Debug.WriteLine("EventDataControll.AssociateEventWithApplicationUser: Attempting to associate event:" + EventId + " with ApplicationUser " + CurrentUserId);
             Event SelectedEvent = db.Events.Include(e => e.ApplicationUser).FirstOrDefault(e => e.EventId == EventId);
-            //AppUser SelectedAppUser = db.AppUsers.Find(UserId);
+            //ApplicationUser SelectedApplicationUser = db.ApplicationUsers.Find(UserId);
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
 
             //Fetch the User Details by UserId using the FindById method
-            ApplicationUser SelectedAppUser = UserManager.FindById(CurrentUserId);
-            if (SelectedEvent == null || SelectedAppUser == null)
+            ApplicationUser SelectedApplicationUser = UserManager.FindById(CurrentUserId);
+            if (SelectedEvent == null || SelectedApplicationUser == null)
             {
                 return NotFound();
             }
 
             Debug.WriteLine("input EventId  is: " + EventId);
             Debug.WriteLine("selected Event Title is: " + SelectedEvent.Title);
-            Debug.WriteLine("input UserId is: " + SelectedAppUser.Id);
-            Debug.WriteLine("selected UserName is: " + SelectedAppUser.UserName);
+            Debug.WriteLine("input UserId is: " + SelectedApplicationUser.Id);
+            Debug.WriteLine("selected UserName is: " + SelectedApplicationUser.UserName);
 
             //SQL equivalent:
-            //insert into EventAppUsers (EventId,UserId) values ({EventId}/{UserId})
+            //insert into EventApplicationUsers (EventId,UserId) values ({EventId}/{UserId})
 
-            SelectedEvent.ApplicationUser.Add(SelectedAppUser);
+            SelectedEvent.ApplicationUser.Add(SelectedApplicationUser);
             db.SaveChanges();
 
             return Ok();
         }
-        //UnAssociateEventWithAppUser
-        //api/eventData/UnAssociateEventWithAppUser/1/3
+        //UnAssociateEventWithApplicationUser
+        //api/eventData/UnAssociateEventWithApplicationUser/1/3
 
         [HttpPost]
-        [Route("api/EventData/UnAssociateEventWithAppUser/{EventId}/{UserId}")]
-        public IHttpActionResult UnAssociateEventWithAppUser(int EventId, int UserId)
+        [Route("api/EventData/UnAssociateEventWithApplicationUser/{EventId}/{UserId}")]
+        public IHttpActionResult UnAssociateEventWithApplicationUser(int EventId, int UserId)
         {
             /*
-            Event SelectedEvent = db.Events.Include(e => e.AppUsers).FirstOrDefault(e => e.EventId == EventId);
-            AppUser SelectedAppUser = db.AppUsers.Find(UserId);
+            Event SelectedEvent = db.Events.Include(e => e.ApplicationUsers).FirstOrDefault(e => e.EventId == EventId);
+            ApplicationUser SelectedApplicationUser = db.ApplicationUsers.Find(UserId);
 
-            if (SelectedEvent == null || SelectedAppUser == null)
+            if (SelectedEvent == null || SelectedApplicationUser == null)
             {
                 return NotFound();
             }
 
 
-            SelectedEvent.AppUsers.Remove(SelectedAppUser);
+            SelectedEvent.ApplicationUsers.Remove(SelectedApplicationUser);
             db.SaveChanges();
             */
             return Ok();
@@ -215,6 +215,7 @@ namespace MyPassionProject.Controllers
         // POST: api/EventData/AddEvent
         [ResponseType(typeof(Event))]
         [HttpPost]
+        
         public IHttpActionResult AddEvent(Event newEvent)
         {  
             Debug.WriteLine("I have reached the add event method!");
@@ -281,7 +282,6 @@ namespace MyPassionProject.Controllers
                                 //haspic = true;
                                 picextension = extension;
 
-                                //Update the animal haspic and picextension fields in the database
                                 Event SelectedEvent = db.Events.Find(id);
                                 SelectedEvent.ImagePath = "/Content/Images/Events/" + fn;
                                 //SelectedEvent.AnimalHasPic = haspic;
@@ -317,8 +317,9 @@ namespace MyPassionProject.Controllers
             // UpdateEvent
             // POST: api/EventData/UpdateEvent/9
             //CLI command:curl -H "Content-Type:application/json" -d @newEvent.json https://localhost:44317/api/EventData/UpdateEvent/9
-            [ResponseType(typeof(void))]
+        [ResponseType(typeof(void))]
         [HttpPost]
+       
         public IHttpActionResult UpdateEvent(int id, Event updatedEvent)
         {
             Debug.WriteLine("I have reached the update event method!");
@@ -378,6 +379,7 @@ namespace MyPassionProject.Controllers
         // POST: api/EventData/DeleteEvent/14
         [ResponseType(typeof(Event))]
         [HttpPost]
+      
         public IHttpActionResult DeleteEvent(int id)
         {
             Event existingEvent = db.Events.Find(id);

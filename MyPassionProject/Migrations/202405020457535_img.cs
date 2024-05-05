@@ -9,7 +9,7 @@
         {
             AddColumn("dbo.Events", "Image", c => c.Binary());
             DropColumn("dbo.Events", "EventHasPic");
-            DropColumn("dbo.Events", "PicExtension");
+          
         }
         
         public override void Down()

@@ -7,13 +7,13 @@ namespace MyPassionProject.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class AppUser : IMigrationMetadata
+    public sealed partial class DropAppUserTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AppUser));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(DropAppUserTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202402010427317_AppUser"; }
+            get { return "202405050623553_Drop-AppUser-Table"; }
         }
         
         string IMigrationMetadata.Source

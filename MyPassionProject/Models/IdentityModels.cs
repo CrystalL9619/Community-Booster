@@ -19,6 +19,11 @@ namespace MyPassionProject.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            var roles = await manager.GetRolesAsync(Id);
+            foreach (var roleName in roles)
+            {
+                userIdentity.AddClaim(new Claim(ClaimTypes.Role, roleName));
+            }
             return userIdentity;
         }
     }
@@ -36,7 +41,7 @@ namespace MyPassionProject.Models
         public DbSet<Category>Categories { get; set; }
 
         //Add an AppUser entity to our system
-        public DbSet<AppUser> AppUsers { get; set; }
+        //public DbSet<AppUser> AppUsers { get; set; }
 
 
         public static ApplicationDbContext Create()

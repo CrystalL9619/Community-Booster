@@ -182,8 +182,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AppUserController.cs" />
-    <Compile Include="Controllers\AppUserDataController.cs" />
+    <Compile Include="Controllers\ApplicationUserController.cs" />
+    <Compile Include="Controllers\ApplicationUserDataController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CategoryDataController.cs" />
     <Compile Include="Controllers\EventController.cs" />
@@ -204,14 +204,6 @@
     <Compile Include="Migrations\202402010415529_eventcategory.cs" />
     <Compile Include="Migrations\202402010415529_eventcategory.designer.cs">
       <DependentUpon>202402010415529_eventcategory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202402010427317_AppUser.cs" />
-    <Compile Include="Migrations\202402010427317_AppUser.designer.cs">
-      <DependentUpon>202402010427317_AppUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202402010456252_EventAppUsers.cs" />
-    <Compile Include="Migrations\202402010456252_EventAppUsers.designer.cs">
-      <DependentUpon>202402010456252_EventAppUsers.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202402020050205_Event1.cs" />
     <Compile Include="Migrations\202402020050205_Event1.designer.cs">
@@ -237,9 +229,12 @@
     <Compile Include="Migrations\202405040003300_AddAspNetUserNEvent.designer.cs">
       <DependentUpon>202405040003300_AddAspNetUserNEvent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405050623553_Drop-AppUser-Table.cs" />
+    <Compile Include="Migrations\202405050623553_Drop-AppUser-Table.designer.cs">
+      <DependentUpon>202405050623553_Drop-AppUser-Table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -390,12 +385,6 @@
     <EmbeddedResource Include="Migrations\202402010415529_eventcategory.resx">
       <DependentUpon>202402010415529_eventcategory.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202402010427317_AppUser.resx">
-      <DependentUpon>202402010427317_AppUser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202402010456252_EventAppUsers.resx">
-      <DependentUpon>202402010456252_EventAppUsers.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202402020050205_Event1.resx">
       <DependentUpon>202402020050205_Event1.cs</DependentUpon>
     </EmbeddedResource>
@@ -413,6 +402,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405040003300_AddAspNetUserNEvent.resx">
       <DependentUpon>202405040003300_AddAspNetUserNEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405050623553_Drop-AppUser-Table.resx">
+      <DependentUpon>202405050623553_Drop-AppUser-Table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

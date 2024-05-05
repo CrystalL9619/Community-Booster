@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace MyPassionProject.Controllers
 {
-    public class AppUserDataController : ApiController
+    public class ApplicationUserDataController : ApiController
     {
         /*
         //Utlizing the database connection 
