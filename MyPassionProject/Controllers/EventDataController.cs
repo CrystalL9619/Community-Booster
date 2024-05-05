@@ -76,8 +76,9 @@ namespace MyPassionProject.Controllers
                 EventDateTime = e.EventDateTime,
                 Capacity = e.Capacity,
                 Details = e.Details,
-                CategoryId = e.Category.CategoryId,  // Use e.CategoryId instead of e.Category.CategoryId
-                CategoryName = e.Category.CategoryName
+                CategoryId = e.CategoryId,  // Use e.CategoryId instead of e.Category.CategoryId
+                CategoryName = e.Category.CategoryName,
+                ImagePath = e.ImagePath
             }));
 
             return Ok(EventDtos);

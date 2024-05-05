@@ -80,7 +80,7 @@ h1 {
     background-color: #1abc9c;
 }
 
-a:nth-child(1):hover ~ .animation {
+/*a:nth-child(1):hover ~ .animation {
     left: 0;
     background-color: #1abc9c;
 }
@@ -89,10 +89,11 @@ a:nth-child(2):hover ~ .animation {
     left: 50%;
     background-color: #1abc9c;
 }
+*/
 
 .main {
     margin: 5% 5% 50px 50px;
-    gap: 0;
+    gap: 0px;
     width: 100%;
     height: auto;
     display: flex;
@@ -104,6 +105,7 @@ a:nth-child(2):hover ~ .animation {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    gap:50px;
 }
 
 .eachone {
@@ -200,8 +202,9 @@ h3 {
 .content {
     position: absolute;
     width: 200px;
-    top: 55%;
-    left: 60%;
+    max-height:250px;
+    top: 48%;
+    left: 55%;
     transform: translateX(-50%) translateY(-50%) translateZ(60px);
 }
 
