@@ -233,6 +233,14 @@
     <Compile Include="Migrations\202405050623553_Drop-AppUser-Table.designer.cs">
       <DependentUpon>202405050623553_Drop-AppUser-Table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405070355539_RenameColumnInEventTable.cs" />
+    <Compile Include="Migrations\202405070355539_RenameColumnInEventTable.designer.cs">
+      <DependentUpon>202405070355539_RenameColumnInEventTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405070427546_RenameColumnInEventTable1.cs" />
+    <Compile Include="Migrations\202405070427546_RenameColumnInEventTable1.designer.cs">
+      <DependentUpon>202405070427546_RenameColumnInEventTable1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
@@ -406,6 +414,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405050623553_Drop-AppUser-Table.resx">
       <DependentUpon>202405050623553_Drop-AppUser-Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405070355539_RenameColumnInEventTable.resx">
+      <DependentUpon>202405070355539_RenameColumnInEventTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405070427546_RenameColumnInEventTable1.resx">
+      <DependentUpon>202405070427546_RenameColumnInEventTable1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

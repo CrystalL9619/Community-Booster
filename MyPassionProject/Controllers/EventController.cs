@@ -101,9 +101,9 @@ namespace MyPassionProject.Controllers
         }
 
 
-
         //POST: Event/Associate/{EventId}/{UserId}
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Associate(int EventId, string CurrentUserId)
         {
 
@@ -124,22 +124,22 @@ namespace MyPassionProject.Controllers
 
         //Get: Event/UnAssociate/{EventId}?UserId={UserId}
         [HttpGet]
-        public ActionResult UnAssociate(int id, int UserId)
+        [Authorize(Roles = "Admin")]
+        public ActionResult UnAssociate(int EventId, string CurrentUserId)
         {
-            Debug.WriteLine("Unassociate "+ id+"with"+UserId);
-            string convertedEventId = id.ToString();
-            string convertedUserId = UserId.ToString();
+            Debug.WriteLine("Unassociate " + EventId + "with" + CurrentUserId);
+            string convertedEventId = EventId.ToString();
+            //string convertedUserId = UserId.ToString();
 
-            string url = "EventData/UnAssociateEventWithApplicationUser/" + convertedEventId + "/" + convertedUserId;
-            
+            string url = "EventData/UnAssociateEventWithApplicationUser/" + convertedEventId + "/" + CurrentUserId;
+
             HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";
             HttpResponseMessage response = client.PostAsync(url, content).Result;
 
 
-            return RedirectToAction("Find/" + id);
+            return RedirectToAction("Find/" + EventId);
         }
-
 
 
         // GET: Event/New
@@ -208,11 +208,11 @@ namespace MyPassionProject.Controllers
 
                 return RedirectToAction("List");
             }
-           /* else if (response.IsSuccessStatusCode)
+            else if (response.IsSuccessStatusCode)
             {
                 //No image upload, but update still successful
                 return RedirectToAction("List");
-            }*/
+            }
             else
             {
                 return RedirectToAction("Error");
@@ -256,7 +256,7 @@ namespace MyPassionProject.Controllers
         // POST: Event/UpdateEvent/9
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult Update(int id, Event newEvent)
+        public ActionResult Update(int id, Event newEvent, HttpPostedFileBase EventImage)
         {
             
                 Debug.WriteLine("event info : ");
@@ -275,21 +275,63 @@ namespace MyPassionProject.Controllers
                 HttpContent content = new StringContent(jsonpayload);
                 content.Headers.ContentType.MediaType = "application/json";
 
-                // POST: api/EventData/UpdateEvent/9
-                //Header : Content-Type: application/json
-
                 HttpResponseMessage response = client.PostAsync(url, content).Result;
 
-                Debug.WriteLine(response);
-                if (response.IsSuccessStatusCode) { 
+                Debug.WriteLine("Content:"+content);
 
-                return RedirectToAction("Find/" + id);
+            //update request is successful, and we have image data
+            if (response.IsSuccessStatusCode && EventImage != null)
+            {
+                Debug.WriteLine("Attempt to update img");
+                // Read the response content as a string
+                var responseData = response.Content.ReadAsAsync<Event>().Result;
+                Debug.WriteLine("responseData" + responseData);
+                // Deserialize the response to get the ID
+                var eventId = responseData.EventId;
+                Console.WriteLine($"Event updated successfully. ID: {eventId}");
+                //Updating the animal picture as a separate request
+                //Debug.WriteLine("Calling Add Image method.");
+                //Send over image data for player
+                url = "EventData/UploadEventImage/" + eventId;
+                //Debug.WriteLine("Received  Picture "+Event.FileName);
+
+                MultipartFormDataContent formData = new MultipartFormDataContent();
+                HttpContent imagecontent = new StreamContent(EventImage.InputStream);
+                formData.Add(imagecontent, "EventPic", EventImage.FileName);
+
+                try
+                {
+                    response = client.PostAsync(url, formData).Result;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+
+                return RedirectToAction("List");
+            }
+            else if (response.IsSuccessStatusCode)
+            {
+                //No image upload, but update still successful
+                return RedirectToAction("List");
             }
             else
             {
-                return View();
+                return RedirectToAction("Error");
             }
         }
+
+
+        /*  if (response.IsSuccessStatusCode) { 
+
+          return RedirectToAction("Find/" + id);
+          }
+          else
+           {
+          return View();
+           }
+      }*/
 
 
         //GET : /Event/DeleteConfirm/{id}

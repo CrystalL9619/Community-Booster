@@ -59,6 +59,11 @@
         <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
         <input type="submit" value="Join" />
     </form>
+    <form method="GET" action="/Event/UnAssociate">
+        <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
+        <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
+        <button type="submit">Cancel</button>
+    </form>
 </div>
 
 

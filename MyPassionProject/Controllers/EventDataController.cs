@@ -44,6 +44,8 @@ namespace MyPassionProject.Controllers
             {
                 EventId = e.EventId,
                 Title = e.Title,
+                Location = e.Location,
+                EventDateTime = e.EventDateTime,
                 CategoryName = e.Category.CategoryName,
                 ImagePath = e.ImagePath
             }));
@@ -129,6 +131,8 @@ namespace MyPassionProject.Controllers
 
         //AssociateEventWithApplicationUser
         //api/eventData/AssociateEventWithApplicationUser/9/1
+        //AssociateEventWithApplicationUser
+        //api/eventData/AssociateEventWithApplicationUser/9/1
         [HttpPost]
         [Route("api/EventData/AssociateEventWithApplicationUser/{EventId}/{CurrentUserId}")]
         public IHttpActionResult AssociateEventWithApplicationUser(int EventId, string CurrentUserId)
@@ -165,12 +169,17 @@ namespace MyPassionProject.Controllers
         //api/eventData/UnAssociateEventWithApplicationUser/1/3
 
         [HttpPost]
-        [Route("api/EventData/UnAssociateEventWithApplicationUser/{EventId}/{UserId}")]
-        public IHttpActionResult UnAssociateEventWithApplicationUser(int EventId, int UserId)
+        [Route("api/EventData/UnAssociateEventWithApplicationUser/{EventId}/{CurrentUserId}")]
+        public IHttpActionResult UnAssociateEventWithApplicationUser(int EventId, string CurrentUserId)
         {
-            /*
-            Event SelectedEvent = db.Events.Include(e => e.ApplicationUsers).FirstOrDefault(e => e.EventId == EventId);
-            ApplicationUser SelectedApplicationUser = db.ApplicationUsers.Find(UserId);
+
+            Event SelectedEvent = db.Events.Include(e => e.ApplicationUser).FirstOrDefault(e => e.EventId == EventId);
+            // ApplicationUser SelectedApplicationUser = db.ApplicationUsers.Find(CurrentUserId);
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+
+            //Fetch the User Details by UserId using the FindById method
+            ApplicationUser SelectedApplicationUser = UserManager.FindById(CurrentUserId);
 
             if (SelectedEvent == null || SelectedApplicationUser == null)
             {
@@ -178,11 +187,12 @@ namespace MyPassionProject.Controllers
             }
 
 
-            SelectedEvent.ApplicationUsers.Remove(SelectedApplicationUser);
+            SelectedEvent.ApplicationUser.Remove(SelectedApplicationUser);
             db.SaveChanges();
-            */
+
             return Ok();
         }
+
 
         //FindEvent
         // GET: api/EventData/FindEvent/2
@@ -318,7 +328,7 @@ namespace MyPassionProject.Controllers
             // UpdateEvent
             // POST: api/EventData/UpdateEvent/9
             //CLI command:curl -H "Content-Type:application/json" -d @newEvent.json https://localhost:44317/api/EventData/UpdateEvent/9
-        [ResponseType(typeof(void))]
+        [ResponseType(typeof(Event))]
         [HttpPost]
        
         public IHttpActionResult UpdateEvent(int id, Event updatedEvent)
@@ -353,13 +363,14 @@ namespace MyPassionProject.Controllers
             existingEvent.Details = updatedEvent.Details ?? existingEvent.Details;
          
             existingEvent.CategoryId = updatedEvent.CategoryId;
+            db.Entry(existingEvent).Property(e => e.ImagePath).IsModified = false;
 
 
             try
             {
                 db.SaveChanges();
                 Debug.WriteLine("Event updated successfully");
-                return StatusCode(HttpStatusCode.NoContent);
+                return CreatedAtRoute("DefaultApi", null, updatedEvent);
             }
             catch (DbUpdateConcurrencyException)
             {

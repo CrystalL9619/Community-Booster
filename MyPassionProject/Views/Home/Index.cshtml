@@ -41,7 +41,7 @@
         }
     </div>
 
-    <div class="card-container" name="Fare" style="display: none;">
+    <div name="Fare" style="display:none">
         @foreach (var Event in Model.FareEvents)
         {
             <div class="eachone">
@@ -94,6 +94,9 @@
             const links = document.querySelectorAll('.mainnav a');
             const animation = document.querySelector('.animation');
 
+            //funSection.style.display = "block"
+            //fareSection.style.display = "none";
+
             links.forEach(function (link, index) {
                 link.addEventListener("click", function () {
                     // Calculate the left position based on the index of the clicked link
@@ -101,18 +104,31 @@
                     animation.style.left = leftPosition;
                 });
             });
-
-            funLink.addEventListener("click", function (event) {
-                event.preventDefault();
-                funSection.style.display = "block";
-                fareSection.style.display = "none";
-            });
+            
 
             fareLink.addEventListener("click", function (event) {
                 event.preventDefault();
-                funSection.style.display = "none";
+                funSection.classList.remove("card-container");
+                funSection.style.display = "none";  
+                fareSection.classList.add("card-container");
                 fareSection.style.display = "block";
+                
+               
+               
             });
+            funLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                fareSection.style.display = "none";
+                fareSection.classList.remove("card-container");
+              
+                funSection.style.display = "block"; 
+                fareSection.classList.add("card-container");
+               
+                
+               
+            });
+
+
         });
     </script>
 }

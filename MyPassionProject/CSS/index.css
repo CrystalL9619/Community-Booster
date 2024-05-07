@@ -93,26 +93,27 @@ a:nth-child(2):hover ~ .animation {
 
 .main {
     margin: 5% 5% 50px 50px;
+    padding:0;
     gap: 0px;
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
 }
 .card-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap:50px;
+    gap: 20px;
 }
 
 .eachone {
     display: flex;
     flex-direction: row;
     gap: 0;
-    margin-bottom: 20px;
+    margin:0 0 20px 0;
     padding: 0;
 }
 
