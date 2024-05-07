@@ -11,7 +11,7 @@
 <div>Capacity: @Model.SelectedEvent.Capacity</div>
 <div>Details: @Model.SelectedEvent.Details</div>
 <div>Category:@Model.SelectedEvent.CategoryName</div>
- 
+
 
 
 
@@ -57,13 +57,36 @@
     <form method="POST" action="/Event/Associate">
         <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
         <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
-        <input type="submit" value="Join" />
+        <input type="submit" value="Join" onclick="return confirmAssociate()" />
     </form>
     <form method="GET" action="/Event/UnAssociate">
         <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
         <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
-        <button type="submit">Cancel</button>
+        <button type="submit" onclick="return confirmUnAssociate()">Cancel</button>
     </form>
 </div>
+@section scripts {
+    <script>
+    function confirmAssociate() {
+        var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
+        if (!isAdmin) {
+            return true; // Proceed with form submission without confirmation
+        }
 
+        var confirmed = confirm("Congratulations! You're in! Can't wait to see you there!");
+        return confirmed;
+    }
+
+    function confirmUnAssociate() {
+        var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
+        if (!isAdmin) {
+            return true; // Proceed with form submission without confirmation
+        }
+
+        var confirmed = confirm("What a pity! Hope to see you in another event!");
+        return confirmed;
+    }
+    </script>
+
+}
 
