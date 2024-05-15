@@ -6,6 +6,7 @@
 <h2>Create Your Event</h2>
 
 <form action="/Event/Create" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="CreatorId" value=@Model.CreatorId>
     <div>
         <label>Event Name:</label> <input type="text" name="Title" />
     </div>
@@ -45,7 +46,7 @@
         <div class="col-6">
             <div>
                 <input type="submit" class="btn btn-primary" value="Create" />
-                <a href="@Url.Action("List", "Event")" class="btn btn-secondary">Cancel</a>
+                <a href="@Url.Action("Account", "Home")" class="btn btn-secondary">Cancel</a>
             </div>
         </div>
     </div>

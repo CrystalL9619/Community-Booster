@@ -22,6 +22,7 @@ using Microsoft.Owin.Security;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 
+
 namespace MyPassionProject.Controllers
 {
 
@@ -86,29 +87,23 @@ namespace MyPassionProject.Controllers
             return Ok(EventDtos);
         }
         /// <summary>
-        /// Gathers info about all events related to a particular UserId
-        /// </summary>
-        /// <param name="id">UserId</param>
-        /// <returns>
-        ///</returns>
-        ///GET:api/EventData/ListEventsForApplicationUser/1
-
-        /*
+        /// https://localhost:44317/api/EventData/ListCreatedEventForUser?CurrentUserId={CurrentUserId}
+        /// <param name="CurrentUserId"></param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(EventDto))]
-        public IHttpActionResult ListEventsForApplicationUser(int id)
+        public IHttpActionResult ListCreatedEventForUser(string CurrentUserId)
         {
-            //SQL equivalent:
-            //select events.*,eventApplicationUsers.* from events INNER JOIN 
-            //eventApplicationUsers on events.eventId = eventApplicationUsers.eventId
-            //where eventApplicationUsers.UserId={USERID}
+            Debug.WriteLine($"{CurrentUserId}");    
+            // Ensure CurrentUserId is not null or empty
+            if (string.IsNullOrEmpty(CurrentUserId))
+            {
+               return BadRequest("CurrentUserId is required.");
+            }
 
-            //all events that have users which match with our ID
-            
-            List<Event> Events = db.Events.Where(
-                e => e.ApplicationUser.Any(
-                    a => a.UserId == id
-                )).ToList();
+            // Retrieve events where CreatorId matches CurrentUserId
+            List<Event> Events = db.Events.Where(e => e.CreatorId == CurrentUserId).ToList();
+
             List<EventDto> EventDtos = new List<EventDto>();
 
             Events.ForEach(e => EventDtos.Add(new EventDto()
@@ -120,19 +115,93 @@ namespace MyPassionProject.Controllers
                 Capacity = e.Capacity,
                 Details = e.Details,
                 CategoryId = e.Category.CategoryId,
-                CategoryName = e.Category.CategoryName
+                CategoryName = e.Category.CategoryName,
+                ImagePath = e.ImagePath
             }));
 
             return Ok(EventDtos);
-           
         }
-       
-        */
 
-        //AssociateEventWithApplicationUser
-        //api/eventData/AssociateEventWithApplicationUser/9/1
-        //AssociateEventWithApplicationUser
-        //api/eventData/AssociateEventWithApplicationUser/9/1
+        /// <summary>
+        /// Gathers info about all events related to a particular UserId
+        /// </summary>
+        /// <param name="id">UserId</param>
+        /// <returns>
+        ///</returns>
+        ///GET:api/EventData/ListEventsForApplicationUser/1
+        
+        [HttpGet]
+        [ResponseType(typeof(EventDto))]
+        public IHttpActionResult ListEventsForApplicationUser(string CurrentUserId)
+        {
+            //SQL equivalent:
+            //select events.*,eventApplicationUsers.* from events INNER JOIN 
+            //ApplicationUserEvents on events.eventId = ApplicationUserEvents.eventId
+            //where evApplicationUsers.UserId={USERID}
+
+            //all events that have users which match with our ID
+            
+            List<Event> Events = db.Events.Where(
+                e => e.ApplicationUser.Any(
+                    a => a.Id == CurrentUserId
+                )).ToList();
+             List<EventDto> EventDtos = new List<EventDto>();
+
+            Events.ForEach(e => EventDtos.Add(new EventDto()
+            {
+                EventId = e.EventId,
+                Title = e.Title,
+                Location = e.Location,
+                EventDateTime = e.EventDateTime,
+                Capacity = e.Capacity,
+                Details = e.Details,
+                CategoryId = e.Category.CategoryId,
+                CategoryName = e.Category.CategoryName,
+                ImagePath= e.ImagePath
+            }));
+
+            return Ok(EventDtos);
+            //if (string.IsNullOrEmpty(CurrentUserId))
+            //{
+            //    ModelState.AddModelError("CurrentUserId", "CurrentUserId is required.");
+            //    return BadRequest(ModelState);
+            //}
+
+            //var UserManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            //ApplicationUser SelectedApplicationUser = UserManager.FindById(CurrentUserId);
+
+            //if (SelectedApplicationUser == null)
+            //{
+            //    return NotFound(); // Return 404 if user is not found
+            //}
+
+            //// Ensure that the Events collection is not null before using LINQ methods
+            //if (SelectedApplicationUser.Events == null)
+            //{
+            //    SelectedApplicationUser.Events = new List<Event>(); // Initialize the collection if it's null
+            //}
+
+            //List<EventDto> Events = SelectedApplicationUser.Events.Select(e => new EventDto
+            //{
+            //    EventId = e.EventId,
+            //    Title = e.Title,
+            //    Location = e.Location,
+            //    EventDateTime = e.EventDateTime,
+            //    Capacity = e.Capacity,
+            //    Details = e.Details,
+            //    CategoryId = e.CategoryId,
+            //    CategoryName = e.Category.CategoryName
+            //}).ToList();
+
+            //return Ok(Events);
+        }
+
+
+
+            //AssociateEventWithApplicationUser
+            //api/eventData/AssociateEventWithApplicationUser/9/1
+            //AssociateEventWithApplicationUser
+            //api/eventData/AssociateEventWithApplicationUser/9/1
         [HttpPost]
         [Route("api/EventData/AssociateEventWithApplicationUser/{EventId}/{CurrentUserId}")]
         public IHttpActionResult AssociateEventWithApplicationUser(int EventId, string CurrentUserId)
@@ -224,29 +293,28 @@ namespace MyPassionProject.Controllers
 
         //AddEvent
         // POST: api/EventData/AddEvent
-        [ResponseType(typeof(Event))]
-        [HttpPost]
-        
+  
+       [ResponseType(typeof(Event))]
+       [HttpPost]
         public IHttpActionResult AddEvent(Event newEvent)
-        {  
+        {
             Debug.WriteLine("I have reached the add event method!");
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-           
-            db.Events.Add(newEvent);
 
+            db.Events.Add(newEvent);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi",null, newEvent);
+            return CreatedAtRoute("DefaultApi", null, newEvent);
         }
 
         /// <summary>
         /// Handle image upload and save it to image folder
         /// </summary>
-        /// <param name="id"> Event id</param>
+        /// <param name="id"> Event id</param> 
         /// <returns></returns>
         [HttpPost]
         public IHttpActionResult UploadEventImage(int id)
@@ -405,6 +473,39 @@ namespace MyPassionProject.Controllers
 
             return Ok();
         }
+
+        [HttpGet]
+        [ResponseType(typeof(IEnumerable<EventDto>))]
+        public IHttpActionResult SearchEvent(string query)
+        {
+            var lowercaseQuery = query.ToLower();
+            Debug.WriteLine("I wanna know:"+lowercaseQuery);
+            var events = db.Events.Where(e =>
+                e.Title.ToLower().Contains(lowercaseQuery) ||
+                e.Location.ToLower().Contains(lowercaseQuery) ||
+                e.Details.ToLower().Contains(lowercaseQuery) ||
+                e.Category.CategoryName.ToLower().Contains(lowercaseQuery) ||
+                e.EventDateTime.ToString().Contains(lowercaseQuery)
+            );
+
+            var eventDtos = events.Select(e => new EventDto
+            {
+                EventId = e.EventId,
+                Title = e.Title,
+                Location = e.Location,
+                EventDateTime = e.EventDateTime,
+                Capacity = e.Capacity,
+                Details = e.Details,
+                CategoryId = e.Category.CategoryId,
+                CategoryName = e.Category.CategoryName,
+                ImagePath = e.ImagePath
+            });
+
+            return Ok(eventDtos);
+        }
+
+
+
 
         private bool EventExists(int id)
         {

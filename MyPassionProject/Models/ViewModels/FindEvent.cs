@@ -11,7 +11,11 @@ namespace MyPassionProject.Models.ViewModels
         public EventDto SelectedEvent { get; set; }
 
         public string CurrentUserId { get; set; }
-       //public IEnumerable<AppUserDto> ParticipatingUsers { get; set; }
+        public IEnumerable<EventDto> RelatedEvent { get; set; }
+        public string CreatorId { get; set; }
+
+        public IEnumerable<EventDto> CreatedEvents { get; set; }
+        //public IEnumerable<AppUserDto> ParticipatingUsers { get; set; }
 
         //public IEnumerable<AppUserDto> NotPaticipatingUsers { get; set; }
     }

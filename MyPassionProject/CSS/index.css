@@ -290,13 +290,26 @@ h3 {
     margin: 0;
     font-family: "Marcellus", serif;
 }
-
-button {
+.button-container {
+    display: flex;
+    flex-direction: column;
+    margin:10px;
+}
+.button-yes {
     margin: 10px;
     width: 100px;
     height: 40px;
-    background-color: #34495e;
+    background-color: #1abc9c;
     color: #fff;
+    border-radius:10px;
+}
+.button-no {
+    margin: 10px;
+    width: 100px;
+    height: 40px;
+    background-color: #ff6a00;
+    color: #fff;
+    border-radius: 10px;
 }
 
 #eventForm h3 {
@@ -314,6 +327,7 @@ button {
 #eventForm input {
     margin: 0;
 }
+
 
 /*
 @media (max-width: 768px) {

@@ -13,6 +13,7 @@ namespace MyPassionProject.Models.ViewModels
 
         //all of the related Events to that particular Category
         public IEnumerable<EventDto> RelatedEvents { get; set; }
-       
+        public string CreatorId { get; set; }
+
     }
 }

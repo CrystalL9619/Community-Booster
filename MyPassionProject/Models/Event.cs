@@ -31,6 +31,7 @@ namespace MyPassionProject.Models
         //public ICollection<AppUser> AppUsers { get; set; }
 
         public ICollection<ApplicationUser> ApplicationUser { get; set; }
+        public string CreatorId { get; set; }
 
         //A event belongs to one category
         //A category has many events
@@ -54,5 +55,6 @@ namespace MyPassionProject.Models
         public string CategoryName { get; set; }
 
         public string ImagePath { get; set; }
+        public string CreatorId { get; set; }
     }
 }

@@ -21,11 +21,19 @@
                 <ul class="navbar-nav flex-grow-1">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Events", "List", "Event", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Categories", "List", "Category", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Users", "List", "AppUser", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Account", "Account", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    @* <li>@Html.ActionLink("Events", "List", "Event", new { area = "" }, new { @class = "nav-link" })</li>
+            <li>@Html.ActionLink("Categories", "List", "Category", new { area = "" }, new { @class = "nav-link" })</li>
+            <li>@Html.ActionLink("Users", "List", "AppUser", new { area = "" }, new { @class = "nav-link" })</li>*@
                 </ul>
+                <nav class="navbar bg-body-tertiary">
+                    <div class="container-fluid">
+                        <form class="d-flex" role="search" action="@Url.Action("Search","Home")" method="get">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" >
+                            <button class="btn btn-outline-success" type="submit" >Search</button>
+                        </form>
+                    </div>
+                </nav>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

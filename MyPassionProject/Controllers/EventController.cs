@@ -11,6 +11,10 @@ using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 using System;
 using Microsoft.AspNet.Identity;
+using System.Globalization;
+using Microsoft.AspNet.Identity.Owin;
+using System.Threading.Tasks;
+
 
 
 
@@ -119,6 +123,7 @@ namespace MyPassionProject.Controllers
             HttpResponseMessage response = client.PostAsync(url, content).Result;
 
             return RedirectToAction("Find/" + EventId);
+           
         }
 
 
@@ -138,7 +143,8 @@ namespace MyPassionProject.Controllers
             HttpResponseMessage response = client.PostAsync(url, content).Result;
 
 
-            return RedirectToAction("Find/" + EventId);
+             return RedirectToAction("Find/" + EventId);
+           
         }
 
 
@@ -150,14 +156,19 @@ namespace MyPassionProject.Controllers
             FindCategory ViewModel = new FindCategory();
             string url = "CategoryData/ListCategories";
             HttpResponseMessage response = client.GetAsync(url).Result;
+             
             IEnumerable<CategoryDto> CategoryOptions = response.Content.ReadAsAsync<List<CategoryDto>>().Result;
             ViewModel.CategoryOptions = CategoryOptions;
+
+            string currentUserId = User.Identity.GetUserId();
+            ViewModel.CreatorId = currentUserId;
             return View(ViewModel);
         }
 
 
         // POST: Event/Create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Event newEvent, HttpPostedFileBase EventImage)
         {
             Debug.WriteLine("the json payload is :");
@@ -171,9 +182,11 @@ namespace MyPassionProject.Controllers
             HttpContent jsoncontent = new StringContent(jsonpayload);
             jsoncontent.Headers.ContentType.MediaType = "application/json";
             Debug.WriteLine(jsonpayload);
+  
 
 
             HttpResponseMessage response = client.PostAsync(url, jsoncontent).Result;
+            Debug.WriteLine(response);
 
             //update request is successful, and we have image data
             if (response.IsSuccessStatusCode && EventImage != null)
@@ -384,7 +397,7 @@ namespace MyPassionProject.Controllers
 
 
         }
-
+        
 
 
     }

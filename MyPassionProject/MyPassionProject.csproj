@@ -241,6 +241,10 @@
     <Compile Include="Migrations\202405070427546_RenameColumnInEventTable1.designer.cs">
       <DependentUpon>202405070427546_RenameColumnInEventTable1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405072005393_CreatorId.cs" />
+    <Compile Include="Migrations\202405072005393_CreatorId.designer.cs">
+      <DependentUpon>202405072005393_CreatorId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
@@ -352,6 +356,8 @@
     <Content Include="Views\AppUser\DeleteConfirm.cshtml" />
     <Content Include="Views\AppUser\Error.cshtml" />
     <Content Include="Views\Event\New.cshtml" />
+    <Content Include="Views\Home\Account.cshtml" />
+    <Content Include="Views\Home\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -420,6 +426,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405070427546_RenameColumnInEventTable1.resx">
       <DependentUpon>202405070427546_RenameColumnInEventTable1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405072005393_CreatorId.resx">
+      <DependentUpon>202405072005393_CreatorId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
