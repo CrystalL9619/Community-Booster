@@ -7,11 +7,12 @@
     {
         public override void Up()
         {
-            DropTable("dbo.AppUsers");
+            //DropTable("dbo.AppUsers");
         }
         
         public override void Down()
         {
+            /*
             CreateTable(
                 "dbo.AppUsers",
                 c => new
@@ -23,7 +24,7 @@
                         PhoneNumber = c.String(),
                     })
                 .PrimaryKey(t => t.UserId);
-            
+            */
         }
     }
 }

@@ -28,7 +28,7 @@ namespace MyPassionProject.Controllers
             static EventController()
             { 
             client = new HttpClient();
-                client.BaseAddress = new System.Uri("https://localhost:44317/api/");
+                client.BaseAddress = new System.Uri(Constant.BaseUrl);
             }
 
         
@@ -58,7 +58,7 @@ namespace MyPassionProject.Controllers
             FindEvent ViewModel = new FindEvent();
              
             string convertedId = id.ToString();//super important!!!!
-            string url = "EventData/FindEvent/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "EventData/FindEvent/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
 
             HttpResponseMessage response = client.GetAsync(url).Result;
             
@@ -176,7 +176,7 @@ namespace MyPassionProject.Controllers
             //objective: add a new event into our system using the API
             //curl -H "Content-Type:application/json" -d @newEvent.json https://localhost:44317/api/EventData/AddEvent 
               
-            string url = "EventData/AddEvent";//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "EventData/AddEvent";//In order to work , need a router like:Constant.BaseUrlbefore string
 
             string jsonpayload = jss.Serialize(newEvent);
             HttpContent jsoncontent = new StringContent(jsonpayload);
@@ -245,7 +245,7 @@ namespace MyPassionProject.Controllers
             //curl https://localhost:44317/api/EventData/FindEvent/9
 
             string convertedId = id.ToString();//super important!!!!
-            string url = "EventData/FindEvent/" + convertedId; //In order to work, need a router like: "https://localhost:44317/api/"before string
+            string url = "EventData/FindEvent/" + convertedId; //In order to work, need a router like: Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             //Debug.WriteLine("The response code is ");
@@ -277,7 +277,7 @@ namespace MyPassionProject.Controllers
                 Debug.WriteLine(newEvent.CategoryId);
 
                 string convertedId = id.ToString();//super important!!!!
-                string url = "EventData/UpdateEvent/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+                string url = "EventData/UpdateEvent/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
                 //serialize into JSON
                 //Send the request to the API
 
@@ -353,7 +353,7 @@ namespace MyPassionProject.Controllers
         public ActionResult DeleteConfirm(int id)
         {
             string convertedId = id.ToString();//super important!!!!
-            string url = "EventData/FindEvent/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "EventData/FindEvent/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             EventDto SelectedEvent = response.Content.ReadAsAsync<EventDto>().Result;
@@ -379,7 +379,7 @@ namespace MyPassionProject.Controllers
             Debug.WriteLine(id);
 
                 string convertedId = id.ToString();//super important!!!!
-                string url = "EventData/DeleteEvent/" + convertedId;// In order to work, need a router like: "https://localhost:44317/api/"before string
+                string url = "EventData/DeleteEvent/" + convertedId;// In order to work, need a router like: Constant.BaseUrlbefore string
             
                 HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";

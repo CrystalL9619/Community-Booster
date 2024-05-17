@@ -11,6 +11,7 @@
             DropForeignKey("dbo.EventAppUsers", "AppUser_UserId", "dbo.AppUsers");
             DropIndex("dbo.EventAppUsers", new[] { "Event_EventId" });
             DropIndex("dbo.EventAppUsers", new[] { "AppUser_UserId" });
+            //DropTable("dbo.EventAppUsers");
             CreateTable(
                 "dbo.ApplicationUserEvents",
                 c => new
@@ -24,11 +25,12 @@
                 .Index(t => t.ApplicationUser_Id)
                 .Index(t => t.Event_EventId);
             
-            DropTable("dbo.EventAppUsers");
+            
         }
         
         public override void Down()
         {
+            /*
             CreateTable(
                 "dbo.EventAppUsers",
                 c => new
@@ -37,7 +39,7 @@
                         AppUser_UserId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => new { t.Event_EventId, t.AppUser_UserId });
-            
+            */
             DropForeignKey("dbo.ApplicationUserEvents", "Event_EventId", "dbo.Events");
             DropForeignKey("dbo.ApplicationUserEvents", "ApplicationUser_Id", "dbo.AspNetUsers");
             DropIndex("dbo.ApplicationUserEvents", new[] { "Event_EventId" });

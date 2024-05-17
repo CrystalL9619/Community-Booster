@@ -21,7 +21,7 @@ namespace MyPassionProject.Controllers
         static CategoryController()
         {
             client = new HttpClient();
-            client.BaseAddress = new System.Uri("https://localhost:44317/api/");
+            client.BaseAddress = new System.Uri(Constant.BaseUrl);
         }
 
 
@@ -52,7 +52,7 @@ namespace MyPassionProject.Controllers
             //curl https://localhost:44317/api/CategoryData/FindCategory/2
 
             string convertedId = id.ToString();//super important!!!!
-            string url = "CategoryData/FindCategory/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "CategoryData/FindCategory/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             CategoryDto SelectedCategory = response.Content.ReadAsAsync<CategoryDto>().Result;
@@ -98,7 +98,7 @@ namespace MyPassionProject.Controllers
             //objective: add a new category into our system using the API
 
 
-            string url = "CategoryData/AddCategory";//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "CategoryData/AddCategory";//In order to work , need a router like:Constant.BaseUrlbefore string
 
             string jsonpayload = jss.Serialize(newCategory);
 
@@ -127,7 +127,7 @@ namespace MyPassionProject.Controllers
             //objective: communicate with our category data api to retrieve a specific category by ID
 
             string convertedId = id.ToString();//super important!!!!
-            string url = "CategoryData/FindCategory/" + convertedId; //In order to work, need a router like: "https://localhost:44317/api/"before string
+            string url = "CategoryData/FindCategory/" + convertedId; //In order to work, need a router like: Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             //Debug.WriteLine("The response code is ");
@@ -149,7 +149,7 @@ namespace MyPassionProject.Controllers
                 Debug.WriteLine(newCategory.CategoryName);
 
                 string convertedId = id.ToString();//super important!!!!
-                string url = "CategoryData/UpdateCategory/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+                string url = "CategoryData/UpdateCategory/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
                 //serialize into JSON
                 //Send the request to the API
 
@@ -183,7 +183,7 @@ namespace MyPassionProject.Controllers
         {
        
             string convertedId = id.ToString();//super important!!!!
-            string url = "CategoryData/FindCategory/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "CategoryData/FindCategory/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             CategoryDto SelectedCategory = response.Content.ReadAsAsync<CategoryDto>().Result;
@@ -209,7 +209,7 @@ namespace MyPassionProject.Controllers
 
 
                 string convertedId = id.ToString();//super important!!!!
-                string url = "CategoryData/DeleteCategory/" + convertedId;// In order to work, need a router like: "https://localhost:44317/api/"before string
+                string url = "CategoryData/DeleteCategory/" + convertedId;// In order to work, need a router like: Constant.BaseUrlbefore string
            
                 HttpContent content = new StringContent("");
                 HttpResponseMessage response = client.PostAsync(url, content).Result;

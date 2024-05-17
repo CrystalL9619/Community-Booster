@@ -20,7 +20,7 @@ namespace MyPassionProject.Controllers
         static AppUserController()
         {
             client = new HttpClient();
-            client.BaseAddress = new System.Uri("https://localhost:44317/api/");
+            client.BaseAddress = new System.Uri(Constant.BaseUrl);
         }
 
 
@@ -50,7 +50,7 @@ namespace MyPassionProject.Controllers
 
          
             string convertedId = id.ToString();//super important!!!!
-            string url = "AppUserData/FindAppUser/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "AppUserData/FindAppUser/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             AppUserDto SelectedAppUser = response.Content.ReadAsAsync<AppUserDto>().Result;
@@ -97,7 +97,7 @@ namespace MyPassionProject.Controllers
             //objective: add a new AppUser into our system using the API
 
 
-            string url = "AppUserData/AddAppUser";//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "AppUserData/AddAppUser";//In order to work , need a router like:Constant.BaseUrlbefore string
 
             string jsonpayload = jss.Serialize(newAppUser);
 
@@ -126,7 +126,7 @@ namespace MyPassionProject.Controllers
             //objective: communicate with our AppUser data api to retrieve a specific AppUser by ID
 
             string convertedId = id.ToString();//super important!!!!
-            string url = "AppUserData/FindAppUser/" + convertedId; //In order to work, need a router like: "https://localhost:44317/api/"before string
+            string url = "AppUserData/FindAppUser/" + convertedId; //In order to work, need a router like: Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             //Debug.WriteLine("The response code is ");
@@ -147,7 +147,7 @@ namespace MyPassionProject.Controllers
                 Debug.WriteLine(newAppUser.UserName);
 
                 string convertedId = id.ToString();//super important!!!!
-                string url = "AppUserData/UpdateAppUser/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+                string url = "AppUserData/UpdateAppUser/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
                 //serialize into JSON
                 //Send the request to the API
 
@@ -180,7 +180,7 @@ namespace MyPassionProject.Controllers
         {
       
             string convertedId = id.ToString();//super important!!!!
-            string url = "AppUserData/FindAppUser/" + convertedId;//In order to work , need a router like:"https://localhost:44317/api/"before string
+            string url = "AppUserData/FindAppUser/" + convertedId;//In order to work , need a router like:Constant.BaseUrlbefore string
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             AppUserDto SelectedAppUser = response.Content.ReadAsAsync<AppUserDto>().Result;
@@ -205,7 +205,7 @@ namespace MyPassionProject.Controllers
             Debug.WriteLine(id);
 
                 string convertedId = id.ToString();//super important!!!!
-                string url = "AppUserData/DeleteAppUser/" + convertedId;// In order to work, need a router like: "https://localhost:44317/api/"before string
+                string url = "AppUserData/DeleteAppUser/" + convertedId;// In order to work, need a router like: Constant.BaseUrlbefore string
 
                 HttpContent content = new StringContent("");
                 HttpResponseMessage response = client.PostAsync(url, content).Result;

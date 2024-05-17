@@ -24,7 +24,7 @@ namespace MyPassionProject.Controllers
         static HomeController()
         {
             client = new HttpClient();
-            client.BaseAddress = new System.Uri("https://localhost:44317/api/");
+            client.BaseAddress = new System.Uri(Constant.BaseUrl);
         }
         public ActionResult Index()
         {
@@ -72,7 +72,7 @@ namespace MyPassionProject.Controllers
         }
         // GET: Home/Account
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize()]
         public ActionResult Account()//
         {
             //use HTTP client to access infomation

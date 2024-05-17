@@ -156,6 +156,7 @@ namespace MyPassionProject.Controllers
                 if (result.Succeeded)
                 {
                     // Assign the role to the user
+
                     await UserManager.AddToRoleAsync(user.Id, "Guest");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
