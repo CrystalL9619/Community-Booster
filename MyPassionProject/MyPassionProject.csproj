@@ -422,7 +422,7 @@
     <Content Include="Views\AppUser\DeleteConfirm.cshtml" />
     <Content Include="Views\AppUser\Error.cshtml" />
     <Content Include="Views\Event\New.cshtml" />
-    <Content Include="Views\Home\Account.cshtml" />
+    <Content Include="Views\Home\MyEvents.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>

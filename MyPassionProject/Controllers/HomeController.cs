@@ -73,7 +73,7 @@ namespace MyPassionProject.Controllers
         // GET: Home/Account
         [HttpGet]
         [Authorize()]
-        public ActionResult Account()//
+        public ActionResult MyEvents()//
         {
             //use HTTP client to access infomation
             //objective: communicate with our event data api to retrieve a list of event
@@ -126,7 +126,7 @@ namespace MyPassionProject.Controllers
                 content.Headers.ContentType.MediaType = "application/json";
                 HttpResponseMessage associateResponse = client.PostAsync(associateUrl, content).Result;
 
-                return RedirectToAction("Account");
+                return RedirectToAction("MyEvents");
             }
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -140,7 +140,7 @@ namespace MyPassionProject.Controllers
                 content.Headers.ContentType.MediaType = "application/json";
                 HttpResponseMessage unassociateResponse = client.PostAsync(unassociateUrl, content).Result;
 
-                return RedirectToAction("Account");
+                return RedirectToAction("MyEvents");
         }
         [HttpGet]
         public ActionResult Search(string query)

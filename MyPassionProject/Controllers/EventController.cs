@@ -168,7 +168,7 @@ namespace MyPassionProject.Controllers
 
         // POST: Event/Create
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+       
         public ActionResult Create(Event newEvent, HttpPostedFileBase EventImage)
         {
             Debug.WriteLine("the json payload is :");
