@@ -69,6 +69,7 @@ namespace MyPassionProject.Controllers
 
             ViewModel.SelectedEvent = SelectedEvent;
 
+            Debug.Write("ViewModel.SelectedEvent.CreatorId" + ViewModel.SelectedEvent.CreatorId);
             //show associated ApplicationUsers with this Event
             /*
               url = "ApplicationUserData/ListApplicationUsersForEvent/" + convertedId;
@@ -107,7 +108,7 @@ namespace MyPassionProject.Controllers
 
         //POST: Event/Associate/{EventId}/{UserId}
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        
         public ActionResult Associate(int EventId, string CurrentUserId)
         {
 

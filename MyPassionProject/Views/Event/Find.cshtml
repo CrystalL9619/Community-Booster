@@ -16,6 +16,7 @@
 
 
 
+
 @*
 
     <div>
@@ -81,27 +82,35 @@
 @section scripts {
     <script>
     function confirmAssociate() {
-        var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
+        @*var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
-        }
+        }*@
 
         var confirmed = confirm("Congratulations! You're in! Can't wait to see you there!");
         return confirmed;
     }
 
     function confirmUnAssociate() {
-        var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
+       @* var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
-        }
+        }*@
 
         var confirmed = confirm("What a pity! Hope to see you in another event!");
         return confirmed;
         }
-        document.addEventListener("DOMContentLoaded", function () {
-            const modify = document.querySelector('[name="modify"]');
-            modify.style.display = "block";
+        console.log("curr usr  id","@Model.CurrentUserId");
+        console.log("creater id","@Model.SelectedEvent.CreatorId");
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const modify = document.querySelector('[name="modify"]');
+
+        if ("@Model.CurrentUserId" === "@Model.SelectedEvent.CreatorId") {
+                console.log("@Model.CurrentUserId");
+                console.log("@Model.SelectedEvent.CreatorId");
+                modify.style.display = "block";
+            }
         });
     </script>
 

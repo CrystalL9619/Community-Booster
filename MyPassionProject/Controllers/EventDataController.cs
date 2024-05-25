@@ -220,7 +220,12 @@ namespace MyPassionProject.Controllers
             {
                 return NotFound();
             }
-
+            if (SelectedEvent.ApplicationUser.Count > int.Parse(SelectedEvent.Capacity))
+            {
+                Debug.WriteLine("What a pity! The event is full");
+                // Event is full
+                return Content(HttpStatusCode.BadRequest, "What a pity! The event is full");
+            }
             Debug.WriteLine("input EventId  is: " + EventId);
             Debug.WriteLine("selected Event Title is: " + SelectedEvent.Title);
             Debug.WriteLine("input UserId is: " + SelectedApplicationUser.Id);
@@ -279,9 +284,12 @@ namespace MyPassionProject.Controllers
                 Capacity = Event.Capacity,
                 Details = Event.Details,
                 CategoryId = Event.Category.CategoryId,
-                CategoryName = Event.Category.CategoryName
+                CategoryName = Event.Category.CategoryName,
+                CreatorId = Event.CreatorId
 
             };
+            Debug.WriteLine("Eventdto" + EventDto.CreatorId);
+            Debug.WriteLine("CreatorId" + Event.CreatorId);
             if (Event == null)
             {
                 return NotFound();

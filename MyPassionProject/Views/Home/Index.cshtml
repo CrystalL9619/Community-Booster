@@ -93,6 +93,8 @@
             const fareSection = document.querySelector('div[name="Fare"]');
             const links = document.querySelectorAll('.mainnav a');
             const animation = document.querySelector('.animation');
+           
+
 
             //funSection.style.display = "block"
             //fareSection.style.display = "none";
@@ -108,24 +110,23 @@
 
             fareLink.addEventListener("click", function (event) {
                 event.preventDefault();
-                funSection.classList.remove("card-container");
                 funSection.style.display = "none";  
-                fareSection.classList.add("card-container");
                 fareSection.style.display = "block";
-                
-               
-               
+                setTimeout(function () {
+                    fareSection.style.display = "flex";
+                    fareSection.style.gap="20px"
+                }, 10);
+           
             });
             funLink.addEventListener("click", function (event) {
                 event.preventDefault();
                 fareSection.style.display = "none";
-                fareSection.classList.remove("card-container");
-              
                 funSection.style.display = "block"; 
-                fareSection.classList.add("card-container");
-               
-                
-               
+                setTimeout(function () {
+                    funSection.style.display = "flex";
+                    funSection.style.gap = "20px";
+                }, 10);
+ 
             });
 
 
