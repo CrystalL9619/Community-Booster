@@ -220,23 +220,29 @@ namespace MyPassionProject.Controllers
             {
                 return NotFound();
             }
-            if (SelectedEvent.ApplicationUser.Count > int.Parse(SelectedEvent.Capacity))
+            try
             {
-                Debug.WriteLine("What a pity! The event is full");
-                // Event is full
-                return Content(HttpStatusCode.BadRequest, "What a pity! The event is full");
+                if (SelectedEvent.ApplicationUser.Count >= int.Parse(SelectedEvent.Capacity))
+                {
+                    Debug.WriteLine("Sorry! The event is full");
+                    // Event is full
+                    return Content(HttpStatusCode.BadRequest, "Sorry! The event is full");
+                }
+                Debug.WriteLine("input EventId  is: " + EventId);
+                Debug.WriteLine("selected Event Title is: " + SelectedEvent.Title);
+                Debug.WriteLine("input UserId is: " + SelectedApplicationUser.Id);
+                Debug.WriteLine("selected UserName is: " + SelectedApplicationUser.UserName);
+
+                //SQL equivalent:
+                //insert into EventApplicationUsers (EventId,UserId) values ({EventId}/{UserId})
+
+                SelectedEvent.ApplicationUser.Add(SelectedApplicationUser);
+                db.SaveChanges();
             }
-            Debug.WriteLine("input EventId  is: " + EventId);
-            Debug.WriteLine("selected Event Title is: " + SelectedEvent.Title);
-            Debug.WriteLine("input UserId is: " + SelectedApplicationUser.Id);
-            Debug.WriteLine("selected UserName is: " + SelectedApplicationUser.UserName);
-
-            //SQL equivalent:
-            //insert into EventApplicationUsers (EventId,UserId) values ({EventId}/{UserId})
-
-            SelectedEvent.ApplicationUser.Add(SelectedApplicationUser);
-            db.SaveChanges();
-
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
             return Ok();
         }
         //UnAssociateEventWithApplicationUser
@@ -288,7 +294,7 @@ namespace MyPassionProject.Controllers
                 CreatorId = Event.CreatorId
 
             };
-            Debug.WriteLine("Eventdto" + EventDto.CreatorId);
+            Debug.WriteLine("Event" + EventDto.CreatorId);
             Debug.WriteLine("CreatorId" + Event.CreatorId);
             if (Event == null)
             {

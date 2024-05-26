@@ -3,9 +3,10 @@
 @{
     ViewBag.Title = "Find";
 
+
 }
 
-<a href="/Home/Index" class="btn btn-primary">Go back to Home</a>
+<a href="/Home/Index" class="btn bg-success-subtle">Go back to Home</a>
 <h2>@Model.SelectedEvent.Title</h2>
 <h4>Location: @Model.SelectedEvent.Location</h4>
 <h4>Event Time: @Model.SelectedEvent.EventDateTime</h4>
@@ -19,50 +20,58 @@
 
 @*
 
-    <div>
+        <div>
 
 
 
-            <h2>Paticipant in this @Model.SelectedEvent.Title:</h2>
-                @foreach (var AppUser in Model.ParticipatingUsers)
-                {
-                    <a href="/AppUser/Find/@AppUser.UserId">@AppUser.UserName</a>
-                    <a href="/Event/UnAssociate/@Model.SelectedEvent.EventId?UserId=@AppUser.UserId">[x]</a><br />
-                }
-            </div>
+                <h2>Paticipant in this @Model.SelectedEvent.Title:</h2>
+                    @foreach (var AppUser in Model.ParticipatingUsers)
+                    {
+                        <a href="/AppUser/Find/@AppUser.UserId">@AppUser.UserName</a>
+                        <a href="/Event/UnAssociate/@Model.SelectedEvent.EventId?UserId=@AppUser.UserId">[x]</a><br />
+                    }
+                </div>
 
-            <div>
-                <h4>Add new paticipant to this Event: @Model.SelectedEvent.Title</h4>
-                <form method="POST" action="/Event/Associate">
-                    <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
-                    <label for="UserId">Select User:</label>
-                    <select name="UserId" id="UserId">
-                        @foreach (var AppUser in Model.NotPaticipatingUsers)
-                        {
-                            <option value="@AppUser.UserId">@AppUser.UserName</option>
-                        }
-                    </select>
-                    <input type="submit" value="Associate AppUser" />
-                </form>
+                <div>
+                    <h4>Add new paticipant to this Event: @Model.SelectedEvent.Title</h4>
+                    <form method="POST" action="/Event/Associate">
+                        <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
+                        <label for="UserId">Select User:</label>
+                        <select name="UserId" id="UserId">
+                            @foreach (var AppUser in Model.NotPaticipatingUsers)
+                            {
+                                <option value="@AppUser.UserId">@AppUser.UserName</option>
+                            }
+                        </select>
+                        <input type="submit" value="Associate AppUser" />
+                    </form>
+        </div>
+
+
+    <div class="d-grid gap-2 d-md-block">
+        <form method="POST" action="/Event/Associate">
+            <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
+            <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
+            <button type="submit" class="btn btn-success" onclick="return confirmAssociate()">Join</button>
+        </form>
+        <form method="GET" action="/Event/UnAssociate" id="unass">
+            <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
+            <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
+            <button type="submit" class="btn btn-danger" onclick="return confirmUnAssociate()">Cancel</button>
+        </form>
     </div>
 *@
-<div class="d-grid gap-2 d-md-block">
-    <form method="POST" action="/Event/Associate">
-        <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
-        <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
-        <button type="submit" class="btn btn-success" onclick="return confirmAssociate()">Join</button>
-    </form>
-    <form method="GET" action="/Event/UnAssociate">
-        <input type="hidden" name="EventId" value="@Model.SelectedEvent.EventId">
-        <input type="hidden" name="CurrentUserId" value="@Model.CurrentUserId">
-        <button type="submit" class="btn btn-danger" onclick="return confirmUnAssociate()">Cancel</button>
-    </form>
-</div>
+<br />
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <button class="button-yes" onclick="return confirmAssociate()">Join</button>
+    <button class="button-no" onclick="return confirmUnAssociate()">Cancel</button>
+}
 
 <br />
 <hr />
-
-
 <div name="modify" style="display:none">
 
     <div>
@@ -81,14 +90,36 @@
 </div>
 @section scripts {
     <script>
+
     function confirmAssociate() {
         @*var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
-        }*@
+        }
 
-        var confirmed = confirm("Congratulations! You're in! Can't wait to see you there!");
-        return confirmed;
+        let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + @Model.SelectedEvent.EventId + "/" + @Model.CurrentUserId;
+        console.log('assoc url', url);
+        fetch(url, { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    // confirm("Congratulations! You're in! Can't wait to see you there!");
+
+                } else {
+                    //confirm("Sorry event is full");
+                }
+            })
+          *@
+
+        let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+        console.log('assoc url', url);
+        fetch(url, { method: 'POST' }).then(res => {
+            if (res.ok) {
+                alert("Congratulations! You're in !Can't wait to see you there!");
+            } else {
+                alert("Sorry!Event is Full")
+            }
+        });
+
     }
 
     function confirmUnAssociate() {
@@ -97,8 +128,16 @@
             return true; // Proceed with form submission without confirmation
         }*@
 
-        var confirmed = confirm("What a pity! Hope to see you in another event!");
-        return confirmed;
+     let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+     console.log('unassoc url', url);
+     fetch(url, { method: 'POST' }).then(res => {
+         if (res.ok) {
+             alert("What a pity! Hope to see you in another event!");
+
+         } else {
+             alert("Something went wrong, please try later!")
+         }
+         });
         }
         console.log("curr usr  id","@Model.CurrentUserId");
         console.log("creater id","@Model.SelectedEvent.CreatorId");

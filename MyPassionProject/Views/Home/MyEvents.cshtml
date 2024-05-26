@@ -1,9 +1,10 @@
 ﻿@model MyPassionProject.Models.ViewModels.FindEvent
 @{
     ViewBag.Title = "Account";
+   
+
 }
 
-<link href="~/CSS/index.css" rel="stylesheet" />
 
 <h2>Welcome</h2>
 <div>
@@ -36,20 +37,30 @@
                         </p>
                     </div><!--end of details-->
                 </div><!--end of event-->
-            </div><!--end of eachone-->
 
-            <div class="d-grid gap-4 d-md-block">
-                <form method="POST" action="@Url.Action("Associate", "Home")">
-                    @Html.Hidden("EventId", relatedEvent.EventId)
-                    @Html.Hidden("CurrentUserId", Model.CurrentUserId)
-                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to join this event?')">Join</button>
-                </form>
-                <form method="POST" action="@Url.Action("UnAssociate", "Home")">
-                    @Html.Hidden("EventId", relatedEvent.EventId)
-                    @Html.Hidden("CurrentUserId", Model.CurrentUserId)
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel your participation in this event?')">Cancel</button>
-                </form>
-            </div>
+
+            </div><!--end of eachone-->
+            @*
+                <div class="d-grid gap-4 d-md-block">
+                    <form method="POST" action="@Url.Action("Associate", "Home")">
+                        @Html.Hidden("EventId", relatedEvent.EventId)
+                        @Html.Hidden("CurrentUserId", Model.CurrentUserId)
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to join this event?')">Join</button>
+                    </form>
+                    <form method="POST" action="@Url.Action("UnAssociate", "Home")">
+                        @Html.Hidden("EventId", relatedEvent.EventId)
+                        @Html.Hidden("CurrentUserId", Model.CurrentUserId)
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel your participation in this event?')">Cancel</button>
+                    </form>
+                </div>
+            *@
+            <br />
+            if (User.Identity.IsAuthenticated)
+            { <div class="button-container">
+                    <button class="button-yes" onclick="return confirmAssociate(@relatedEvent.EventId)">Join</button>
+                    <button class="button-no" onclick="return confirmUnAssociate(@relatedEvent.EventId)">Cancel</button>
+                </div>
+            }
         }
     </div><!--end of card-container-->
 </div>
@@ -87,7 +98,8 @@
 
 @section scripts {
     <script>
-            function confirmAssociate() {
+        @*
+               function confirmAssociate() {
                 var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
                 if (!isAdmin) {
                     return true; // Proceed with form submission without confirmation
@@ -105,6 +117,34 @@
 
                 var confirmed = confirm("What a pity! Hope to see you in another event!");
                 return confirmed;
-            }
+            }*@
+        function confirmAssociate(eventId) {
+            let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
+            console.log('assoc url', url);
+            fetch(url, { method: 'POST' }).then(res => {
+                if (res.ok) {
+                    alert("Congratulations! You're in !Can't wait to see you there!");
+                } else {
+                    alert("Sorry!Event is Full")
+                }
+            });
+        }
+        function confirmUnAssociate(eventId) {
+       @* var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
+       if (!isAdmin) {
+        return true; // Proceed with form submission without confirmation
+        }*@
+
+       let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
+       console.log('unassoc url', url);
+       fetch(url, { method: 'POST' }).then(res => {
+       if (res.ok) {
+         alert("What a pity! Hope to see you in another event!");
+           location.reload();
+     } else {
+         alert("Something went wrong, please try later!")
+     }
+     });
+    }
     </script>
 }

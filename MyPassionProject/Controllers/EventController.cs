@@ -108,7 +108,7 @@ namespace MyPassionProject.Controllers
 
         //POST: Event/Associate/{EventId}/{UserId}
         [HttpPost]
-        
+        [Authorize(Roles = "Admin,Guest")]
         public ActionResult Associate(int EventId, string CurrentUserId)
         {
 
@@ -122,15 +122,19 @@ namespace MyPassionProject.Controllers
             HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";
             HttpResponseMessage response = client.PostAsync(url, content).Result;
-
-            return RedirectToAction("Find/" + EventId);
+            
+            //if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            //{
+              //  return View("AssociationResult");
+            //}
+            return RedirectToAction("MyEvents","Home");
            
         }
 
 
         //Get: Event/UnAssociate/{EventId}?UserId={UserId}
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Guest")]
         public ActionResult UnAssociate(int EventId, string CurrentUserId)
         {
             Debug.WriteLine("Unassociate " + EventId + "with" + CurrentUserId);
@@ -220,12 +224,12 @@ namespace MyPassionProject.Controllers
                 }
                 
 
-                return RedirectToAction("List");
+                return RedirectToAction("MyEvents","Home");
             }
             else if (response.IsSuccessStatusCode)
             {
                 //No image upload, but update still successful
-                return RedirectToAction("List");
+                return RedirectToAction("MyEvents", "Home");
             }
             else
             {
@@ -236,7 +240,7 @@ namespace MyPassionProject.Controllers
 
         // GET: Event/Edit/9
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             //grab the event information
@@ -269,7 +273,7 @@ namespace MyPassionProject.Controllers
 
         // POST: Event/UpdateEvent/9
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public ActionResult Update(int id, Event newEvent, HttpPostedFileBase EventImage)
         {
             
@@ -323,12 +327,12 @@ namespace MyPassionProject.Controllers
                 }
 
 
-                return RedirectToAction("List");
+                return RedirectToAction("MyEvents","Home");
             }
             else if (response.IsSuccessStatusCode)
             {
                 //No image upload, but update still successful
-                return RedirectToAction("List");
+                return RedirectToAction("MyEvents", "Home");
             }
             else
             {
@@ -350,7 +354,7 @@ namespace MyPassionProject.Controllers
 
         //GET : /Event/DeleteConfirm/{id}
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirm(int id)
         {
             string convertedId = id.ToString();//super important!!!!
@@ -373,7 +377,7 @@ namespace MyPassionProject.Controllers
 
         //Post: Event/Delete/{id}
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             Debug.WriteLine("The Event is ");
@@ -388,7 +392,7 @@ namespace MyPassionProject.Controllers
               
                  if (response.IsSuccessStatusCode)
                  {
-                     return RedirectToAction("List");
+                     return RedirectToAction("MyEvents","Home");
                  }
                  else
                  {
