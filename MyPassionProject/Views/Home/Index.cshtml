@@ -93,6 +93,7 @@
             const fareSection = document.querySelector('div[name="Fare"]');
             const links = document.querySelectorAll('.mainnav a');
             const animation = document.querySelector('.animation');
+            const main = document.querySelector('.main');
            
 
 
@@ -112,9 +113,12 @@
                 event.preventDefault();
                 funSection.style.display = "none";  
                 fareSection.style.display = "block";
+                main.style.width = "1000px"
                 setTimeout(function () {
                     fareSection.style.display = "flex";
-                    fareSection.style.gap="20px"
+                    fareSection.style.gap = "20px";
+                    fareSection.style.flexWrap = "wrap"
+                   
                 }, 10);
            
             });
@@ -122,9 +126,11 @@
                 event.preventDefault();
                 fareSection.style.display = "none";
                 funSection.style.display = "block"; 
+                main.style.width = "1000px"
                 setTimeout(function () {
                     funSection.style.display = "flex";
                     funSection.style.gap = "20px";
+                    funSection.style.flexWrap = "wrap"
                 }, 10);
  
             });
