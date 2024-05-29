@@ -7,23 +7,23 @@
 
 <form action="/Event/Create" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="CreatorId" value=@Model.CreatorId>
-    <div>
-        <label>Event Name:</label> <input type="text" name="Title" />
+    <div class="form-group mb-3">
+        <label>Title:</label> <input type="text" name="Title" />
     </div>
-    <div>
-        <label>Event Location</label> <input type="text" name="Location" />
+    <div class="form-group mb-3">
+        <label>Location</label> <input type="text" name="Location" />
     </div>
-    <div>
-        <label>Event Date & Time:</label> <input type="datetime-local" name="EventDateTime" />
+    <div class="form-group mb-3">
+        <label>Date & Time:</label> <input type="datetime-local" name="EventDateTime" />
     </div>
-    <div>
-        <label>Event Capacity</label> <input type="number" name="Capacity" />
+    <div class="form-group mb-3">
+        <label>Capacity</label> <input type="number" name="Capacity" />
     </div>
-    <div>
-        <label>Event Details</label> <textarea name="Details"></textarea>
+    <div class="form-group mb-3">
+        <label>Details</label> <textarea name="Details"></textarea>
     </div>
-    <div class="row my-4">
-        <div class="col-md-3">
+    
+        <div class="form-group mb-3">
 
             <label class="form-label">Category:</label>
             <select name="CategoryId" class="form-select">
@@ -35,19 +35,18 @@
             </select>
 
         </div>
-    </div>
-    <div>
+   
+    <div class="form-group mb-3">
         <label>Event Image:</label>
         <input type="file" name="EventImage" accept="image/*" />
     </div>
 
 
-    <div class="row my-4">
-        <div class="col-6">
+    <div class="form-group mb-3">
             <div>
                 <input type="submit" class="btn btn-primary" value="Create" />
                 <a href="@Url.Action("MyEvents", "Home")" class="btn btn-secondary">Cancel</a>
             </div>
         </div>
-    </div>
+ 
 </form>

@@ -20,12 +20,12 @@
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("My Events", "MyEvents", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Developers", "Index", "Help", new { area = "" }, new { @class = "nav-link" })</li>
                     @* <li>@Html.ActionLink("Events", "List", "Event", new { area = "" }, new { @class = "nav-link" })</li>
-            <li>@Html.ActionLink("Categories", "List", "Category", new { area = "" }, new { @class = "nav-link" })</li>
-            <li>@Html.ActionLink("Users", "List", "AppUser", new { area = "" }, new { @class = "nav-link" })</li>*@
+        <li>@Html.ActionLink("Categories", "List", "Category", new { area = "" }, new { @class = "nav-link" })</li>
+        <li>@Html.ActionLink("Users", "List", "AppUser", new { area = "" }, new { @class = "nav-link" })</li>*@
                 </ul>
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid">
@@ -42,7 +42,7 @@
     <div class="container body-content">
         @RenderBody()
      
-        <footer style="position: fixed; bottom: 0; width: 100%;">
+        <footer style="position: relative; bottom: 0; width: 100%;">
             <p>&copy; @DateTime.Now.Year - Community Booster</p>
 
         </footer>

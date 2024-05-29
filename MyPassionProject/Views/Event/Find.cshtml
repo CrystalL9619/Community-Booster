@@ -73,9 +73,9 @@
 <br />
 <hr />
 <div name="modify" style="display:none">
-
+    <br />
     <div>
-        <a href="/Event/Edit/@Model.SelectedEvent.EventId" class="btn btn-primary">Update This  Event</a>
+        <a href="/Event/Edit/@Model.SelectedEvent.EventId" class="btn bg-primary-subtle">Update This  Event</a>
     </div>
     @*
             @Html.Partial("~/Views/Shared/_EventPartial.cshtml", Model)
@@ -83,11 +83,15 @@
 
         @Html.ActionLink("Delete This Event", "DeleteConfirm", "Event", new { id = Model.SelectedEvent.EventId }, new { @class = "btn btn-danger" })
     *@
+    <br />
+
     <div>
         @Html.ActionLink("Delete This Event", "DeleteConfirm", "Event", new { id = Model.SelectedEvent.EventId }, new { @class = "btn btn-danger" })
 
     </div>
+    <br />
 </div>
+<br />
 @section scripts {
     <script>
 

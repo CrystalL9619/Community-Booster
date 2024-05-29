@@ -72,8 +72,8 @@ namespace MyPassionProject.Controllers
         }
         // GET: Home/Account
         [HttpGet]
-        [Authorize()]
-        public ActionResult MyEvents()//
+        [Authorize(Roles ="Admin,Guest")]
+        public ActionResult MyEvents()
         {
             //use HTTP client to access infomation
             //objective: communicate with our event data api to retrieve a list of event
