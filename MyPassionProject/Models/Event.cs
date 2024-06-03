@@ -56,5 +56,6 @@ namespace MyPassionProject.Models
 
         public string ImagePath { get; set; }
         public string CreatorId { get; set; }
+        public string CreatorUserName { get; set; }
     }
 }

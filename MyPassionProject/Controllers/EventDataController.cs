@@ -222,7 +222,9 @@ namespace MyPassionProject.Controllers
             }
             try
             {
-                if (SelectedEvent.ApplicationUser.Count >= int.Parse(SelectedEvent.Capacity))
+                int eventCapacity = int.Parse(SelectedEvent.Capacity);
+                if (SelectedEvent.ApplicationUser.Count >= eventCapacity)
+                   
                 {
                     Debug.WriteLine("Sorry! The event is full");
                     // Event is full
@@ -238,6 +240,11 @@ namespace MyPassionProject.Controllers
 
                 SelectedEvent.ApplicationUser.Add(SelectedApplicationUser);
                 db.SaveChanges();
+                int SeatsRemaining = eventCapacity - SelectedEvent.ApplicationUser.Count;
+                Debug.WriteLine("Seats remaining: " + SeatsRemaining);
+
+                // Return the remaining seats in the response
+                return Ok(new { SeatsRemaining });
             }
             catch (Exception e)
             {
@@ -269,8 +276,11 @@ namespace MyPassionProject.Controllers
 
             SelectedEvent.ApplicationUser.Remove(SelectedApplicationUser);
             db.SaveChanges();
+            int eventCapacity = int.Parse(SelectedEvent.Capacity);
+            int SeatsRemaining = eventCapacity - SelectedEvent.ApplicationUser.Count;
+            Debug.WriteLine("Seats remaining: " + SeatsRemaining);
 
-            return Ok();
+            return Ok(new { SeatsRemaining });
         }
 
 
@@ -281,6 +291,10 @@ namespace MyPassionProject.Controllers
         public IHttpActionResult FindEvent(int id)
         {
             Event Event = db.Events.Find(id);
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+            var creator = UserManager.FindById(Event.CreatorId);
+            string creatorUserName = creator != null ? creator.UserName : "";
             EventDto EventDto = new EventDto()
             {
                 EventId = Event.EventId,
@@ -291,7 +305,8 @@ namespace MyPassionProject.Controllers
                 Details = Event.Details,
                 CategoryId = Event.Category.CategoryId,
                 CategoryName = Event.Category.CategoryName,
-                CreatorId = Event.CreatorId
+                CreatorId = Event.CreatorId,
+                CreatorUserName = creatorUserName
 
             };
             Debug.WriteLine("Event" + EventDto.CreatorId);
@@ -432,18 +447,19 @@ namespace MyPassionProject.Controllers
             }
 
             // Only update properties user want to update
-            existingEvent.UpdateDate = updatedEvent.UpdateDate != default
-            ? updatedEvent.UpdateDate
-            : existingEvent.UpdateDate;//I leart that this patten is a short version of if statement. The patten A?B:C means if A then B , else C;
-                                       // The update datetime should be current datetime, however, since it is a MVP ,I just leave it as original one for now
+            // existingEvent.UpdateDate = updatedEvent.UpdateDate != default
+            // ? updatedEvent.UpdateDate
+            //: existingEvent.UpdateDate; I leart that this patten is a short version of if statement. The patten A?B:C means if A then B , else C;
+            // The update datetime should be current datetime, however, since it is a MVP ,I just leave it as original one for now
+            existingEvent.UpdateDate = DateTime.Now;
             existingEvent.Title = updatedEvent.Title ?? existingEvent.Title;//I learnt that this patten is a short version of another if statement. The patten A=B??C means If B is not null, let A=B, otherwise use A=C
             existingEvent.Location = updatedEvent.Location ?? existingEvent.Location;
             existingEvent.EventDateTime = updatedEvent.EventDateTime != default
             ? updatedEvent.EventDateTime
             : existingEvent.EventDateTime;
             existingEvent.Capacity = updatedEvent.Capacity ?? existingEvent.Capacity;
-            existingEvent.Details = updatedEvent.Details ?? existingEvent.Details;
-         
+            existingEvent.Details = updatedEvent.Details ?? string.Empty;
+
             existingEvent.CategoryId = updatedEvent.CategoryId;
             db.Entry(existingEvent).Property(e => e.ImagePath).IsModified = false;
 

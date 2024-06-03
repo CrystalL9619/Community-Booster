@@ -10,16 +10,16 @@
     <form method="POST" action="@Url.Action("Update", "Event", new { id = Model.SelectedEvent.EventId })" enctype="multipart/form-data">
         <input type="text" style="display:none;" name="EventId" value="@Model.SelectedEvent.EventId" />
         <div class="form-group mb-3">
-            <label>Title:</label> <input type="text" class="form-control" name="Title" value="@Model.SelectedEvent.Title" />
+            <label>Title:</label> <input type="text" class="form-control" name="Title" value="@Model.SelectedEvent.Title" required/>
         </div>
         <div class="form-group mb-3">
-            <label>Location:</label> <input type="text" class="form-control" name="Location" value="@Model.SelectedEvent.Location" />
+            <label>Location:</label> <input type="text" class="form-control" name="Location" value="@Model.SelectedEvent.Location" required/>
         </div>
         <div class="form-group mb-3">
-            <label> Date & Time:</label> <input type="text" class="form-control" name="EventDateTime" value="@Model.SelectedEvent.EventDateTime" />
+            <label> Date & Time:</label> <input type="text" class="form-control" name="EventDateTime" value="@Model.SelectedEvent.EventDateTime" required />
         </div>
         <div class="form-group mb-3">
-            <label> Capacity:</label> <input type="text" class="form-control" name="Capacity" value="@Model.SelectedEvent.Capacity" />
+            <label> Capacity:</label> <input type="text" class="form-control" name="Capacity" value="@Model.SelectedEvent.Capacity" required />
         </div>
         <div class="form-group mb-3">
             <label> Details:</label> <input type="text" class="form-control" name="Details" value="@Model.SelectedEvent.Details" />

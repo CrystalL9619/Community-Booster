@@ -69,7 +69,9 @@ namespace MyPassionProject.Controllers
 
             ViewModel.SelectedEvent = SelectedEvent;
 
+
             Debug.Write("ViewModel.SelectedEvent.CreatorId" + ViewModel.SelectedEvent.CreatorId);
+           
             //show associated ApplicationUsers with this Event
             /*
               url = "ApplicationUserData/ListApplicationUsersForEvent/" + convertedId;
@@ -92,9 +94,10 @@ namespace MyPassionProject.Controllers
 
             // Get current user
             // Current user object pass into view model
+            
             string currentUserId = User.Identity.GetUserId();
             ViewModel.CurrentUserId = currentUserId;
-
+ 
             return View(ViewModel);
         }
 
@@ -122,7 +125,8 @@ namespace MyPassionProject.Controllers
             HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";
             HttpResponseMessage response = client.PostAsync(url, content).Result;
-            
+
+           
             //if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             //{
               //  return View("AssociationResult");

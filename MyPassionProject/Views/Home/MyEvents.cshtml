@@ -55,9 +55,9 @@
             <br />
             if (User.Identity.IsAuthenticated)
             { <div class="button-container">
-                    <button class="button-yes" onclick="return confirmAssociate(@relatedEvent.EventId)">Join</button>
-                    <button class="button-no" onclick="return confirmUnAssociate(@relatedEvent.EventId)">Cancel</button>
-              </div>
+    @* <button class="button-yes" onclick="return confirmAssociate(@relatedEvent.EventId)">Join</button>*@
+    <button class="button-no" onclick="return confirmUnAssociate(@relatedEvent.EventId)">Cancel</button>
+</div>
             }
         }
     </div><!--end of card-container-->
@@ -115,7 +115,7 @@
 
                 var confirmed = confirm("What a pity! Hope to see you in another event!");
                 return confirmed;
-            }*@
+            }
         function confirmAssociate(eventId) {
             let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
             console.log('assoc url', url);
@@ -126,7 +126,7 @@
                     alert("Sorry!Event is Full")
                 }
             });
-        }
+        }*@
         function confirmUnAssociate(eventId) {
        @* var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
        if (!isAdmin) {
