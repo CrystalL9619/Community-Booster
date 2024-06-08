@@ -72,7 +72,7 @@
         <button class="button-no" onclick="return confirmUnAssociate()">Cancel</button>
     }
 </div>
-<div id="SeatsRemaining">Seats Remaining: @Model.SelectedEvent.Capacity</div>
+<div id="SeatsRemaining">Seats Remaining:  @Model.SelectedEvent.SeatsRemaining</div>
 <br />
 <hr />
 <div name="modify" style="display:none">
@@ -104,6 +104,7 @@
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
         } *@
+         let redirect = "@Url.Action("MyEvents", "Home")"
          let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
         console.log('assoc url', url);
         fetch(url, { method: 'POST' }).then(res => {
@@ -111,6 +112,7 @@
                 res.json().then(data => {
                     alert("Congratulations! You're in! Can't wait to see you there!");
                     document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+                    window.location.href = redirect
                 });
             } else {
                 alert("Sorry!Event is Full")
@@ -125,14 +127,15 @@
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
         }*@
-
+       let redirect = "@Url.Action("MyEvents", "Home")"
      let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
      console.log('unassoc url', url);
      fetch(url, { method: 'POST' }).then(res => {
          if (res.ok) {
              res.json().then(data => {
              alert("What a pity! Hope to see you in another event!");
-                 document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+             document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+                 window.location.href = redirect
              });
          } else {
              alert("Something went wrong, please try later!")

@@ -69,7 +69,7 @@ namespace MyPassionProject.Controllers
 
             ViewModel.SelectedEvent = SelectedEvent;
 
-
+       
             Debug.Write("ViewModel.SelectedEvent.CreatorId" + ViewModel.SelectedEvent.CreatorId);
            
             //show associated ApplicationUsers with this Event

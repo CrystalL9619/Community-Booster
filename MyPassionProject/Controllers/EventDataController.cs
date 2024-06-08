@@ -142,7 +142,7 @@ namespace MyPassionProject.Controllers
             //all events that have users which match with our ID
             
             List<Event> Events = db.Events.Where(
-                e => e.ApplicationUser.Any(
+                e => e.ApplicationUsers.Any(
                     a => a.Id == CurrentUserId
                 )).ToList();
              List<EventDto> EventDtos = new List<EventDto>();
@@ -209,7 +209,7 @@ namespace MyPassionProject.Controllers
             Debug.WriteLine("");
 
             Debug.WriteLine("EventDataControll.AssociateEventWithApplicationUser: Attempting to associate event:" + EventId + " with ApplicationUser " + CurrentUserId);
-            Event SelectedEvent = db.Events.Include(e => e.ApplicationUser).FirstOrDefault(e => e.EventId == EventId);
+            Event SelectedEvent = db.Events.Include(e => e.ApplicationUsers).FirstOrDefault(e => e.EventId == EventId);
             //ApplicationUser SelectedApplicationUser = db.ApplicationUsers.Find(UserId);
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
@@ -223,7 +223,7 @@ namespace MyPassionProject.Controllers
             try
             {
                 int eventCapacity = int.Parse(SelectedEvent.Capacity);
-                if (SelectedEvent.ApplicationUser.Count >= eventCapacity)
+                if (SelectedEvent.ApplicationUsers.Count >= eventCapacity)
                    
                 {
                     Debug.WriteLine("Sorry! The event is full");
@@ -238,9 +238,9 @@ namespace MyPassionProject.Controllers
                 //SQL equivalent:
                 //insert into EventApplicationUsers (EventId,UserId) values ({EventId}/{UserId})
 
-                SelectedEvent.ApplicationUser.Add(SelectedApplicationUser);
+                SelectedEvent.ApplicationUsers.Add(SelectedApplicationUser);
                 db.SaveChanges();
-                int SeatsRemaining = eventCapacity - SelectedEvent.ApplicationUser.Count;
+                int SeatsRemaining = eventCapacity - SelectedEvent.ApplicationUsers.Count;
                 Debug.WriteLine("Seats remaining: " + SeatsRemaining);
 
                 // Return the remaining seats in the response
@@ -260,7 +260,7 @@ namespace MyPassionProject.Controllers
         public IHttpActionResult UnAssociateEventWithApplicationUser(int EventId, string CurrentUserId)
         {
 
-            Event SelectedEvent = db.Events.Include(e => e.ApplicationUser).FirstOrDefault(e => e.EventId == EventId);
+            Event SelectedEvent = db.Events.Include(e => e.ApplicationUsers).FirstOrDefault(e => e.EventId == EventId);
             // ApplicationUser SelectedApplicationUser = db.ApplicationUsers.Find(CurrentUserId);
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
 
@@ -274,27 +274,37 @@ namespace MyPassionProject.Controllers
             }
 
 
-            SelectedEvent.ApplicationUser.Remove(SelectedApplicationUser);
+            SelectedEvent.ApplicationUsers.Remove(SelectedApplicationUser);
             db.SaveChanges();
             int eventCapacity = int.Parse(SelectedEvent.Capacity);
-            int SeatsRemaining = eventCapacity - SelectedEvent.ApplicationUser.Count;
+            int SeatsRemaining = eventCapacity - SelectedEvent.ApplicationUsers.Count;
             Debug.WriteLine("Seats remaining: " + SeatsRemaining);
 
             return Ok(new { SeatsRemaining });
         }
 
 
-        //FindEvent
-        // GET: api/EventData/FindEvent/2
         [ResponseType(typeof(EventDto))]
         [HttpGet]
         public IHttpActionResult FindEvent(int id)
         {
-            Event Event = db.Events.Find(id);
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            Event Event = db.Events.Include(e => e.ApplicationUsers).FirstOrDefault(e => e.EventId == id);
 
+            if (Event == null)
+            {
+                return NotFound();
+            }
+
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
             var creator = UserManager.FindById(Event.CreatorId);
             string creatorUserName = creator != null ? creator.UserName : "";
+
+            // Calculate remaining seats
+          
+            int seatsTaken = Event.ApplicationUsers.Count(); 
+            int Capacity = int.Parse(Event.Capacity);
+            int seatsRemaining = Capacity - seatsTaken;
+
             EventDto EventDto = new EventDto()
             {
                 EventId = Event.EventId,
@@ -306,24 +316,22 @@ namespace MyPassionProject.Controllers
                 CategoryId = Event.Category.CategoryId,
                 CategoryName = Event.Category.CategoryName,
                 CreatorId = Event.CreatorId,
-                CreatorUserName = creatorUserName
-
+                CreatorUserName = creatorUserName,
+                SeatsRemaining = seatsRemaining
             };
+
             Debug.WriteLine("Event" + EventDto.CreatorId);
             Debug.WriteLine("CreatorId" + Event.CreatorId);
-            if (Event == null)
-            {
-                return NotFound();
-            }
 
             return Ok(EventDto);
         }
 
 
+
         //AddEvent
         // POST: api/EventData/AddEvent
-  
-       [ResponseType(typeof(Event))]
+
+        [ResponseType(typeof(Event))]
        [HttpPost]
         public IHttpActionResult AddEvent(Event newEvent)
         {

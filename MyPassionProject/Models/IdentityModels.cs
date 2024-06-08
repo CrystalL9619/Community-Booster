@@ -30,19 +30,40 @@ namespace MyPassionProject.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
-        {
-        }
+       public ApplicationDbContext()
+           : base("DefaultConnection", throwIfV1Schema: false)
+       {
+       }
+      /*//Add an Event entity to our system
+       public DbSet<Event> Events { get; set; }
+
+
+
+       //Add an AppUser entity to our system
+       //public DbSet<AppUser> AppUsers { get; set; }
+       */
+
+        //Add an Category entity to our system
+        public DbSet<Category> Categories { get; set; }
+
         //Add an Event entity to our system
         public DbSet<Event> Events { get; set; }
 
-        //Add an Category entity to our system
-        public DbSet<Category>Categories { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        //Add an AppUser entity to our system
-        //public DbSet<AppUser> AppUsers { get; set; }
-
+            // Configure the many-to-many relationship
+            modelBuilder.Entity<Event>()
+                .HasMany(e => e.ApplicationUsers)
+                .WithMany(a => a.Events)
+                .Map(m =>
+                {
+                    m.ToTable("ApplicationUserEvents");
+                    m.MapLeftKey("Event_EventId");
+                    m.MapRightKey("ApplicationUser_Id");
+                });
+        }
 
         public static ApplicationDbContext Create()
         {

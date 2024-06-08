@@ -29,8 +29,8 @@ namespace MyPassionProject.Models
 
         //Many AppUsers involved in an event
         //public ICollection<AppUser> AppUsers { get; set; }
+        public ICollection<ApplicationUser> ApplicationUsers { get; set; }
 
-        public ICollection<ApplicationUser> ApplicationUser { get; set; }
         public string CreatorId { get; set; }
 
         //A event belongs to one category
@@ -57,5 +57,7 @@ namespace MyPassionProject.Models
         public string ImagePath { get; set; }
         public string CreatorId { get; set; }
         public string CreatorUserName { get; set; }
+
+        public int SeatsRemaining { get; set; }
     }
 }

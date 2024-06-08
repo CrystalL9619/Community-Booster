@@ -289,6 +289,14 @@
     <Compile Include="Migrations\202405072005393_CreatorId.designer.cs">
       <DependentUpon>202405072005393_CreatorId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202406072300097_MigrationName.cs" />
+    <Compile Include="Migrations\202406072300097_MigrationName.designer.cs">
+      <DependentUpon>202406072300097_MigrationName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202406072339014_ApplicationUserEventsRelationship.cs" />
+    <Compile Include="Migrations\202406072339014_ApplicationUserEventsRelationship.designer.cs">
+      <DependentUpon>202406072339014_ApplicationUserEventsRelationship.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
@@ -497,6 +505,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405072005393_CreatorId.resx">
       <DependentUpon>202405072005393_CreatorId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406072300097_MigrationName.resx">
+      <DependentUpon>202406072300097_MigrationName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406072339014_ApplicationUserEventsRelationship.resx">
+      <DependentUpon>202406072339014_ApplicationUserEventsRelationship.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
