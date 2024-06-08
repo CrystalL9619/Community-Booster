@@ -5,6 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
+using static MyPassionProject.Models.ApplicationUser;
 
 
 namespace MyPassionProject.Models
@@ -59,5 +60,6 @@ namespace MyPassionProject.Models
         public string CreatorUserName { get; set; }
 
         public int SeatsRemaining { get; set; }
+        public List<ApplicationUserDto> ApplicationUsers { get; set; }
     }
-}
+    }

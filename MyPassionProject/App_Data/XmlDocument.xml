@@ -493,7 +493,15 @@
             </returns>
             GET:api/EventData/ListEventsForCategory/1
         </member>
-        <!-- Badly formed XML comment ignored for member "M:MyPassionProject.Controllers.EventDataController.ListCreatedEventForUser(System.String)" -->
+        <member name="M:MyPassionProject.Controllers.EventDataController.ListCreatedEventForUser(System.String)">
+             <summary>
+             Gathers info about all users participate(associate) to a particular Event
+             </summary>
+             <param name="CurrentUserId">CurrentUserId</param>
+             <returns>
+            </returns>
+            GET:api/EventData/ListCreatedEventForUser/1
+        </member>
         <member name="M:MyPassionProject.Controllers.EventDataController.ListEventsForApplicationUser(System.String)">
              <summary>
              Gathers info about all events related to a particular UserId

@@ -89,9 +89,17 @@
                         </p>
                     </div><!--end of details-->
                 </div><!--end of event-->
+                <div class="list">
+                    <h3>Participants:</h3>
+                    @foreach (var user in createdEvent.ApplicationUsers)
+                    {
+                        <h2>@user.UserName</h2>
+                    }
+                </div>
             </div><!--end of eachone-->
         }
     </div>
+    
 </div>
 
 @section scripts {

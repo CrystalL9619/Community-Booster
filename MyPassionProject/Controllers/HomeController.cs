@@ -102,8 +102,9 @@ namespace MyPassionProject.Controllers
             Debug.WriteLine("It is going to" + listcreatedUrl);
             HttpResponseMessage listcreatedUrlResponse = client.GetAsync(listcreatedUrl).Result;
             List<EventDto> CreatedEvents = listcreatedUrlResponse.Content.ReadAsAsync<List<EventDto>>().Result;
+            
+            
 
-          
             var findEvent = new FindEvent
             {
                 CurrentUserId = CurrentUserId,

@@ -20,6 +20,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.AspNet.Identity.EntityFramework;
+using static MyPassionProject.Models.ApplicationUser;
 
 
 
@@ -87,26 +88,28 @@ namespace MyPassionProject.Controllers
             return Ok(EventDtos);
         }
         /// <summary>
-        /// https://localhost:44317/api/EventData/ListCreatedEventForUser?CurrentUserId={CurrentUserId}
-        /// <param name="CurrentUserId"></param>
-        /// <returns></returns>
+        /// Gathers info about all users participate(associate) to a particular Event
+        /// </summary>
+        /// <param name="CurrentUserId">CurrentUserId</param>
+        /// <returns>
+        ///</returns>
+        ///GET:api/EventData/ListCreatedEventForUser/1
+
         [HttpGet]
         [ResponseType(typeof(EventDto))]
         public IHttpActionResult ListCreatedEventForUser(string CurrentUserId)
         {
-            Debug.WriteLine($"{CurrentUserId}");    
-            // Ensure CurrentUserId is not null or empty
             if (string.IsNullOrEmpty(CurrentUserId))
             {
-               return BadRequest("CurrentUserId is required.");
+                return BadRequest("CurrentUserId is required.");
             }
 
-            // Retrieve events where CreatorId matches CurrentUserId
-            List<Event> Events = db.Events.Where(e => e.CreatorId == CurrentUserId).ToList();
+            var events = db.Events
+                           .Where(e => e.CreatorId == CurrentUserId)
+                           .Include(e => e.ApplicationUsers)
+                           .ToList();
 
-            List<EventDto> EventDtos = new List<EventDto>();
-
-            Events.ForEach(e => EventDtos.Add(new EventDto()
+            var eventDtos = events.Select(e => new EventDto
             {
                 EventId = e.EventId,
                 Title = e.Title,
@@ -116,11 +119,19 @@ namespace MyPassionProject.Controllers
                 Details = e.Details,
                 CategoryId = e.Category.CategoryId,
                 CategoryName = e.Category.CategoryName,
-                ImagePath = e.ImagePath
-            }));
+                ImagePath = e.ImagePath,
+                ApplicationUsers = e.ApplicationUsers.Select(u => new ApplicationUserDto
+                {
+                    UserId = u.Id,
+                    UserName = u.UserName
+                }).ToList()
+            }).ToList();
 
-            return Ok(EventDtos);
+            return Ok(eventDtos);
         }
+
+
+
 
         /// <summary>
         /// Gathers info about all events related to a particular UserId
@@ -129,7 +140,7 @@ namespace MyPassionProject.Controllers
         /// <returns>
         ///</returns>
         ///GET:api/EventData/ListEventsForApplicationUser/1
-        
+
         [HttpGet]
         [ResponseType(typeof(EventDto))]
         public IHttpActionResult ListEventsForApplicationUser(string CurrentUserId)
@@ -195,7 +206,7 @@ namespace MyPassionProject.Controllers
 
             //return Ok(Events);
         }
-
+   
 
 
             //AssociateEventWithApplicationUser

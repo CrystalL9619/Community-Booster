@@ -26,6 +26,12 @@ namespace MyPassionProject.Models
             }
             return userIdentity;
         }
+        public class ApplicationUserDto
+        {
+            public string UserId { get; set; }
+            public string UserName { get; set; }
+        }
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
