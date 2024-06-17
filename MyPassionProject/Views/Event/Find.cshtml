@@ -6,16 +6,41 @@
 
 }
 
-<a href="/Home/Index" class="btn bg-success-subtle">Go back to Home</a>
-<h2>@Model.SelectedEvent.Title</h2>
-<h4>Host:@Model.SelectedEvent.CreatorUserName</h4>
-<h4>Location: @Model.SelectedEvent.Location</h4>
-<h4>Event Time: @Model.SelectedEvent.EventDateTime</h4>
-<h4>Capacity: @Model.SelectedEvent.Capacity</h4>
-<h4>Details: @Model.SelectedEvent.Details</h4>
-<h4>Category:@Model.SelectedEvent.CategoryName</h4>
+<a href="/Home/Index" class="btn bg-success-subtle" >Go back to Home</a>
+<div class="card mt-5" style="width: 50%; height: 50%;" >
+    <div class="card-body">
+        <h2>@Model.SelectedEvent.Title</h2>
+        <table class="table table-striped table-striped-columns">
+            <tbody>
+                <tr>
+                    <th scope="row">Host</th>
+                    <td>@Model.SelectedEvent.CreatorUserName</td>
+                </tr>
+                <tr>
+                    <th scope="row">Location</th>
+                    <td>@Model.SelectedEvent.Location</td>
+                </tr>
+                <tr>
+                    <th scope="row">Event Time</th>
+                    <td>@Model.SelectedEvent.EventDateTime</td>
+                </tr>
+                <tr>
+                    <th scope="row">Capacity</th>
+                    <td>@Model.SelectedEvent.Capacity</td>
+                </tr>
+                <tr>
+                    <th scope="row">Details</th>
+                    <td>@Model.SelectedEvent.Details</td>
+                </tr>
+                <tr>
+                    <th scope="row">Category</th>
+                    <td>@Model.SelectedEvent.CategoryName</td>
+                </tr>
+            </tbody>
+        </table>
 
-
+    </div>
+</div>
 
 
 

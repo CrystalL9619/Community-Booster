@@ -1,7 +1,7 @@
 ﻿@model MyPassionProject.Models.ViewModels.FindEvent
 @{
     ViewBag.Title = "Account";
-   
+
 
 }
 
@@ -11,96 +11,106 @@
     <a href="@Url.Action("New", "Event")" class="btn btn-primary">Post Your Own Event</a>
 </div>
 
-<h2>The Event You're In</h2>
-<div>
-    <div class="card-container">
-        @foreach (var relatedEvent in Model.RelatedEvent)
-        {
-            <div class="eachone">
-                <div class="event">
-                    <div class="card" style="background-image: url('@relatedEvent.ImagePath');">
-                        <div class="content">
-                            <h2 id="eventTitle">@relatedEvent.Title</h2>
-                            <h3> Location : </h3>
-                            <p id="eventLocation">@relatedEvent.Location</p>
-                            <h3>Date: </h3>
-                            <p id="eventDate">@relatedEvent.EventDateTime</p>
-                            <h3> Capacity:</h3>
-                            <p id="eventCapacity">@relatedEvent.Capacity</p>
-                        </div>
-                    </div>
-                    <div class="details">
-                        <p class="threeD">Details:</p>
-                        <p class="breakdown threeD">
-                            @relatedEvent.Details
-                            <a href="/Event/Find/@relatedEvent.EventId">See More</a>
-                        </p>
-                    </div><!--end of details-->
-                </div><!--end of event-->
-            </div><!--end of eachone-->
-            @*
-                <div class="d-grid gap-4 d-md-block">
-                    <form method="POST" action="@Url.Action("Associate", "Home")">
-                        @Html.Hidden("EventId", relatedEvent.EventId)
-                        @Html.Hidden("CurrentUserId", Model.CurrentUserId)
-                        <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to join this event?')">Join</button>
-                    </form>
-                    <form method="POST" action="@Url.Action("UnAssociate", "Home")">
-                        @Html.Hidden("EventId", relatedEvent.EventId)
-                        @Html.Hidden("CurrentUserId", Model.CurrentUserId)
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel your participation in this event?')">Cancel</button>
-                    </form>
-                </div>
-            *@
-            <br />
-            if (User.Identity.IsAuthenticated)
-            { <div class="button-container">
-    @* <button class="button-yes" onclick="return confirmAssociate(@relatedEvent.EventId)">Join</button>*@
-    <button class="button-no" onclick="return confirmUnAssociate(@relatedEvent.EventId)">Cancel</button>
-</div>
-            }
-        }
-    </div><!--end of card-container-->
-</div>
+<h2 class="mt-5">The Event You're In</h2>
 
-<h2>The Event You Posted</h2>
-<div>
-    <div class="card-container">
-        @foreach (var createdEvent in Model.CreatedEvents)
-        {
-            <div class="eachone">
-                <div class="event">
-                    <div class="card" style="background-image: url('@createdEvent.ImagePath');">
-                        <div class="content">
-                            <h2 id="eventTitle">@createdEvent.Title</h2>
-                            <h3> Location : </h3>
-                            <p id="eventLocation">@createdEvent.Location</p>
-                            <h3>Date: </h3>
-                            <p id="eventDate">@createdEvent.EventDateTime</p>
-                            <h3> Capacity:</h3>
-                            <p id="eventCapacity">@createdEvent.Capacity</p>
+<div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+    @foreach (var relatedEvent in Model.RelatedEvent)
+    {
+        <div class="col">
+            <div>
+                <div class="eachone">
+                    <div class="event">
+                        <div class="card" style="background-image: url('@relatedEvent.ImagePath');">
+                            <div class="content">
+                                <h2 id="eventTitle">@relatedEvent.Title</h2>
+                                <h3>Location:</h3>
+                                <p id="eventLocation">@relatedEvent.Location</p>
+                                <h3>Date:</h3>
+                                <p id="eventDate">@relatedEvent.EventDateTime</p>
+                                <h3>Capacity:</h3>
+                                <p id="eventCapacity">@relatedEvent.Capacity</p>
+                            </div>
                         </div>
+                        <div class="details">
+                            <p class="threeD">Details:</p>
+                            <p class="breakdown threeD">
+                                @relatedEvent.Details
+                                <a href="/Event/Find/@relatedEvent.EventId">See More</a>
+                            </p>
+                        </div><!-- end of details -->
+                    </div><!-- end of event -->
+                </div><!-- end of eachone -->
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="button-container">
+                        @* <button class="button-yes" onclick="return confirmAssociate(@relatedEvent.EventId)">Join</button> *@
+                        <button class="button-no" onclick="return confirmUnAssociate(@relatedEvent.EventId)">Cancel</button>
                     </div>
-                    <div class="details">
-                        <p class="threeD">Details:</p>
-                        <p class="breakdown threeD">
-                            @createdEvent.Details
-                            <a href="/Event/Find/@createdEvent.EventId">See More</a>
-                        </p>
-                    </div><!--end of details-->
-                </div><!--end of event-->
-                <div class="list">
-                    <h3>Participants:</h3>
-                    @foreach (var user in createdEvent.ApplicationUsers)
-                    {
-                        <h2>@user.UserName</h2>
-                    }
-                </div>
-            </div><!--end of eachone-->
-        }
+                }
+            </div><!-- end of card -->
+        </div><!-- end of col -->
+    }
+</div><!-- end of row -->
+@*
+    <div class="d-grid gap-4 d-md-block">
+        <form method="POST" action="@Url.Action("Associate", "Home")">
+            @Html.Hidden("EventId", relatedEvent.EventId)
+            @Html.Hidden("CurrentUserId", Model.CurrentUserId)
+            <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to join this event?')">Join</button>
+        </form>
+        <form method="POST" action="@Url.Action("UnAssociate", "Home")">
+            @Html.Hidden("EventId", relatedEvent.EventId)
+            @Html.Hidden("CurrentUserId", Model.CurrentUserId)
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel your participation in this event?')">Cancel</button>
+        </form>
     </div>
-    
-</div>
+*@
+
+<hr />
+
+<h2 class="mt-5">The Event You Posted</h2>
+
+
+<div class="row row-cols-1 row-cols-md-1 g-4 mt-3">
+    @foreach (var createdEvent in Model.CreatedEvents)
+    {
+        <div class="col">
+            <div>
+                <div class="eachone">
+                    <div class="event">
+                        <div class="card" style="background-image: url('@createdEvent.ImagePath');">
+                            <div class="content">
+                                <h2 id="eventTitle">@createdEvent.Title</h2>
+                                <h3>Location:</h3>
+                                <p id="eventLocation">@createdEvent.Location</p>
+                                <h3>Date:</h3>
+                                <p id="eventDate">@createdEvent.EventDateTime</p>
+                                <h3>Capacity:</h3>
+                                <p id="eventCapacity">@createdEvent.Capacity</p>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <p class="threeD">Details:</p>
+                            <p class="breakdown threeD">
+                                @createdEvent.Details
+                                <a href="/Event/Find/@createdEvent.EventId">See More</a>
+                            </p>
+                        </div><!-- end of details -->
+                    </div><!-- end of event -->
+                    <div class="list">
+                        <h3>Participants:</h3>
+                        @foreach (var user in createdEvent.ApplicationUsers)
+                        {
+                            <h2>@user.UserName</h2>
+                        }
+                    </div>
+                </div><!-- end of eachone -->
+            </div><!-- end of card -->
+        </div><!-- end of col -->
+    }
+</div><!-- end of row -->
+
 
 @section scripts {
     <script>
