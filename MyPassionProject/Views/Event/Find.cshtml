@@ -6,42 +6,50 @@
 
 }
 
-<a href="/Home/Index" class="btn bg-success-subtle" >Go back to Home</a>
-<div class="card mt-5" style="width: 50%; height: 50%;" >
-    <div class="card-body">
-        <h2>@Model.SelectedEvent.Title</h2>
-        <table class="table table-striped table-striped-columns">
-            <tbody>
-                <tr>
-                    <th scope="row">Host</th>
-                    <td>@Model.SelectedEvent.CreatorUserName</td>
-                </tr>
-                <tr>
-                    <th scope="row">Location</th>
-                    <td>@Model.SelectedEvent.Location</td>
-                </tr>
-                <tr>
-                    <th scope="row">Event Time</th>
-                    <td>@Model.SelectedEvent.EventDateTime</td>
-                </tr>
-                <tr>
-                    <th scope="row">Capacity</th>
-                    <td>@Model.SelectedEvent.Capacity</td>
-                </tr>
-                <tr>
-                    <th scope="row">Details</th>
-                    <td>@Model.SelectedEvent.Details</td>
-                </tr>
-                <tr>
-                    <th scope="row">Category</th>
-                    <td>@Model.SelectedEvent.CategoryName</td>
-                </tr>
-            </tbody>
-        </table>
-
+<a href="/Home/Index" class="btn bg-success-subtle">Go back to Home</a>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2>@Model.SelectedEvent.Title</h2>
+                    <table class="table table-striped table-striped-columns">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Host</th>
+                                <td>@Model.SelectedEvent.CreatorUserName</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Location</th>
+                                <td id="location-cell">@Model.SelectedEvent.Location</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Event Time</th>
+                                <td>@Model.SelectedEvent.EventDateTime</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Capacity</th>
+                                <td>@Model.SelectedEvent.Capacity</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Details</th>
+                                <td>@Model.SelectedEvent.Details</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Category</th>
+                                <td>@Model.SelectedEvent.CategoryName</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> 
+        <div style="width:500px; height: 400px;">
+            @Html.Action("Map", "Event")
+        </div>
+        
     </div>
 </div>
-
 
 
 @*
@@ -122,64 +130,65 @@
 <br />
 @section scripts {
     <script>
+      
 
 
     function confirmAssociate() {
-        @*var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
+    @*var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
         } *@
-         let redirect = "@Url.Action("MyEvents", "Home")"
-         let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
-        console.log('assoc url', url);
-        fetch(url, { method: 'POST' }).then(res => {
-            if (res.ok) {
-                res.json().then(data => {
-                    alert("Congratulations! You're in! Can't wait to see you there!");
-                    document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
-                    window.location.href = redirect
-                });
-            } else {
-                alert("Sorry!Event is Full")
-            }
-        });
+    let redirect = "@Url.Action("MyEvents", "Home")"
+    let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+    console.log('assoc url', url);
+    fetch(url, { method: 'POST' }).then(res => {
+    if (res.ok) {
+    res.json().then(data => {
+    alert("Congratulations! You're in! Can't wait to see you there!");
+    document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+    window.location.href = redirect
+    });
+    } else {
+    alert("Sorry!Event is Full")
+    }
+    });
 
     }
 
 
     function confirmUnAssociate() {
-       @* var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
+    @* var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
         }*@
-       let redirect = "@Url.Action("MyEvents", "Home")"
-     let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
-     console.log('unassoc url', url);
-     fetch(url, { method: 'POST' }).then(res => {
-         if (res.ok) {
-             res.json().then(data => {
-             alert("What a pity! Hope to see you in another event!");
-             document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
-                 window.location.href = redirect
-             });
-         } else {
-             alert("Something went wrong, please try later!")
-         }
-         });
-        }
-        console.log("curr usr  id","@Model.CurrentUserId");
-        console.log("creater id","@Model.SelectedEvent.CreatorId");
+    let redirect = "@Url.Action("MyEvents", "Home")"
+    let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+    console.log('unassoc url', url);
+    fetch(url, { method: 'POST' }).then(res => {
+    if (res.ok) {
+    res.json().then(data => {
+    alert("What a pity! Hope to see you in another event!");
+    document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+    window.location.href = redirect
+    });
+    } else {
+    alert("Something went wrong, please try later!")
+    }
+    });
+    }
+    console.log("curr usr  id","@Model.CurrentUserId");
+    console.log("creater id","@Model.SelectedEvent.CreatorId");
 
     document.addEventListener("DOMContentLoaded", function () {
-        const modify = document.querySelector('[name="modify"]');
-        const forAttendee = document.querySelector('[name="ForAttendee"]');
-        if ("@Model.CurrentUserId" === "@Model.SelectedEvent.CreatorId") {
-                console.log("@Model.CurrentUserId");
-                console.log("@Model.SelectedEvent.CreatorId");
-            modify.style.display = "block";
-            forAttendee.style.display = "none";
-            }
-        });
+    const modify = document.querySelector('[name="modify"]');
+    const forAttendee = document.querySelector('[name="ForAttendee"]');
+    if ("@Model.CurrentUserId" === "@Model.SelectedEvent.CreatorId") {
+    console.log("@Model.CurrentUserId");
+    console.log("@Model.SelectedEvent.CreatorId");
+    modify.style.display = "block";
+    forAttendee.style.display = "none";
+    }
+    });
     </script>
 
 }

@@ -406,8 +406,11 @@ namespace MyPassionProject.Controllers
 
 
         }
-        
+        [HttpGet]
+        public ActionResult Map()
+        {
+            return PartialView("_Map");
 
-
+        }
     }
 }

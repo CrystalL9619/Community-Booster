@@ -442,6 +442,7 @@
     <Content Include="Views\Event\New.cshtml" />
     <Content Include="Views\Home\MyEvents.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
+    <Content Include="Views\Shared\_Map.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Images\" />

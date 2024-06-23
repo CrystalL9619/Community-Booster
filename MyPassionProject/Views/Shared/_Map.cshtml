@@ -1,0 +1,89 @@
+﻿<head>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTgtAB4V_2DIVb_vhX1dcJc9c8t88HmMg&libraries=places,marker"></script>
+</head>
+
+<div>
+    <div id="fordragging">
+        <input type='text' name='search' id='searchBar' style="width:200px; height: 50px;" placeholder='Search for a Location' />
+    </div>
+    <div id="map" style="width: 500px; height: 400px;"></div>
+</div>
+
+<script>
+    let map;
+    let marker;
+
+    async function initMap() {
+        const toronto = { lat: 43.7, lng: -79.42 };
+
+        if (!document.getElementById("map")) {
+            return;
+        }
+
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 10,
+            center: toronto,
+            mapId: "65daadea8544bb6a", 
+            zoomControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.LEFT_BOTTOM
+            }
+        });
+
+        try {
+            marker = await createAdvancedMarker(toronto, "Toronto");
+        } catch (error) {
+            console.log("Error creating marker:", error);
+        }
+
+        const input = document.getElementById("searchBar");
+        //map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+        const autocomplete = new google.maps.places.Autocomplete(input);
+
+        autocomplete.addListener("place_changed", async () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry || !place.geometry.location) {
+                console.log("No location found for the selected place.");
+                return;
+            }
+
+            const newPlace = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
+
+            map.setCenter(newPlace);
+            map.setZoom(15);
+
+            try {
+                await updateAdvancedMarker(newPlace, place.name);
+            } catch (error) {
+                console.log("Error updating marker:", error);
+            }
+        });
+    }
+
+    async function createAdvancedMarker(position, title) {
+        return new google.maps.marker.AdvancedMarkerElement({
+            map,
+            position,
+            title,
+            mapId: "65daadea8544bb6a" 
+        });
+    }
+
+    async function updateAdvancedMarker(position, title) {
+        marker.setMap(null); // Remove previous marker
+        marker = await createAdvancedMarker(position, title); // Create new marker
+    }
+
+    window.addEventListener("load", async () => {
+        try {
+            await initMap();
+        } catch (error) {
+            console.error("Error in initMap:", error);
+        }
+    });
+
+</script>

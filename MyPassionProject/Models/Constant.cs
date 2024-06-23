@@ -9,7 +9,7 @@ namespace MyPassionProject.Models
     public class Constant
     {
         public static string BaseUrl = "https://mypassionproject20240517013016.azurewebsites.net/api/";
-       //public static string BaseUrl = "https://localhost:44318/api/";
+        //public static string BaseUrl = "https://localhost:44318/api/";
         public string name = "";
     }
 }
