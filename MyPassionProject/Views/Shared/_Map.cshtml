@@ -1,12 +1,24 @@
 ﻿<head>
     <script src="~/Scripts/jquery-3.7.1.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTgtAB4V_2DIVb_vhX1dcJc9c8t88HmMg&libraries=places,marker"></script>
+    
 </head>
 
 <div>
-    <div id="fordragging">
-        <input type='text' name='search' id='searchBar' style="width:200px; height: 50px;" placeholder='Search for a Location' />
-    </div>
+   
+    <nav class="navbar bg-body-tertiary" style="width: 500px">
+        <form class="container-fluid justify-content-between align-items-center">
+            @*<button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/car-front-fillCar.svg" alt="Car Icon" onclick="calculateAndDisplayRoute('DRIVING')"></button>
+        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/truck-front.svg" alt="Bus Icon" onclick="calculateAndDisplayRoute('TRANSIT')"></button>
+        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/scooter.svg" alt="Bike Icon" onclick="calculateAndDisplayRoute('BICYCLING')"></button>
+        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/person-walking.svg" alt="Walking Icon" onclick="calculateAndDisplayRoute('WALKING')"></button>
+        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/person-raised-hand.svg" alt="Taxi Icon"></button>*@
+            <div id="fordragging" style="margin-left: auto; ">
+                <input type='text' name='search' id='searchBar' style="width:200px; height: 50px;" placeholder='Search for a Location' />
+            </div>
+        </form>
+    </nav>
+
     <div id="map" style="width: 500px; height: 400px;"></div>
 </div>
 
@@ -61,22 +73,28 @@
             } catch (error) {
                 console.log("Error updating marker:", error);
             }
+           
         });
     }
 
     async function createAdvancedMarker(position, title) {
         return new google.maps.marker.AdvancedMarkerElement({
-            map,
-            position,
-            title,
+            map: map,
+            position: position,
+            title: title,
             mapId: "65daadea8544bb6a" 
         });
     }
 
     async function updateAdvancedMarker(position, title) {
-        marker.setMap(null); // Remove previous marker
-        marker = await createAdvancedMarker(position, title); // Create new marker
+        if (marker) {
+            marker.setMap(null); // Remove previous marker if it exists
+        }
+        marker = await createAdvancedMarker(position, title); 
+        //marker.setMap(null); // Remove previous marker
+        //marker = await createAdvancedMarker(position, title); // Create new marker
     }
+    
 
     window.addEventListener("load", async () => {
         try {
