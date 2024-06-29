@@ -1,19 +1,30 @@
 ﻿<head>
-    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTgtAB4V_2DIVb_vhX1dcJc9c8t88HmMg&libraries=places,marker"></script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTgtAB4V_2DIVb_vhX1dcJc9c8t88HmMg&libraries=places,marker,geometry&callback=initMap"></script>
+
 </head>
 
+
 <div>
-   
     <nav class="navbar bg-body-tertiary" style="width: 500px">
         <form class="container-fluid justify-content-between align-items-center">
-            @*<button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/car-front-fillCar.svg" alt="Car Icon" onclick="calculateAndDisplayRoute('DRIVING')"></button>
-        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/truck-front.svg" alt="Bus Icon" onclick="calculateAndDisplayRoute('TRANSIT')"></button>
-        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/scooter.svg" alt="Bike Icon" onclick="calculateAndDisplayRoute('BICYCLING')"></button>
-        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/person-walking.svg" alt="Walking Icon" onclick="calculateAndDisplayRoute('WALKING')"></button>
-        <button class="btn btn-outline-success me-2" type="button"><img src="/Content/Images/Google Map Icons/person-raised-hand.svg" alt="Taxi Icon"></button>*@
-            <div id="fordragging" style="margin-left: auto; ">
+            <button id="drivingBtn" class="btn btn-outline-success me-2" type="button">
+                <img src="/Content/Images/Google Map Icons/car-front-fillCar.svg" alt="Car Icon">
+            </button>
+            <button id="transitBtn" class="btn btn-outline-success me-2" type="button">
+                <img src="/Content/Images/Google Map Icons/truck-front.svg" alt="Bus Icon">
+            </button>
+            <button id="bicyclingBtn" class="btn btn-outline-success me-2" type="button">
+                <img src="/Content/Images/Google Map Icons/scooter.svg" alt="Bike Icon">
+            </button>
+            <button id="walkingBtn" class="btn btn-outline-success me-2" type="button">
+                <img src="/Content/Images/Google Map Icons/person-walking.svg" alt="Walking Icon">
+            </button>
+            <button id="taxiBtn" class="btn btn-outline-success me-2" type="button">
+                <img src="/Content/Images/Google Map Icons/person-raised-hand.svg" alt="Taxi Icon">
+            </button>
+
+            <div id="fordragging" style="margin-left: auto;">
                 <input type='text' name='search' id='searchBar' style="width:200px; height: 50px;" placeholder='Search for a Location' />
             </div>
         </form>
@@ -25,83 +36,164 @@
 <script>
     let map;
     let marker;
+    let directionsService;
+    let directionsRenderer;
+    let currentInfoWindow = null;
+    let destination = null;
+
+    // Event listeners for travel mode buttons
+    document.getElementById('drivingBtn').addEventListener('click', () => {
+        handleTravelModeChange('DRIVING');
+    });
+
+    document.getElementById('walkingBtn').addEventListener('click', () => {
+        handleTravelModeChange('WALKING');
+    });
+
+    document.getElementById('bicyclingBtn').addEventListener('click', () => {
+        handleTravelModeChange('BICYCLING');
+    });
+
+    document.getElementById('transitBtn').addEventListener('click', () => {
+        handleTravelModeChange('TRANSIT');
+    });
+
+    document.getElementById('taxiBtn').addEventListener('click', () => {
+        handleTravelModeChange('DRIVING'); // Taxi uses driving mode
+    });
 
     async function initMap() {
-        const toronto = { lat: 43.7, lng: -79.42 };
-
-        if (!document.getElementById("map")) {
-            return;
-        }
-
         map = new google.maps.Map(document.getElementById("map"), {
             zoom: 10,
-            center: toronto,
-            mapId: "65daadea8544bb6a", 
+            center: { lat: 0, lng: 0 }, // Default center before geolocation
+            mapId: "65daadea8544bb6a", // Replace with your map ID if necessary
             zoomControl: true,
             zoomControlOptions: {
                 position: google.maps.ControlPosition.LEFT_BOTTOM
             }
         });
 
-        try {
-            marker = await createAdvancedMarker(toronto, "Toronto");
-        } catch (error) {
-            console.log("Error creating marker:", error);
+        // Try to get user's current location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                map.setCenter(userLocation);
+                createMarker(userLocation, "Your Location");
+            }, (error) => {
+                console.error('Geolocation error:', error);
+            });
+        } else {
+            console.error('Geolocation not supported');
         }
 
+        // Initialize DirectionsService and DirectionsRenderer
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer({
+            map: map,
+            suppressMarkers: true, // Suppress default markers
+            preserveViewport: true // Preserve the map viewport
+        });
+
         const input = document.getElementById("searchBar");
-        //map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
         const autocomplete = new google.maps.places.Autocomplete(input);
 
-        autocomplete.addListener("place_changed", async () => {
+        autocomplete.addListener("place_changed", () => {
             const place = autocomplete.getPlace();
             if (!place.geometry || !place.geometry.location) {
                 console.log("No location found for the selected place.");
                 return;
             }
 
-            const newPlace = {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-            };
-
-            map.setCenter(newPlace);
-            map.setZoom(15);
-
-            try {
-                await updateAdvancedMarker(newPlace, place.name);
-            } catch (error) {
-                console.log("Error updating marker:", error);
-            }
-           
+            destination = place.geometry.location;
+            calculateAndDisplayRoute(destination);
         });
     }
 
-    async function createAdvancedMarker(position, title) {
-        return new google.maps.marker.AdvancedMarkerElement({
-            map: map,
+    function createMarker(position, title) {
+        if (marker && marker.map) {
+            marker.map = null; // Remove existing marker if any
+        }
+
+        marker = new google.maps.marker.AdvancedMarkerElement({
             position: position,
-            title: title,
-            mapId: "65daadea8544bb6a" 
+            map: map,
+            title: title
         });
     }
 
-    async function updateAdvancedMarker(position, title) {
-        if (marker) {
-            marker.setMap(null); // Remove previous marker if it exists
-        }
-        marker = await createAdvancedMarker(position, title); 
-        //marker.setMap(null); // Remove previous marker
-        //marker = await createAdvancedMarker(position, title); // Create new marker
-    }
-    
+    async function calculateAndDisplayRoute(destination, travelMode = 'DRIVING') {
+        console.log("Calculating route to destination:", destination);
 
-    window.addEventListener("load", async () => {
+        // Clear previous directions if any
+        directionsRenderer.setDirections({ routes: [] });
+
         try {
-            await initMap();
-        } catch (error) {
-            console.error("Error in initMap:", error);
-        }
-    });
+            const result = await new Promise((resolve, reject) => {
+                directionsService.route(
+                    {
+                        origin: marker ? marker.position : map.getCenter(),
+                        destination: destination,
+                        travelMode: google.maps.TravelMode[travelMode]
+                    },
+                    (result, status) => {
+                        if (status === "OK") {
+                            resolve(result);
+                        } else {
+                            reject(status);
+                        }
+                    }
+                );
+            });
 
+            // Display the route
+            directionsRenderer.setDirections(result);
+            
+
+            const route = result.routes[0];
+            const leg = route.legs[0];
+
+            // Set zoom and center
+            map.fitBounds(route.bounds);
+
+            // Update info window
+            if (currentInfoWindow) {
+                currentInfoWindow.close();
+            }
+            currentInfoWindow = new google.maps.InfoWindow({
+                content: `<div><strong>Distance:</strong> ${leg.distance.text}<br><strong>Duration:</strong> ${leg.duration.text}</div>`,
+                position: destination
+            });
+            currentInfoWindow.open(map);
+            new google.maps.marker.AdvancedMarkerElement({
+                position:destination ,
+                map: map,
+                title: 'Destination',
+                //mapId: "65daadea8544bb6a" 
+            });
+
+            console.log("Route displayed successfully");
+        } catch (error) {
+            console.error("Error calculating route:", error);
+            window.alert("Error calculating route. Please try again.");
+        }
+    }
+    async function handleTravelModeChange(travelMode) {
+        if (!destination) {
+            window.alert("Please select a destination first.");
+            return;
+        }
+
+        console.log("Changing travel mode to:", travelMode);
+        calculateAndDisplayRoute(destination, travelMode);
+    }
+
+    window.addEventListener("load", () => {
+        initMap().catch(error => {
+            console.error("Error in initMap:", error);
+        });
+    });
 </script>
