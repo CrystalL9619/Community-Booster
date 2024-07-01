@@ -208,6 +208,10 @@ h3 {
     left: 55%;
     transform: translateX(-50%) translateY(-50%) translateZ(60px);
 }
+.content p {
+    margin:0;
+    padding:0;
+}
 
 .event .details {
     width: 300px;
@@ -236,10 +240,12 @@ h3 {
         line-height: 30px;
         padding: 15px 5px;
         letter-spacing: 2px;
+       
     }
-
-.event .card,
-.event .details {
+        .event .details .breakdown p {
+            max-height: 250px;
+        }
+        .event .card, .event .details {
     position: absolute;
     top: 0;
     left: 0;
