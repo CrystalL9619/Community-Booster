@@ -42,12 +42,23 @@
                         </tbody>
                     </table>
                 </div>
+                <br />
+                <div name="ForAttendee">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <button class="button-yes" onclick="return confirmAssociate()">Join</button>
+
+                        <button class="button-no" onclick="return confirmUnAssociate()">Cancel</button>
+                    }
+                </div>
+                <div id="SeatsRemaining">Seats Remaining:  @Model.SelectedEvent.SeatsRemaining</div>
+                <br />
             </div>
-        </div> 
+        </div>
         <div style="width:500px; height: 400px;">
             @Html.Action("Map", "Event")
         </div>
-        
+
     </div>
 </div>
 
@@ -95,19 +106,7 @@
         </form>
     </div>
 *@
-<br />
 
-<div name="ForAttendee">
-    @if (User.Identity.IsAuthenticated)
-    {
-        <button class="button-yes" onclick="return confirmAssociate()">Join</button>
-
-        <button class="button-no" onclick="return confirmUnAssociate()">Cancel</button>
-    }
-</div>
-<div id="SeatsRemaining">Seats Remaining:  @Model.SelectedEvent.SeatsRemaining</div>
-<br />
-<hr />
 <div name="modify" style="display:none">
     <br />
     <div>
@@ -130,30 +129,37 @@
 <br />
 @section scripts {
     <script>
-      
 
+        function confirmAssociate() {
 
-    function confirmAssociate() {
-    @*var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
-        if (!isAdmin) {
-            return true; // Proceed with form submission without confirmation
-        } *@
-    let redirect = "@Url.Action("MyEvents", "Home")"
-    let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
-    console.log('assoc url', url);
-    fetch(url, { method: 'POST' }).then(res => {
-    if (res.ok) {
-    res.json().then(data => {
-    alert("Congratulations! You're in! Can't wait to see you there!");
-    document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
-    window.location.href = redirect
-    });
-    } else {
-    alert("Sorry!Event is Full")
-    }
-    });
+            let redirect = "@Url.Action("MyEvents", "Home")";
 
-    }
+            let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+
+            console.log('assoc url', url);
+
+            fetch(url, { method: 'POST' }).then(res => {
+                if (res.ok) {
+                    res.json().then(data => {
+                        alert("Congratulations! You're in! Can't wait to see you there!");
+                        document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+
+                        let bodyObj = data;
+                        console.log('Selected Event:', bodyObj);
+                        let toAddress = data.CurrentUserEmail;
+                        console.log(toAddress);
+                        let subject = 'Confirm Your Participation';
+                        console.log(subject);
+
+                        sendEmailWithEventDetails(toAddress, subject, bodyObj);
+                        //window.location.href = redirect;
+                    });
+                } else {
+                    alert("Sorry! Event is Full");
+                }
+            });
+        }
+
 
 
     function confirmUnAssociate() {
@@ -168,7 +174,7 @@
     if (res.ok) {
     res.json().then(data => {
     alert("What a pity! Hope to see you in another event!");
-    document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+        document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
     window.location.href = redirect
     });
     } else {
@@ -189,6 +195,43 @@
     forAttendee.style.display = "none";
     }
     });
+
+       function sendEmailWithEventDetails(toAddress, subject, bodyObj) {
+    let url = '@Url.Action("SendEmail", "Home")';
+
+    // Convert the body object to a formatted string
+            let bodyString = `
+        Event: ${bodyObj.Title}
+        Date: ${new Date(bodyObj.EventDateTime).toLocaleString()}
+        Location: ${bodyObj.Location}
+        Details: ${bodyObj.Details}
+        Seats Remaining: ${bodyObj.SeatsRemaining}
+            `;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            toAddress: toAddress,
+            subject: subject,
+            body: bodyString
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Email sent successfully');
+        } else {
+            return response.text().then(text => {
+                throw new Error(text);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error sending email:', error);
+    });
+}
     </script>
 
 }

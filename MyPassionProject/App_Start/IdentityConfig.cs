@@ -21,6 +21,11 @@ namespace MyPassionProject
             // Plug in your email service here to send an email.
             return Task.FromResult(0);
         }
+
+        internal Task SendEmailAsync(string toEmail, string subject, string htmlContent)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class SmsService : IIdentityMessageService

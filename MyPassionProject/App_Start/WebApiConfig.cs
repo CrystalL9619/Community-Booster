@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace MyPassionProject
 {
@@ -27,7 +28,7 @@ namespace MyPassionProject
             );
             // Inside WebApiConfig.cs or Global.asax.cs
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
-
+           
         }
     }
 }

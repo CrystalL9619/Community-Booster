@@ -21,6 +21,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.AspNet.Identity.EntityFramework;
 using static MyPassionProject.Models.ApplicationUser;
+using System.Web.Http.Cors;
+using MyPassionProject.Models.ViewModels;
 
 
 
@@ -227,6 +229,8 @@ namespace MyPassionProject.Controllers
 
             //Fetch the User Details by UserId using the FindById method
             ApplicationUser SelectedApplicationUser = UserManager.FindById(CurrentUserId);
+            string currentUserEmail=SelectedApplicationUser.Email;
+
             if (SelectedEvent == null || SelectedApplicationUser == null)
             {
                 return NotFound();
@@ -254,8 +258,25 @@ namespace MyPassionProject.Controllers
                 int SeatsRemaining = eventCapacity - SelectedEvent.ApplicationUsers.Count;
                 Debug.WriteLine("Seats remaining: " + SeatsRemaining);
 
-                // Return the remaining seats in the response
-                return Ok(new { SeatsRemaining });
+                var creator = UserManager.FindById(SelectedEvent.CreatorId);
+                string creatorUserName = creator != null ? creator.UserName : "";
+                EventDto  EventDto= new EventDto()
+                {
+                    EventId = SelectedEvent.EventId,
+                    Title = SelectedEvent.Title,
+                    Location = SelectedEvent.Location,
+                    EventDateTime = SelectedEvent.EventDateTime,
+                    Capacity = SelectedEvent.Capacity,
+                    Details = SelectedEvent.Details,
+                    CategoryId = SelectedEvent.Category.CategoryId,
+                    CategoryName = SelectedEvent.Category.CategoryName,
+                    CreatorId = SelectedEvent.CreatorId,
+                    CreatorUserName = creatorUserName,
+                    SeatsRemaining = SeatsRemaining,
+                    CurrentUserEmail= currentUserEmail
+                };
+
+                return Ok(EventDto);
             }
             catch (Exception e)
             {

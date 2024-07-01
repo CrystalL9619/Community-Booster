@@ -13,6 +13,14 @@ using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using System.Diagnostics;
 using System.Security.Policy;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System.Configuration;
+using MailKit.Net.Smtp;
+using MimeKit;
+using static System.Net.Mime.MediaTypeNames;
+using System.Net;
+
 
 namespace MyPassionProject.Controllers
 {
@@ -20,12 +28,56 @@ namespace MyPassionProject.Controllers
     {
         private static readonly HttpClient client;
         private JavaScriptSerializer jss = new JavaScriptSerializer();
-
+     
         static HomeController()
         {
             client = new HttpClient();
             client.BaseAddress = new System.Uri(Constant.BaseUrl);
+           
         }
+      
+        [HttpPost]
+        public ActionResult SendEmail(string toAddress, string subject, string body)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"To: {toAddress}");
+                System.Diagnostics.Debug.WriteLine($"Subject: {subject}");
+                System.Diagnostics.Debug.WriteLine($"Body: {body}");
+
+                string smtpServer = ConfigurationManager.AppSettings["SmtpServer"];
+                int smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+                string smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"];
+                string smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
+
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("Community Booster", smtpUsername)); // Display name and sender email
+                message.To.Add(new MailboxAddress("", toAddress)); // Recipient email
+
+                message.Subject = subject;
+                message.Body = new TextPart("plain")
+                {
+                    Text = body
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect(smtpServer, smtpPort, useSsl: true);
+                    client.Authenticate(smtpUsername, smtpPassword);
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+
+                return Content("Email sent successfully!");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Exception: {ex.Message}");
+                Response.StatusCode = 400; // Bad Request status code
+                return Content($"Error sending email: {ex.Message}");
+            }
+        }
+
         public ActionResult Index()
         {
             //send request event data controller -> list event for category
@@ -170,10 +222,7 @@ namespace MyPassionProject.Controllers
                 Debug.WriteLine($"An error occurred: {ex.Message}");
                 return View("Error");
             }
-        }
-
-
-
-
-    }
+        }      
+    
+}
 }

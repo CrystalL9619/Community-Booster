@@ -58,7 +58,7 @@ namespace MyPassionProject.Models
         public string ImagePath { get; set; }
         public string CreatorId { get; set; }
         public string CreatorUserName { get; set; }
-
+        public string CurrentUserEmail { get; set; }
         public int SeatsRemaining { get; set; }
         public List<ApplicationUserDto> ApplicationUsers { get; set; }
     }
