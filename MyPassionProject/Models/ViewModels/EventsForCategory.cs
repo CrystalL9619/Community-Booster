@@ -9,5 +9,10 @@ namespace MyPassionProject.Models.ViewModels
     {
         public IEnumerable<EventDto> FunEvents { get; set; }
         public IEnumerable<EventDto> FareEvents { get; set; }
+
+        public IEnumerable<EventDto> SortedEvents { get; set; }
+        public string visibleCategory { get; set; }
+        public string SortType { get; set; }
+
     }
 }

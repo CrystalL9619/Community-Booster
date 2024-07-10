@@ -18,5 +18,6 @@ namespace MyPassionProject.Models.ViewModels
         //public IEnumerable<AppUserDto> ParticipatingUsers { get; set; }
 
         //public IEnumerable<AppUserDto> NotPaticipatingUsers { get; set; }
+  
     }
 }

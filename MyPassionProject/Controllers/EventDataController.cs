@@ -78,6 +78,7 @@ namespace MyPassionProject.Controllers
             {
                 EventId = e.EventId,
                 Title = e.Title,
+                UpdateDate=e.UpdateDate,
                 Location = e.Location,
                 EventDateTime = e.EventDateTime,
                 Capacity = e.Capacity,
@@ -115,6 +116,7 @@ namespace MyPassionProject.Controllers
             {
                 EventId = e.EventId,
                 Title = e.Title,
+                UpdateDate = e.UpdateDate,
                 Location = e.Location,
                 EventDateTime = e.EventDateTime,
                 Capacity = e.Capacity,
@@ -164,6 +166,7 @@ namespace MyPassionProject.Controllers
             {
                 EventId = e.EventId,
                 Title = e.Title,
+                UpdateDate = e.UpdateDate,
                 Location = e.Location,
                 EventDateTime = e.EventDateTime,
                 Capacity = e.Capacity,
@@ -264,6 +267,7 @@ namespace MyPassionProject.Controllers
                 {
                     EventId = SelectedEvent.EventId,
                     Title = SelectedEvent.Title,
+                    UpdateDate = SelectedEvent.UpdateDate,
                     Location = SelectedEvent.Location,
                     EventDateTime = SelectedEvent.EventDateTime,
                     Capacity = SelectedEvent.Capacity,
@@ -341,6 +345,7 @@ namespace MyPassionProject.Controllers
             {
                 EventId = Event.EventId,
                 Title = Event.Title,
+                UpdateDate = Event.UpdateDate,
                 Location = Event.Location,
                 EventDateTime = Event.EventDateTime,
                 Capacity = Event.Capacity,
@@ -363,7 +368,7 @@ namespace MyPassionProject.Controllers
         //AddEvent
         // POST: api/EventData/AddEvent
 
-        [ResponseType(typeof(Event))]
+       [ResponseType(typeof(Event))]
        [HttpPost]
         public IHttpActionResult AddEvent(Event newEvent)
         {
@@ -490,8 +495,8 @@ namespace MyPassionProject.Controllers
             // existingEvent.UpdateDate = updatedEvent.UpdateDate != default
             // ? updatedEvent.UpdateDate
             //: existingEvent.UpdateDate; I leart that this patten is a short version of if statement. The patten A?B:C means if A then B , else C;
-            // The update datetime should be current datetime, however, since it is a MVP ,I just leave it as original one for now
-            existingEvent.UpdateDate = DateTime.Now;
+
+            existingEvent.UpdateDate = DateTime.UtcNow;
             existingEvent.Title = updatedEvent.Title ?? existingEvent.Title;//I learnt that this patten is a short version of another if statement. The patten A=B??C means If B is not null, let A=B, otherwise use A=C
             existingEvent.Location = updatedEvent.Location ?? existingEvent.Location;
             existingEvent.EventDateTime = updatedEvent.EventDateTime != default
@@ -552,6 +557,7 @@ namespace MyPassionProject.Controllers
             Debug.WriteLine("I wanna know:"+lowercaseQuery);
             var events = db.Events.Where(e =>
                 e.Title.ToLower().Contains(lowercaseQuery) ||
+                e.UpdateDate.ToString().Contains(lowercaseQuery) ||
                 e.Location.ToLower().Contains(lowercaseQuery) ||
                 e.Details.ToLower().Contains(lowercaseQuery) ||
                 e.Category.CategoryName.ToLower().Contains(lowercaseQuery) ||
@@ -562,6 +568,7 @@ namespace MyPassionProject.Controllers
             {
                 EventId = e.EventId,
                 Title = e.Title,
+                UpdateDate = e.UpdateDate,
                 Location = e.Location,
                 EventDateTime = e.EventDateTime,
                 Capacity = e.Capacity,

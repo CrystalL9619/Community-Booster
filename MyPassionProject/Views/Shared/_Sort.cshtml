@@ -1,0 +1,143 @@
+﻿@model MyPassionProject.Models.ViewModels.EventsForCategory
+
+@{
+    ViewBag.Title = "_Sort";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTgtAB4V_2DIVb_vhX1dcJc9c8t88HmMg&libraries=places,marker,geometry"></script>
+<link href="~/CSS/index.css" rel="stylesheet" />
+
+<div id="eventContainer">
+    <div class="row row-cols-md-3 g-4 mt-3">
+        @foreach (var Event in Model.SortedEvents)
+        {
+            <div class="col">
+                <div class="eachone">
+                    <div class="event" data-location="@Event.Location">
+                        <div class="card" style="background-image: url('@Event.ImagePath');">
+                            <div class="content">
+                                <h4 id="eventTitle">@Event.Title</h4>
+                                <h5>Location:</h5>
+                                <p id="eventLocation">@Event.Location</p>
+                                <h5>Date:</h5>
+                                <p id="eventDate">@Event.EventDateTime</p>
+                                <h5>Capacity:</h5>
+                                <p id="eventCapacity">@Event.Capacity</p>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <p class="threeD">Details:</p>
+                            <p class="breakdown threeD">
+                                <a href="/Event/Find/@Event.EventId">See More</a>
+                                @Event.Details
+                            </p>
+                        </div><!-- end of details -->
+                    </div><!-- end of event -->
+                </div><!-- end of eachone -->
+            </div><!-- end of col -->
+        }
+    </div><!-- end of row -->
+</div><!-- end of eventContainer -->
+
+<script>
+    $(document).ready(function () {
+        const funLink = document.querySelector('a[href="#Fun"]');
+        const fareLink = document.querySelector('a[href="#Fare"]');
+        const sortType = '@Model.SortType';
+        let eventCards = Array.from(document.querySelectorAll('.event'));
+
+        // Function to apply sorting
+        function applySorting(cards) {
+            if (sortType === 'distance') {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        const userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                        const geocoder = new google.maps.Geocoder();
+
+                        Promise.all(eventCards.map(eventCard => {
+                            return new Promise((resolve) => {
+                                const eventLocation = eventCard.getAttribute('data-location');
+                                geocoder.geocode({ address: eventLocation }, function (results, status) {
+                                    if (status === 'OK') {
+                                        const eventLatLng = results[0].geometry.location;
+                                        const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, eventLatLng);
+                                        eventCard.dataset.distance = distance;
+                                    } else {
+                                        console.warn('Geocode was not successful for ' + eventLocation + ' with status ' + status);
+                                        // Default to Uluru (if geocoding fails)
+                                        const uluruLatLng = new google.maps.LatLng(-25.344, 131.036);
+                                        const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, uluruLatLng);
+                                        eventCard.dataset.distance = distance;
+                                    }
+                                    resolve(eventCard);
+                                });
+                            });
+                        })).then(sortedCards => {
+                            sortedCards.sort((a, b) => parseFloat(a.dataset.distance) - parseFloat(b.dataset.distance));
+                            const container = document.querySelector('.row');
+                            container.innerHTML = ''; // Clear the container
+                            sortedCards.forEach(card => container.appendChild(card.closest('.col')));
+                        });
+                    }, function (error) {
+                        console.error('Error getting geolocation: ', error);
+                    });
+                } else {
+                    console.error('Geolocation is not supported by this browser.');
+                }
+            } else if (sortType === 'date') {
+                eventCards.sort((a, b) => {
+                    const dateA = new Date(a.querySelector('#eventDate').textContent);
+                    const dateB = new Date(b.querySelector('#eventDate').textContent);
+                    return dateB - dateA;
+                });
+            }
+            const container = document.querySelector('.row');
+            container.innerHTML = ''; // Clear the container
+            eventCards.forEach(card => container.appendChild(card.closest('.col')));
+        }
+        // Initial sort application
+        applySorting(eventCards);
+
+        function loadEventContent(category) {
+            $.ajax({
+                url: '/Home/Index',
+                type: 'GET',
+                success: function (result) {
+                    // Create a new jQuery object with the returned HTML
+                    var $result = $(result);
+
+                    // Find the eventContainer in the returned HTML
+                    var $newEventContainer = $result.find('#eventContainer');
+
+                    // Replace the content of the current eventContainer
+                    $('#eventContainer').html($newEventContainer.html());
+                    if (category === 'Fun') {
+                        $('div[name="Fun"]').show();
+                        $('div[name="Fare"]').hide();
+                    } else {
+                        $('div[name="Fare"]').show();
+                        $('div[name="Fun"]').hide();
+                    }
+
+                    // Re-apply event listeners or any other necessary setup
+                    // ...
+                },
+                error: function (error) {
+                    console.log('Error loading event content:', error);
+                }
+            });
+        }
+            // Event listener for navigation links
+            funLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                loadEventContent('Fun');
+            });
+
+            fareLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                loadEventContent('Fare');
+            });
+        });
+</script>
+

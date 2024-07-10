@@ -11,7 +11,16 @@
     <a href="#Fare">Services</a>
     <div class="animation"></div>
 </nav>
-
+<div class="dropdown">
+    <a class="btn btn-success dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Sort (@(string.IsNullOrEmpty(ViewBag.SortType) ? "Default" : ViewBag.SortType))
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" data-sort-type="distance">By Distance</a></li>
+        <li><a class="dropdown-item" href="#" data-sort-type="date">By Latest Post</a></li>
+    </ul>
+</div>
+<div id="eventContainer">
     <div class="row row-cols-md-3 g-4 mt-3" name="Fun">
         @foreach (var Event in Model.FunEvents)
         {
@@ -76,63 +85,84 @@
             </div>
         }
     </div>
+</div>
 
-    @*<div class="list">
-            <h2>List</h2>
-            <p id="listInput"></p>
-            <div class="register">
-                <form name="myForm" id="myForm">
-                    <p>Reserve your spot here:</p>
-                    <label for="regisName">Name : </label>
-                    <input type="text" id="regisName" name="regisName" placeholder="i.e.: James Lee">
-                    <button type="submit" id="button">Add</button>
-                </form>
-            </div>
-        </div><!--end of list-->*@
+@*<div class="list">
+        <h2>List</h2>
+        <p id="listInput"></p>
+        <div class="register">
+            <form name="myForm" id="myForm">
+                <p>Reserve your spot here:</p>
+                <label for="regisName">Name : </label>
+                <input type="text" id="regisName" name="regisName" placeholder="i.e.: James Lee">
+                <button type="submit" id="button">Add</button>
+            </form>
+        </div>
+    </div><!--end of list-->*@
 
-    @section scripts {
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const funLink = document.querySelector('a[href="#Fun"]');
-                const fareLink = document.querySelector('a[href="#Fare"]');
-                const funSection = document.querySelector('div[name="Fun"]');
-                const fareSection = document.querySelector('div[name="Fare"]');
-                const links = document.querySelectorAll('.mainnav a');
-                const animation = document.querySelector('.animation');
-                //const main = document.querySelector('.main');
+@section scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const funLink = document.querySelector('a[href="#Fun"]');
+            const fareLink = document.querySelector('a[href="#Fare"]');
+            const funSection = document.querySelector('div[name="Fun"]');
+            const fareSection = document.querySelector('div[name="Fare"]');
+            const links = document.querySelectorAll('.mainnav a');
+            const animation = document.querySelector('.animation');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            const section = document.getElementById('eventContainer');
+            let visibleCategory; 
 
-
-                //funSection.style.display = "block"
-                //fareSection.style.display = "none";
-
-                links.forEach(function (link, index) {
-                    link.addEventListener("click", function () {
-                        // Calculate the left position based on the index of the clicked link
-                        const leftPosition = index * 50 + '%';
-                        animation.style.left = leftPosition;
-                    });
+            links.forEach(function (link, index) {
+                link.addEventListener("click", function () {
+                    const leftPosition = index * 50 + '%';
+                    animation.style.left = leftPosition;
                 });
-
-
-                fareLink.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    funSection.style.display = "none";
-                    fareSection.style.display = "block";
-                    fareSection.style.display = "flex";
-                    
-
-
-                });
-                funLink.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    fareSection.style.display = "none";
-                    funSection.style.display = "block";
-                    funSection.style.display = "flex";
-
-
-                });
-
-
             });
-        </script>
-    }
+
+            fareLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                funSection.style.display = "none";
+                fareSection.style.display = "flex";
+            });
+
+            funLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                fareSection.style.display = "none";
+                funSection.style.display = "flex";
+            });
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const sortType = this.getAttribute('data-sort-type');
+                   
+                    if (fareSection.style.display === "flex") {
+                        visibleCategory = 'Fare';
+                    } else {
+                        visibleCategory = 'Fun';
+                    }
+
+                    console.log(visibleCategory);
+
+                    // Use AJAX to load the partial view
+                    $.ajax({
+                        url: `/Home/Sort?visibleCategory=${visibleCategory}&sortType=${sortType}`,
+                        type: 'GET',
+                        success: function (result) {
+                            $('#eventContainer').html(result);
+                        },
+                        error: function (error) {
+                            console.log('Error loading partial view:', error);
+                        }
+                    });
+                }); // end of item
+            });
+
+               
+        });    
+    </script>
+}
+
+
+
+

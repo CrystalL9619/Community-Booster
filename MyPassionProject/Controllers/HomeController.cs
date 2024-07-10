@@ -28,14 +28,14 @@ namespace MyPassionProject.Controllers
     {
         private static readonly HttpClient client;
         private JavaScriptSerializer jss = new JavaScriptSerializer();
-     
+
         static HomeController()
         {
             client = new HttpClient();
             client.BaseAddress = new System.Uri(Constant.BaseUrl);
-           
+
         }
-      
+
         [HttpPost]
         public ActionResult SendEmail(string toAddress, string subject, string body)
         {
@@ -124,7 +124,7 @@ namespace MyPassionProject.Controllers
         }
         // GET: Home/Account
         [HttpGet]
-        [Authorize(Roles ="Admin,Guest")]
+        [Authorize(Roles = "Admin,Guest")]
         public ActionResult MyEvents()
         {
             //use HTTP client to access infomation
@@ -154,8 +154,8 @@ namespace MyPassionProject.Controllers
             Debug.WriteLine("It is going to" + listcreatedUrl);
             HttpResponseMessage listcreatedUrlResponse = client.GetAsync(listcreatedUrl).Result;
             List<EventDto> CreatedEvents = listcreatedUrlResponse.Content.ReadAsAsync<List<EventDto>>().Result;
-            
-            
+
+
 
             var findEvent = new FindEvent
             {
@@ -168,32 +168,32 @@ namespace MyPassionProject.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-            public ActionResult Associate(int EventId, string CurrentUserId)
-            {
+        public ActionResult Associate(int EventId, string CurrentUserId)
+        {
 
-                string convertedEventId = EventId.ToString();
+            string convertedEventId = EventId.ToString();
 
 
-                string associateUrl = "EventData/AssociateEventWithApplicationUser/" + convertedEventId + "/" + CurrentUserId;
-                HttpContent content = new StringContent("");
-                content.Headers.ContentType.MediaType = "application/json";
-                HttpResponseMessage associateResponse = client.PostAsync(associateUrl, content).Result;
+            string associateUrl = "EventData/AssociateEventWithApplicationUser/" + convertedEventId + "/" + CurrentUserId;
+            HttpContent content = new StringContent("");
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage associateResponse = client.PostAsync(associateUrl, content).Result;
 
-                return RedirectToAction("MyEvents");
-            }
+            return RedirectToAction("MyEvents");
+        }
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public ActionResult UnAssociate(int EventId, string CurrentUserId)
         {
             string convertedEventId = EventId.ToString();
 
-                string unassociateUrl = "EventData/UnAssociateEventWithApplicationUser/" + convertedEventId + "/" + CurrentUserId;
+            string unassociateUrl = "EventData/UnAssociateEventWithApplicationUser/" + convertedEventId + "/" + CurrentUserId;
 
-                HttpContent content = new StringContent("");
-                content.Headers.ContentType.MediaType = "application/json";
-                HttpResponseMessage unassociateResponse = client.PostAsync(unassociateUrl, content).Result;
+            HttpContent content = new StringContent("");
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage unassociateResponse = client.PostAsync(unassociateUrl, content).Result;
 
-                return RedirectToAction("MyEvents");
+            return RedirectToAction("MyEvents");
         }
         [HttpGet]
         public ActionResult Search(string query)
@@ -222,7 +222,68 @@ namespace MyPassionProject.Controllers
                 Debug.WriteLine($"An error occurred: {ex.Message}");
                 return View("Error");
             }
-        }      
-    
-}
+        }
+        [HttpGet]
+        public ActionResult Sort(string visibleCategory, string sortType)
+        {
+            Debug.WriteLine("Attempt to sort");
+
+            // Check if either visibleCategory or sortType is null or empty
+            if (string.IsNullOrEmpty(visibleCategory) || string.IsNullOrEmpty(sortType))
+            {
+                return RedirectToAction("Error");
+            }
+
+            try
+            {
+                // Assuming 'client' is an HttpClient or similar setup to make HTTP requests
+                string url1 = "EventData/ListEventsForCategory/1";
+                HttpResponseMessage response1 = client.GetAsync(url1).Result;
+                List<EventDto> FunEvents = response1.Content.ReadAsAsync<List<EventDto>>().Result;
+
+                string url2 = "EventData/ListEventsForCategory/2";
+                HttpResponseMessage response2 = client.GetAsync(url2).Result;
+                List<EventDto> FareEvents = response2.Content.ReadAsAsync<List<EventDto>>().Result;
+
+                // Determine which list of events to sort based on visibleCategory
+                List<EventDto> eventsToSort = visibleCategory == "Fun" ? FunEvents : FareEvents;
+
+                // Normalize sortType to lowercase for consistency
+                sortType = sortType.ToLower();
+
+                // Switch statement to handle different sorting types
+                switch (sortType)
+                {
+                    case "distance":
+                        ViewBag.sortType = "distance"; // Set ViewBag.SortType for use in view
+                        break;
+                    case "date":
+                        ViewBag.sortType = "date"; // Set ViewBag.SortType for use in view
+                        break;
+                    default:
+                        ViewBag.sortType = "default"; // Default case, could be used for other scenarios
+                        break;
+                }
+
+                // Create view model with necessary data to pass to the partial view
+                var viewModel = new EventsForCategory
+                {
+                    FunEvents = FunEvents,
+                    FareEvents = FareEvents,
+                    SortedEvents = eventsToSort,
+                    visibleCategory = visibleCategory,
+                    SortType = sortType // Assign SortType to the view model
+                };
+
+                // Return partial view with sorted events and view model
+                return PartialView("_Sort", viewModel);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return RedirectToAction("Error");
+            }
+        }
+
+    }
 }

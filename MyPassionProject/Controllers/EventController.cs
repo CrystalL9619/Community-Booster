@@ -184,7 +184,7 @@ namespace MyPassionProject.Controllers
             //Debug.WriteLine(Event.Title);
             //objective: add a new event into our system using the API
             //curl -H "Content-Type:application/json" -d @newEvent.json https://localhost:44317/api/EventData/AddEvent 
-              
+            newEvent.UpdateDate = DateTime.UtcNow;
             string url = "EventData/AddEvent";//In order to work , need a router like:Constant.BaseUrlbefore string
 
             string jsonpayload = jss.Serialize(newEvent);

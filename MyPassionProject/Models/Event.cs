@@ -46,6 +46,8 @@ namespace MyPassionProject.Models
     {
         public int EventId { get; set; }
         public string Title { get; set; }
+        [Column(TypeName = "datetime2")]
+        public DateTime UpdateDate { get; set; }
         public string Location { get; set; }
         [Column(TypeName = "datetime2")]
         public DateTime EventDateTime { get; set; }
