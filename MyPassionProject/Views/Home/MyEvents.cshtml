@@ -1,19 +1,27 @@
 ﻿@model MyPassionProject.Models.ViewModels.FindEvent
 @{
     ViewBag.Title = "Account";
-
+    <link href="~/CSS/index.css" rel="stylesheet" />
 
 }
 
-
 <h2>Welcome</h2>
-<div>
-    <a href="@Url.Action("New", "Event")" class="btn btn-primary">Post Your Own Event</a>
-</div>
 
-<h2 class="mt-5">The Event You're In</h2>
+<ul class="nav nav-tabs mt-3" id="myTab">
 
-<div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#enrolledLink">The Event You're In</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#postedLink">The Event You Posted</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " href="@Url.Action("New", "Event")">Post Your Own Event</a>
+    </li>
+</ul>
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mt-3" id="enrolled">
     @foreach (var relatedEvent in Model.RelatedEvent)
     {
         <div class="col">
@@ -46,8 +54,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="button-container">
-                        @* <button class="button-yes" onclick="return confirmAssociate(@relatedEvent.EventId)">Join</button> *@
-                        <button class="button-no" onclick="return confirmUnAssociate(@relatedEvent.EventId)">Cancel</button>
+                        <button class="button-no" id="unassoc" data-event-id="@relatedEvent.EventId">Cancel</button>
                     </div>
                 }
             </div><!-- end of card -->
@@ -69,12 +76,8 @@
     </div>
 *@
 
-<hr />
 
-<h2 class="mt-5">The Event You Posted</h2>
-
-
-<div class="row row-cols-1 row-cols-md-1 g-4 mt-3">
+<div class="row row-cols-1 row-cols-md-1 g-4 mt-3" id="posted" style="display:none">
     @foreach (var createdEvent in Model.CreatedEvents)
     {
         <div class="col">
@@ -116,7 +119,7 @@
 
 @section scripts {
     <script>
-        @*
+            @*
                function confirmAssociate() {
                 var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
                 if (!isAdmin) {
@@ -136,7 +139,7 @@
                 var confirmed = confirm("What a pity! Hope to see you in another event!");
                 return confirmed;
             }
-        function confirmAssociate(eventId) {
+           function confirmAssociate(eventId) {
             let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
             console.log('assoc url', url);
             fetch(url, { method: 'POST' }).then(res => {
@@ -146,23 +149,58 @@
                     alert("Sorry!Event is Full")
                 }
             });
-        }*@
-        function confirmUnAssociate(eventId) {
-       @* var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
-       if (!isAdmin) {
-        return true; // Proceed with form submission without confirmation
-        }*@
+           }*@
+            document.addEventListener("DOMContentLoaded", function () {
+                const enrolledLink = document.querySelector('a[href="#enrolledLink"]');
+                const postedLink = document.querySelector('a[href="#postedLink"]');
+                const enrolled = document.getElementById('enrolled');
+                const posted = document.getElementById('posted');
 
-       let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
-       console.log('unassoc url', url);
-       fetch(url, { method: 'POST' }).then(res => {
-       if (res.ok) {
-         alert("What a pity! Hope to see you in another event!");
-           location.reload();
-     } else {
-         alert("Something went wrong, please try later!")
-     }
-     });
-    }
+
+
+
+                const unassoc = document.getElementById('unassoc');
+                if (unassoc) {
+                    unassoc.addEventListener("click", function () {
+                        const eventId = this.getAttribute('data-event-id');
+
+                        @* Uncomment and adjust if you want to use server - side variables
+                        var isAdmin = @(User.IsInRole("Admin").ToString().ToLower());
+                        if (!isAdmin) {
+                            return true; // Proceed with form submission without confirmation
+                        }
+                        *@
+
+                        let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
+                        console.log('unassoc url', url);
+                        fetch(url, { method: 'POST' }).then(res => {
+                            if (res.ok) {
+                                alert("What a pity! Hope to see you in another event!");
+                                location.reload();
+                            } else {
+                                alert("Something went wrong, please try later!")
+                            }
+                        });
+                    });
+                }
+                enrolledLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    enrolledLink.classList.add('active');
+                    postedLink.classList.remove('active');
+                    posted.style.display = "none";
+                    enrolled.style.display = "flex";
+                });
+
+                postedLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    postedLink.classList.add('active');
+                    enrolledLink.classList.remove('active');
+                    enrolled.style.display = "none";
+                    posted.style.display = "flex";
+                });
+
+            });
+
+
     </script>
 }

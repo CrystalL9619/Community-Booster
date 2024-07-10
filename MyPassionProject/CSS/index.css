@@ -349,6 +349,11 @@ h3 {
     margin: 0;
 }
 
+#myTab .nav-link.active {
+    background-color: #1abc9c;
+    color: white;
+}
+
 /*
 @media (max-width: 768px) {
   .header {
