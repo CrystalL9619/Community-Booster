@@ -42,8 +42,8 @@
                             <div class="details">
                                 <p class="threeD">Details:</p>
                                 <p class="breakdown threeD">
+                                    <span class="trimmedDetails">@Event.Details</span>
                                     <a href="/Event/Find/@Event.EventId">See More</a>
-                                    @Event.Details
                                 </p>
                             </div><!--end of details-->
                         </div><!--end of event-->
@@ -72,13 +72,11 @@
                             </div>
                             <div class="details">
                                 <p class="threeD">Details:</p>
-                                <p class="breakdown threeD">
-
+                                <p class="breakdown threeD" id="eventdetail">
+                                    <span class="trimmedDetails">@Event.Details</span>
                                     <a href="/Event/Find/@Event.EventId">See More</a>
-                                    @Event.Details
                                 </p>
                             </div><!--end of details-->
-
                         </div><!--end of event-->
                     </div><!--end of eachone-->
                 </div>
@@ -110,8 +108,7 @@
             const links = document.querySelectorAll('.mainnav a');
             const animation = document.querySelector('.animation');
             const dropdownItems = document.querySelectorAll('.dropdown-item');
-            const section = document.getElementById('eventContainer');
-            let visibleCategory; 
+            let visibleCategory;
 
             links.forEach(function (link, index) {
                 link.addEventListener("click", function () {
@@ -135,7 +132,7 @@
                 item.addEventListener('click', function (event) {
                     event.preventDefault();
                     const sortType = this.getAttribute('data-sort-type');
-                   
+
                     if (fareSection.style.display === "flex") {
                         visibleCategory = 'Fare';
                     } else {
@@ -157,9 +154,24 @@
                     });
                 }); // end of item
             });
+            function trimText(element) {
+                const fullText = element.innerText;
+                const words = fullText.trim().split(/\s+/);
 
-               
-        });    
+                if (words.length > 10) {
+                    const trimmedText = words.slice(0, 10).join(' ') + '...';
+                    element.innerText = trimmedText;
+                }
+            }
+
+            // Trim details for Fun events
+            const funDetailElements = funSection.querySelectorAll('.trimmedDetails');
+            funDetailElements.forEach(trimText);
+
+            // Trim details for Fare events
+            const fareDetailElements = fareSection.querySelectorAll('.trimmedDetails');
+            fareDetailElements.forEach(trimText);
+        });
     </script>
 }
 

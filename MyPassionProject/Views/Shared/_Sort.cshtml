@@ -9,7 +9,7 @@
 <link href="~/CSS/index.css" rel="stylesheet" />
 
 <div id="eventContainer">
-    <div class="row row-cols-md-3 g-4 mt-3">
+    <div class="row row-cols-md-3 g-4 mt-3" name="sorted">
         @foreach (var Event in Model.SortedEvents)
         {
             <div class="col">
@@ -29,8 +29,8 @@
                         <div class="details">
                             <p class="threeD">Details:</p>
                             <p class="breakdown threeD">
+                                <span class="trimmedDetails">@Event.Details</span>
                                 <a href="/Event/Find/@Event.EventId">See More</a>
-                                @Event.Details
                             </p>
                         </div><!-- end of details -->
                     </div><!-- end of event -->
@@ -128,16 +128,31 @@
                 }
             });
         }
-            // Event listener for navigation links
-            funLink.addEventListener("click", function (event) {
-                event.preventDefault();
-                loadEventContent('Fun');
-            });
-
-            fareLink.addEventListener("click", function (event) {
-                event.preventDefault();
-                loadEventContent('Fare');
-            });
+        // Event listener for navigation links
+        funLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            loadEventContent('Fun');
         });
+
+        fareLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            loadEventContent('Fare');
+        });
+        const sortedEvent = document.querySelector('div[name="sorted"]');
+        function trimText(element) {
+            const fullText = element.innerText;
+            const words = fullText.trim().split(/\s+/);
+
+            if (words.length > 10) {
+                const trimmedText = words.slice(0, 10).join(' ') + '...';
+                element.innerText = trimmedText;
+            }
+        }
+
+        // Trim details for Fun events
+        const sortedDetailElements = sortedEvent.querySelectorAll('.trimmedDetails');
+        sortedDetailElements.forEach(trimText);
+
+    });      
 </script>
 

@@ -4,6 +4,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTgtAB4V_2DIVb_vhX1dcJc9c8t88HmMg&libraries=places,marker,geometry"></script>
 
+
 </head>
 
 
@@ -33,7 +34,7 @@
         <div id="locationStatus">Obtaining location...</div>
     </nav>
 
-    <div id="map" style="width: 500px; height: 400px;"></div>
+    <div id="map" style=" height: 400px; max-width:500px; display:flex; flex-wrap:wrap"></div>
 </div>
 
 <script>
@@ -198,7 +199,7 @@
 
     async function calculateAndDisplayRoute(destination, travelMode = 'DRIVING') {
         console.log("Calculating route to destination:", destination);
-
+        
         if (!userLocation || !destination) {
             console.error("User or destination location not available.");
             return;
@@ -244,8 +245,8 @@
             });
             currentInfoWindow.open(map);
             adjustMapView(destination);
-        
-            createMarker(destination)
+            console.log("Again, User's location:", userLocation);          
+            createMarker(userLocation);
             console.log("Route displayed successfully");
         } catch (error) {
             console.error("Error calculating route:", error);

@@ -155,13 +155,18 @@ namespace MyPassionProject.Controllers
             HttpResponseMessage listcreatedUrlResponse = client.GetAsync(listcreatedUrl).Result;
             List<EventDto> CreatedEvents = listcreatedUrlResponse.Content.ReadAsAsync<List<EventDto>>().Result;
 
-
+            string listsavedUrl = $"EventData/ListSavedEventsForUser/{CurrentUserId}";
+            Debug.WriteLine("It is going to" + listsavedUrl);
+            HttpResponseMessage listsavedUrlResponse = client.GetAsync(listsavedUrl).Result;
+            Debug.WriteLine(listsavedUrlResponse.Content.ReadAsStringAsync().Result);
+            List<EventDto> SavedEvents = listsavedUrlResponse.Content.ReadAsAsync<List<EventDto>>().Result;
 
             var findEvent = new FindEvent
             {
                 CurrentUserId = CurrentUserId,
                 RelatedEvent = Events,
-                CreatedEvents = CreatedEvents
+                CreatedEvents = CreatedEvents,
+                SavedEvents = SavedEvents
             };
             return View(findEvent);
         }

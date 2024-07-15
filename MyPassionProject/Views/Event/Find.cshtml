@@ -2,19 +2,65 @@
 
 @{
     ViewBag.Title = "Find";
-    
+    string eventUrl = Url.Action("Find", "Event", new { id = Model.SelectedEvent.EventId }, Request.Url.Scheme);
+    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=66907aaf0da14d00194b1fb4&product=inline-share-buttons&source=platform" async="async"></script>
+    <style>
+        .dropdown-menu {
+            min-width: 330px; 
+            padding: 10px;
+        }
 
+        .sharethis-inline-share-buttons {
+            /* Remove any margins or paddings that might be causing issues */
+            margin: 0 !important;
+            padding: 0 !important;
+        }
 
+            .sharethis-inline-share-buttons .st-btn {
+                /* Make sure the buttons fit within the dropdown */
+                display: inline-block !important;
+                width: auto !important;
+                margin: 5px !important;
+                padding: 5px !important;
+            }
+
+    </style>
 }
 
 <a href="/Home/Index" class="btn bg-success-subtle">Go back to Home</a>
-<div class="container mt-5">
-    <div class="row">
+
+<div class="row mt-3" >
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h2>@Model.SelectedEvent.Title</h2>
-                    <table class="table table-striped table-striped-columns">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <h2>@Model.SelectedEvent.Title</h2>
+                        <div class="d-flex gap-2 mb-0">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="#" id="saveToggle">
+                                    <svg id="heartIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                </a>
+                            }
+                            <div class="dropdown">
+                                <a href="#" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="18" cy="5" r="3"></circle>
+                                        <circle cx="6" cy="12" r="3"></circle>
+                                        <circle cx="18" cy="19" r="3"></circle>
+                                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                    </svg>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="shareDropdown">
+                                    <div class="sharethis-inline-share-buttons"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-striped-columns mt-2">
                         <tbody>
                             <tr>
                                 <th scope="row">Host</th>
@@ -55,13 +101,14 @@
                 <div id="SeatsRemaining">Seats Remaining:  @Model.SelectedEvent.SeatsRemaining</div>
                 <br />
             </div>
+
         </div>
-        <div style="width:500px; height: 400px;">
+        <div class="col-lg-6 ">
             @Html.Action("Map", "Event", new { location = Model.SelectedEvent.Location })
         </div>
-
-    </div>
 </div>
+
+
 
 
 @*
@@ -109,8 +156,7 @@
 *@
 
 <div name="modify" style="display:none">
-    <br />
-    <div>
+    <div class="mt-3">
         <a href="/Event/Edit/@Model.SelectedEvent.EventId" class="btn bg-primary-subtle">Update This  Event</a>
     </div>
     @*
@@ -121,118 +167,197 @@
     *@
     <br />
 
-    <div>
+    <div class="mt-3 mb-3">
         @Html.ActionLink("Delete This Event", "DeleteConfirm", "Event", new { id = Model.SelectedEvent.EventId }, new { @class = "btn btn-danger" })
 
     </div>
-    <br />
+    
 </div>
-<br />
+
 @section scripts {
+
     <script>
 
-        function confirmAssociate() {
+           document.addEventListener("DOMContentLoaded", function () {
+            // This event listener ensures that the script runs when the DOM is fully loaded
 
-            let redirect = "@Url.Action("MyEvents", "Home")";
+                const saveToggle = document.getElementById("saveToggle");
+               const heartIcon = document.getElementById("heartIcon");
+                let isSaved = @(Model.isSaved ? "true" : "false");
+               console.log(isSaved);
 
-            let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+               let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/IsEventSavedForUser" + "/"+ "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+               // Fetch data from the server to determine if the event is saved for the user
+            console.log(url)
+            fetch(url, { method: 'GET' })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    return res.json().then(data => {
 
-            console.log('assoc url', url);
-
-            fetch(url, { method: 'POST' }).then(res => {
-                if (res.ok) {
-                    res.json().then(data => {
-                        alert("Congratulations! You're in! Can't wait to see you there!");
-                        document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
-
-                        let bodyObj = data;
-                        console.log('Selected Event:', bodyObj);
-                        let toAddress = data.CurrentUserEmail;
-                        console.log(toAddress);
-                        let subject = 'Confirm Your Participation';
-                        console.log(subject);
-
-                        sendEmailWithEventDetails(toAddress, subject, bodyObj);
-                        window.location.href = redirect;
+                        isSaved = data;
+                        console.log("isSaved")
+                        updateHeartIcon();
                     });
-                } else {
-                    alert("Sorry! Event is Full");
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    // Optionally, handle or log errors that occur during the fetch
+                });
+
+                // Function to update the appearance of the heart icon based on isSaved status
+                function updateHeartIcon() {
+                    if (isSaved) {
+                        heartIcon.setAttribute("fill", "red");
+                        heartIcon.setAttribute("stroke", "red");
+                    } else {
+                        heartIcon.setAttribute("fill", "none");
+                        heartIcon.setAttribute("stroke", "black");
+                    }
+                }
+
+              // Call updateHeartIcon initially when the page loads
+              updateHeartIcon();
+
+
+                saveToggle.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const url = "@Url.Content("~/api/EventData/")" + (isSaved ? "UnsaveEvent" : "SaveEvent") + "/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+
+                    fetch(url, { method: 'POST' })
+                        .then(res => {
+                            if (res.ok) {
+                                return res.json();
+                            }
+                            throw new Error('Network response was not ok.');
+                        })
+                        .then(data => {
+                            isSaved = data.isSaved;
+                            updateHeartIcon();
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                            // Optionally, show an error message to the user
+                        });
+                });
+            });
+
+
+            var dropdownElement = document.querySelector('.dropdown');
+            dropdownElement.addEventListener('shown.bs.dropdown', function () {
+                if (window.__sharethis__) {
+                    window.__sharethis__.load('inline-share-buttons', {
+                        alignment: 'center',
+                        id: 'my-inline-buttons'
+                    });
                 }
             });
-        }
+
+
+            function confirmAssociate() {
+
+                let redirect = "@Url.Action("MyEvents", "Home")";
+
+                let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+
+                console.log('assoc url', url);
+
+                fetch(url, { method: 'POST' }).then(res => {
+                    if (res.ok) {
+                        res.json().then(data => {
+                            alert("Congratulations! You're in! Can't wait to see you there!");
+                            document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+
+                            let bodyObj = data;
+                            console.log('Selected Event:', bodyObj);
+                            let toAddress = data.CurrentUserEmail;
+                            console.log(toAddress);
+                            let subject = 'Confirm Your Participation';
+                            console.log(subject);
+
+                            sendEmailWithEventDetails(toAddress, subject, bodyObj);
+                            window.location.href = redirect;
+                        });
+                    } else {
+                        alert("Sorry! Event is Full");
+                    }
+                });
+            };
 
 
 
-    function confirmUnAssociate() {
+            function confirmUnAssociate() {
     @* var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
         if (!isAdmin) {
             return true; // Proceed with form submission without confirmation
         }*@
-    let redirect = "@Url.Action("MyEvents", "Home")"
-    let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
-    console.log('unassoc url', url);
-    fetch(url, { method: 'POST' }).then(res => {
-    if (res.ok) {
-    res.json().then(data => {
-    alert("What a pity! Hope to see you in another event!");
-        document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
-    window.location.href = redirect
-    });
-    } else {
-    alert("Something went wrong, please try later!")
-    }
-    });
-    }
-    console.log("curr usr  id","@Model.CurrentUserId");
-    console.log("creater id","@Model.SelectedEvent.CreatorId");
+                let redirect = "@Url.Action("MyEvents", "Home")"
+                let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + "@Model.SelectedEvent.EventId" + "/" + "@Model.CurrentUserId";
+                console.log('unassoc url', url);
+                fetch(url, { method: 'POST' }).then(res => {
+                    if (res.ok) {
+                        res.json().then(data => {
+                            alert("What a pity! Hope to see you in another event!");
+                            document.getElementById('SeatsRemaining').innerText = 'Seats Remaining: ' + data.SeatsRemaining;
+                            window.location.href = redirect
+                        });
+                    } else {
+                        alert("Something went wrong, please try later!")
+                    }
+                });
+            }
+            console.log("curr usr  id", "@Model.CurrentUserId");
+            console.log("creater id", "@Model.SelectedEvent.CreatorId");
 
-    document.addEventListener("DOMContentLoaded", function () {
-    const modify = document.querySelector('[name="modify"]');
-    const forAttendee = document.querySelector('[name="ForAttendee"]');
-    if ("@Model.CurrentUserId" === "@Model.SelectedEvent.CreatorId") {
-    console.log("@Model.CurrentUserId");
-    console.log("@Model.SelectedEvent.CreatorId");
-    modify.style.display = "block";
-    forAttendee.style.display = "none";
-    }
-    });
-
-       function sendEmailWithEventDetails(toAddress, subject, bodyObj) {
-    let url = '@Url.Action("SendEmail", "Home")';
-
-    // Convert the body object to a formatted string
-            let bodyString = `
-        Event: ${bodyObj.Title}
-        Date: ${new Date(bodyObj.EventDateTime).toLocaleString()}
-        Location: ${bodyObj.Location}
-        Details: ${bodyObj.Details}
-        Seats Remaining: ${bodyObj.SeatsRemaining}
-            `;
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            toAddress: toAddress,
-            subject: subject,
-            body: bodyString
-        })
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Email sent successfully');
-        } else {
-            return response.text().then(text => {
-                throw new Error(text);
+            document.addEventListener("DOMContentLoaded", function () {
+                const modify = document.querySelector('[name="modify"]');
+                const forAttendee = document.querySelector('[name="ForAttendee"]');
+                if ("@Model.CurrentUserId" === "@Model.SelectedEvent.CreatorId") {
+                    console.log("@Model.CurrentUserId");
+                    console.log("@Model.SelectedEvent.CreatorId");
+                    modify.style.display = "block";
+                    forAttendee.style.display = "none";
+                }
             });
-        }
-    })
-    .catch(error => {
-        console.error('Error sending email:', error);
-    });
-}
+
+            function sendEmailWithEventDetails(toAddress, subject, bodyObj) {
+                let url = '@Url.Action("SendEmail", "Home")';
+
+                // Convert the body object to a formatted string
+                let bodyString = `
+                Event: ${bodyObj.Title}
+                Date: ${new Date(bodyObj.EventDateTime).toLocaleString()}
+                Location: ${bodyObj.Location}
+                Details: ${bodyObj.Details}
+                Seats Remaining: ${bodyObj.SeatsRemaining}
+                `;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        toAddress: toAddress,
+                        subject: subject,
+                        body: bodyString
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Email sent successfully');
+                        } else {
+                            return response.text().then(text => {
+                                throw new Error(text);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending email:', error);
+                    });
+            }
+
     </script>
 
 }

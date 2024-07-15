@@ -2,7 +2,14 @@
 @{
     ViewBag.Title = "Account";
     <link href="~/CSS/index.css" rel="stylesheet" />
-
+    <style>
+        #footer {
+            position: absolute !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            margin-top: 20px !important;
+        }
+    </style>
 }
 
 <h2>Welcome</h2>
@@ -14,6 +21,9 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#postedLink">The Event You Posted</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#savedLink">Saved Event</a>
     </li>
     <li class="nav-item">
         <a class="nav-link " href="@Url.Action("New", "Event")">Post Your Own Event</a>
@@ -42,10 +52,8 @@
                         <div class="details">
                             <p class="threeD">Details:</p>
                             <p class="breakdown threeD">
-
+                                <span class="trimmedDetails">@relatedEvent.Details</span>
                                 <a href="/Event/Find/@relatedEvent.EventId">See More</a>
-                                @relatedEvent.Details
-
                             </p>
                         </div><!-- end of details -->
                     </div><!-- end of event -->
@@ -98,7 +106,7 @@
                         <div class="details">
                             <p class="threeD">Details:</p>
                             <p class="breakdown threeD">
-                                @createdEvent.Details
+                                <span class="trimmedDetails">@createdEvent.Details</span>
                                 <a href="/Event/Find/@createdEvent.EventId">See More</a>
                             </p>
                         </div><!-- end of details -->
@@ -110,6 +118,37 @@
                             <h2>@user.UserName</h2>
                         }
                     </div>
+                </div><!-- end of eachone -->
+            </div><!-- end of card -->
+        </div><!-- end of col -->
+    }
+</div><!-- end of row -->
+<div class="row row-cols-1 row-cols-md-1 g-4 mt-3" id="saved" style="display:none">
+    @foreach (var savedEvent in Model.SavedEvents)
+    {
+        <div class="col">
+            <div>
+                <div class="eachone">
+                    <div class="event">
+                        <div class="card" style="background-image: url('@savedEvent.ImagePath');">
+                            <div class="content">
+                                <h4 id="eventTitle">@savedEvent.Title</h4>
+                                <h5>Location:</h5>
+                                <p id="eventLocation">@savedEvent.Location</p>
+                                <h5>Date:</h5>
+                                <p id="eventDate">@savedEvent.EventDateTime</p>
+                                <h5>Capacity:</h5>
+                                <p id="eventCapacity">@savedEvent.Capacity</p>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <p class="threeD">Details:</p>
+                            <p class="breakdown threeD">
+                                <span class="trimmedDetails">@savedEvent.Details</span>
+                                <a href="/Event/Find/@savedEvent.EventId">See More</a>
+                            </p>
+                        </div><!-- end of details -->
+                    </div><!-- end of event -->
                 </div><!-- end of eachone -->
             </div><!-- end of card -->
         </div><!-- end of col -->
@@ -153,8 +192,10 @@
             document.addEventListener("DOMContentLoaded", function () {
                 const enrolledLink = document.querySelector('a[href="#enrolledLink"]');
                 const postedLink = document.querySelector('a[href="#postedLink"]');
+                const savedLink = document.querySelector('a[href="#savedLink"]');
                 const enrolled = document.getElementById('enrolled');
                 const posted = document.getElementById('posted');
+                const saved = document.getElementById('saved')
 
 
 
@@ -187,6 +228,8 @@
                     event.preventDefault();
                     enrolledLink.classList.add('active');
                     postedLink.classList.remove('active');
+                    savedLink.classList.remove('active');
+                    saved.style.display = "none";
                     posted.style.display = "none";
                     enrolled.style.display = "flex";
                 });
@@ -195,8 +238,19 @@
                     event.preventDefault();
                     postedLink.classList.add('active');
                     enrolledLink.classList.remove('active');
+                    savedLink.classList.remove('active');
+                    saved.style.display = "none";
                     enrolled.style.display = "none";
                     posted.style.display = "flex";
+                });
+                savedLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    savedLink.classList.add('active');
+                    enrolledLink.classList.remove('active');
+                    postedLink.classList.remove('active');
+                    posted.style.display = "none";
+                    enrolled.style.display = "none";
+                    saved.style.display = "flex";
                 });
 
             });

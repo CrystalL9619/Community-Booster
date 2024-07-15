@@ -23,6 +23,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using static MyPassionProject.Models.ApplicationUser;
 using System.Web.Http.Cors;
 using MyPassionProject.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
+using System.Security.Policy;
 
 
 
@@ -31,7 +35,7 @@ namespace MyPassionProject.Controllers
 
     public class EventDataController : ApiController
     {
-        
+
         //Utlizing the database connection 
         private ApplicationDbContext db = new ApplicationDbContext();
         private object modelBuilder;
@@ -78,7 +82,7 @@ namespace MyPassionProject.Controllers
             {
                 EventId = e.EventId,
                 Title = e.Title,
-                UpdateDate=e.UpdateDate,
+                UpdateDate = e.UpdateDate,
                 Location = e.Location,
                 EventDateTime = e.EventDateTime,
                 Capacity = e.Capacity,
@@ -155,12 +159,12 @@ namespace MyPassionProject.Controllers
             //where evApplicationUsers.UserId={USERID}
 
             //all events that have users which match with our ID
-            
+
             List<Event> Events = db.Events.Where(
                 e => e.ApplicationUsers.Any(
                     a => a.Id == CurrentUserId
                 )).ToList();
-             List<EventDto> EventDtos = new List<EventDto>();
+            List<EventDto> EventDtos = new List<EventDto>();
 
             Events.ForEach(e => EventDtos.Add(new EventDto()
             {
@@ -173,7 +177,7 @@ namespace MyPassionProject.Controllers
                 Details = e.Details,
                 CategoryId = e.Category.CategoryId,
                 CategoryName = e.Category.CategoryName,
-                ImagePath= e.ImagePath
+                ImagePath = e.ImagePath
             }));
 
             return Ok(EventDtos);
@@ -211,13 +215,13 @@ namespace MyPassionProject.Controllers
 
             //return Ok(Events);
         }
-   
 
 
-            //AssociateEventWithApplicationUser
-            //api/eventData/AssociateEventWithApplicationUser/9/1
-            //AssociateEventWithApplicationUser
-            //api/eventData/AssociateEventWithApplicationUser/9/1
+
+        //AssociateEventWithApplicationUser
+        //api/eventData/AssociateEventWithApplicationUser/9/1
+        //AssociateEventWithApplicationUser
+        //api/eventData/AssociateEventWithApplicationUser/9/1
         [HttpPost]
         [Route("api/EventData/AssociateEventWithApplicationUser/{EventId}/{CurrentUserId}")]
         public IHttpActionResult AssociateEventWithApplicationUser(int EventId, string CurrentUserId)
@@ -232,7 +236,7 @@ namespace MyPassionProject.Controllers
 
             //Fetch the User Details by UserId using the FindById method
             ApplicationUser SelectedApplicationUser = UserManager.FindById(CurrentUserId);
-            string currentUserEmail=SelectedApplicationUser.Email;
+            string currentUserEmail = SelectedApplicationUser.Email;
 
             if (SelectedEvent == null || SelectedApplicationUser == null)
             {
@@ -242,7 +246,7 @@ namespace MyPassionProject.Controllers
             {
                 int eventCapacity = int.Parse(SelectedEvent.Capacity);
                 if (SelectedEvent.ApplicationUsers.Count >= eventCapacity)
-                   
+
                 {
                     Debug.WriteLine("Sorry! The event is full");
                     // Event is full
@@ -263,7 +267,7 @@ namespace MyPassionProject.Controllers
 
                 var creator = UserManager.FindById(SelectedEvent.CreatorId);
                 string creatorUserName = creator != null ? creator.UserName : "";
-                EventDto  EventDto= new EventDto()
+                EventDto EventDto = new EventDto()
                 {
                     EventId = SelectedEvent.EventId,
                     Title = SelectedEvent.Title,
@@ -277,7 +281,7 @@ namespace MyPassionProject.Controllers
                     CreatorId = SelectedEvent.CreatorId,
                     CreatorUserName = creatorUserName,
                     SeatsRemaining = SeatsRemaining,
-                    CurrentUserEmail= currentUserEmail
+                    CurrentUserEmail = currentUserEmail
                 };
 
                 return Ok(EventDto);
@@ -336,8 +340,8 @@ namespace MyPassionProject.Controllers
             string creatorUserName = creator != null ? creator.UserName : "";
 
             // Calculate remaining seats
-          
-            int seatsTaken = Event.ApplicationUsers.Count(); 
+
+            int seatsTaken = Event.ApplicationUsers.Count();
             int Capacity = int.Parse(Event.Capacity);
             int seatsRemaining = Capacity - seatsTaken;
 
@@ -368,8 +372,8 @@ namespace MyPassionProject.Controllers
         //AddEvent
         // POST: api/EventData/AddEvent
 
-       [ResponseType(typeof(Event))]
-       [HttpPost]
+        [ResponseType(typeof(Event))]
+        [HttpPost]
         public IHttpActionResult AddEvent(Event newEvent)
         {
             Debug.WriteLine("I have reached the add event method!");
@@ -427,7 +431,7 @@ namespace MyPassionProject.Controllers
                                     Directory.CreateDirectory(folderPath);
                                 }
                                 string path = Path.Combine(folderPath, fn);
-                                
+
                                 //save the file
                                 eventImage.SaveAs(path);
 
@@ -467,12 +471,12 @@ namespace MyPassionProject.Controllers
 
 
 
-            // UpdateEvent
-            // POST: api/EventData/UpdateEvent/9
-            //CLI command:curl -H "Content-Type:application/json" -d @newEvent.json https://localhost:44317/api/EventData/UpdateEvent/9
+        // UpdateEvent
+        // POST: api/EventData/UpdateEvent/9
+        //CLI command:curl -H "Content-Type:application/json" -d @newEvent.json https://localhost:44317/api/EventData/UpdateEvent/9
         [ResponseType(typeof(Event))]
         [HttpPost]
-       
+
         public IHttpActionResult UpdateEvent(int id, Event updatedEvent)
         {
             Debug.WriteLine("I have reached the update event method!");
@@ -534,7 +538,7 @@ namespace MyPassionProject.Controllers
         // POST: api/EventData/DeleteEvent/14
         [ResponseType(typeof(Event))]
         [HttpPost]
-      
+
         public IHttpActionResult DeleteEvent(int id)
         {
             Event existingEvent = db.Events.Find(id);
@@ -554,7 +558,7 @@ namespace MyPassionProject.Controllers
         public IHttpActionResult SearchEvent(string query)
         {
             var lowercaseQuery = query.ToLower();
-            Debug.WriteLine("I wanna know:"+lowercaseQuery);
+            Debug.WriteLine("I wanna know:" + lowercaseQuery);
             var events = db.Events.Where(e =>
                 e.Title.ToLower().Contains(lowercaseQuery) ||
                 e.UpdateDate.ToString().Contains(lowercaseQuery) ||
@@ -581,8 +585,126 @@ namespace MyPassionProject.Controllers
             return Ok(eventDtos);
         }
 
+        [HttpGet]
+        [Route("api/EventData/IsEventSavedForUser/{EventId}/{CurrentUserId}")]
+        public IHttpActionResult IsEventSavedForUser(int EventId, string CurrentUserId)
+        {
+            var existingSavedEvent = db.SavedEvents
+                    .FirstOrDefault(se => se.Event_EventId == EventId && se.ApplicationUser_Id == CurrentUserId);
+            var model = new FindEvent();
 
+            bool isSaved = model.isSaved;
+            isSaved = (existingSavedEvent != null);
+           
+            return Ok( isSaved );
+            
 
+        }
+        [HttpPost]
+        [Route("api/EventData/SaveEvent/{EventId}/{CurrentUserId}")]
+        public IHttpActionResult SaveEvent(int EventId, string CurrentUserId)
+        {
+            Debug.WriteLine("attempt to save event");
+            
+            // Check if the event is already saved
+            var existingSavedEvent = db.SavedEvents
+                    .FirstOrDefault(se => se.Event_EventId == EventId && se.ApplicationUser_Id == CurrentUserId);
+
+                if (existingSavedEvent != null)
+                {
+                    // Event is already saved, just return success
+                    return Ok(new { isSaved = true });
+                }
+                else
+                {
+
+                    // Find the event
+                    Event selectedEvent = db.Events.Find(EventId);
+                    if (selectedEvent == null)
+                    {
+                        return NotFound();
+                    }
+                    // Find the user
+                    ApplicationUser selectedUser = db.Users.Find(CurrentUserId);
+                    if (selectedUser == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Create a SavedEvent entity
+                    SavedEvent savedEvent = new SavedEvent
+                    {
+                        Event_EventId = EventId,
+                        ApplicationUser_Id = CurrentUserId
+                    };
+                    // Add SavedEvent to DbSet and save changes
+                    db.SavedEvents.Add(savedEvent);
+                    db.SaveChanges();
+               
+
+                return Ok(new { isSaved = false });
+                }
+
+        }
+
+        [HttpPost]
+        [Route("api/EventData/UnsaveEvent/{EventId}/{CurrentUserId}")]
+        public IHttpActionResult UnsaveEvent(int EventId, string CurrentUserId)
+        {
+            
+                Debug.WriteLine("attempt to unsave");
+                // Find the SavedEvent entity
+                var  savedEvent = db.SavedEvents
+                    .FirstOrDefault(se => se.Event_EventId == EventId && se.ApplicationUser_Id == CurrentUserId);
+                if (savedEvent == null)
+                {
+                    // If not found, it's already unsaved
+                    return Ok(new { isSaved = false });
+                 }
+            else { 
+                Debug.WriteLine("about to unsave");
+                // Remove SavedEvent from DbSet and save changes
+                db.SavedEvents.Remove(savedEvent);
+                db.SaveChanges();
+                return Ok(new { isSaved = false });
+               }
+        }
+
+        [HttpGet]
+        [Route("api/EventData/ListSavedEventsForUser/{CurrentUserId}")]
+        public IHttpActionResult ListSavedEventsForUser(string CurrentUserId)
+        {
+            if (string.IsNullOrEmpty(CurrentUserId)) {
+                return BadRequest("CurrentUserId is required.");                 
+             }
+         
+                Debug.WriteLine("attempt to List saved events");
+                var savedEvents = db.SavedEvents
+        .Where(se => se.ApplicationUser_Id == CurrentUserId)
+        .Select(se => se.Event_EventId)
+        .ToList();
+
+                // Query the Events table to get the full event details
+                var events = db.Events
+                    .Where(e => savedEvents.Contains(e.EventId))
+                    .Select(e => new
+                    {
+                        EventId = e.EventId,
+                        Title = e.Title,
+                        UpdateDate = e.UpdateDate,
+                        Location = e.Location,
+                        EventDateTime = e.EventDateTime,
+                        Capacity = e.Capacity,
+                        Details = e.Details,
+                        CategoryId = e.Category.CategoryId,
+                        CategoryName = e.Category.CategoryName,
+                        ImagePath = e.ImagePath
+                    })
+                    .ToList();
+                return Ok(events);
+        } 
+  
+            
 
         private bool EventExists(int id)
         {
@@ -599,7 +721,7 @@ namespace MyPassionProject.Controllers
         }
 
 
-         
+
     }
 
 }
@@ -612,6 +734,3 @@ namespace MyPassionProject.Controllers
 //ListEventForUser
 //AddEventToUser
 //RemoveEventFromUser
-
-
-

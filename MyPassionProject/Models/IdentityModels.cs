@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyPassionProject.Models.ViewModels;
 
 namespace MyPassionProject.Models
 {
@@ -55,6 +56,7 @@ namespace MyPassionProject.Models
         //Add an Event entity to our system
         public DbSet<Event> Events { get; set; }
 
+        public DbSet<SavedEvent> SavedEvents { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -15,9 +15,13 @@ namespace MyPassionProject.Models.ViewModels
         public string CreatorId { get; set; }     
 
         public IEnumerable<EventDto> CreatedEvents { get; set; }
+
+        public IEnumerable<EventDto> SavedEvents { get; set; }
+
+        public bool isSaved { get; set; }  
         //public IEnumerable<AppUserDto> ParticipatingUsers { get; set; }
 
         //public IEnumerable<AppUserDto> NotPaticipatingUsers { get; set; }
-  
+
     }
 }

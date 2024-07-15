@@ -74,8 +74,10 @@ namespace MyPassionProject.Controllers
                 return View(model);
             }
             // Find the user by email
-            var user = await UserManager.FindByEmailAsync(model.Email);
-            if (user == null)
+            //var user = await UserManager.FindByEmailAsync(model.Email);
+            // Find the user by UserName instead of Email
+            var user = await UserManager.FindByNameAsync(model.UserName);
+            if (user == null || !(await UserManager.CheckPasswordAsync(user, model.Password)))
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
                 return View(model);

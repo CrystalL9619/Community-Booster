@@ -412,5 +412,6 @@ namespace MyPassionProject.Controllers
             return PartialView("_Map", location);
 
         }
+ 
     }
 }
