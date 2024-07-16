@@ -1,14 +1,24 @@
 ﻿@model MyPassionProject.Models.ViewModels.FindCategory﻿
 @{
     ViewBag.Title = "Create";
+    <link href="~/CSS/index.css" rel="stylesheet" />
 }
-<link href="~/CSS/index.css" rel="stylesheet" />
+
 <h2>Post Your Event</h2>
-
-
-
-<br />
-
+<ul class="nav nav-tabs mt-3 mb-3" id="myTab">
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("MyEvents", "Home", new { activeTab = "enrolled" })">The Event You're In</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("MyEvents", "Home", new { activeTab = "posted" })">The Event You Posted</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("MyEvents", "Home", new { activeTab = "saved" })">Saved Event</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="@Url.Action("New", "Event")">Post Your Own Event</a>
+    </li>
+</ul>
 <form action="/Event/Create" method="POST" enctype="multipart/form-data" onsubmit="setUpdateDate()">
     <input type="hidden" id="UpdateDate" name="UpdateDate" />
     <input type="hidden" name="CreatorId" value=@Model.CreatorId>
@@ -56,10 +66,10 @@
 
 </form>
 <script>
-    
+
     function setUpdateDate() {
         var now = new Date();
         document.getElementById('UpdateDate').value = now.toISOString();
-        }
+    }
 
 </script>

@@ -1,260 +1,95 @@
 ﻿@model MyPassionProject.Models.ViewModels.FindEvent
-@{
-    ViewBag.Title = "Account";
-    <link href="~/CSS/index.css" rel="stylesheet" />
-    <style>
-        #footer {
-            position: absolute !important;
-            bottom: 0 !important;
-            width: 100% !important;
-            margin-top: 20px !important;
-        }
-    </style>
-}
-
 <h2>Welcome</h2>
-
 <ul class="nav nav-tabs mt-3" id="myTab">
-
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#enrolledLink">The Event You're In</a>
+        <a class="nav-link @(Model.ActiveTab == "enrolled" ? "active" : "")" aria-current="page" href="#enrolledLink">The Event You're In</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#postedLink">The Event You Posted</a>
+        <a class="nav-link @(Model.ActiveTab == "posted" ? "active" : "")" href="#postedLink">The Event You Posted</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#savedLink">Saved Event</a>
+        <a class="nav-link @(Model.ActiveTab == "saved" ? "active" : "")" href="#savedLink">Saved Event</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link " href="@Url.Action("New", "Event")">Post Your Own Event</a>
+        <a class="nav-link" href="@Url.Action("New", "Event")">Post Your Own Event</a>
     </li>
 </ul>
-
-
-<div class="row row-cols-1 row-cols-md-3 g-4 mt-3" id="enrolled">
-    @foreach (var relatedEvent in Model.RelatedEvent)
-    {
-        <div class="col">
-            <div>
-                <div class="eachone">
-                    <div class="event">
-                        <div class="card" style="background-image: url('@relatedEvent.ImagePath');">
-                            <div class="content">
-                                <h4 id="eventTitle">@relatedEvent.Title</h4>
-                                <h5>Location:</h5>
-                                <p id="eventLocation">@relatedEvent.Location</p>
-                                <h5>Date:</h5>
-                                <p id="eventDate">@relatedEvent.EventDateTime</p>
-                                <h5>Capacity:</h5>
-                                <p id="eventCapacity">@relatedEvent.Capacity</p>
-                            </div>
-                        </div>
-                        <div class="details">
-                            <p class="threeD">Details:</p>
-                            <p class="breakdown threeD">
-                                <span class="trimmedDetails">@relatedEvent.Details</span>
-                                <a href="/Event/Find/@relatedEvent.EventId">See More</a>
-                            </p>
-                        </div><!-- end of details -->
-                    </div><!-- end of event -->
-                </div><!-- end of eachone -->
-
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div class="button-container">
-                        <button class="button-no" id="unassoc" data-event-id="@relatedEvent.EventId">Cancel</button>
-                    </div>
-                }
-            </div><!-- end of card -->
-        </div><!-- end of col -->
-    }
-</div><!-- end of row -->
-@*
-    <div class="d-grid gap-4 d-md-block">
-        <form method="POST" action="@Url.Action("Associate", "Home")">
-            @Html.Hidden("EventId", relatedEvent.EventId)
-            @Html.Hidden("CurrentUserId", Model.CurrentUserId)
-            <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to join this event?')">Join</button>
-        </form>
-        <form method="POST" action="@Url.Action("UnAssociate", "Home")">
-            @Html.Hidden("EventId", relatedEvent.EventId)
-            @Html.Hidden("CurrentUserId", Model.CurrentUserId)
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel your participation in this event?')">Cancel</button>
-        </form>
-    </div>
-*@
-
-
-<div class="row row-cols-1 row-cols-md-1 g-4 mt-3" id="posted" style="display:none">
-    @foreach (var createdEvent in Model.CreatedEvents)
-    {
-        <div class="col">
-            <div>
-                <div class="eachone">
-                    <div class="event">
-                        <div class="card" style="background-image: url('@createdEvent.ImagePath');">
-                            <div class="content">
-                                <h4 id="eventTitle">@createdEvent.Title</h4>
-                                <h5>Location:</h5>
-                                <p id="eventLocation">@createdEvent.Location</p>
-                                <h5>Date:</h5>
-                                <p id="eventDate">@createdEvent.EventDateTime</p>
-                                <h5>Capacity:</h5>
-                                <p id="eventCapacity">@createdEvent.Capacity</p>
-                            </div>
-                        </div>
-                        <div class="details">
-                            <p class="threeD">Details:</p>
-                            <p class="breakdown threeD">
-                                <span class="trimmedDetails">@createdEvent.Details</span>
-                                <a href="/Event/Find/@createdEvent.EventId">See More</a>
-                            </p>
-                        </div><!-- end of details -->
-                    </div><!-- end of event -->
-                    <div class="list">
-                        <h3>Participants:</h3>
-                        @foreach (var user in createdEvent.ApplicationUsers)
-                        {
-                            <h2>@user.UserName</h2>
-                        }
-                    </div>
-                </div><!-- end of eachone -->
-            </div><!-- end of card -->
-        </div><!-- end of col -->
-    }
-</div><!-- end of row -->
-<div class="row row-cols-1 row-cols-md-1 g-4 mt-3" id="saved" style="display:none">
-    @foreach (var savedEvent in Model.SavedEvents)
-    {
-        <div class="col">
-            <div>
-                <div class="eachone">
-                    <div class="event">
-                        <div class="card" style="background-image: url('@savedEvent.ImagePath');">
-                            <div class="content">
-                                <h4 id="eventTitle">@savedEvent.Title</h4>
-                                <h5>Location:</h5>
-                                <p id="eventLocation">@savedEvent.Location</p>
-                                <h5>Date:</h5>
-                                <p id="eventDate">@savedEvent.EventDateTime</p>
-                                <h5>Capacity:</h5>
-                                <p id="eventCapacity">@savedEvent.Capacity</p>
-                            </div>
-                        </div>
-                        <div class="details">
-                            <p class="threeD">Details:</p>
-                            <p class="breakdown threeD">
-                                <span class="trimmedDetails">@savedEvent.Details</span>
-                                <a href="/Event/Find/@savedEvent.EventId">See More</a>
-                            </p>
-                        </div><!-- end of details -->
-                    </div><!-- end of event -->
-                </div><!-- end of eachone -->
-            </div><!-- end of card -->
-        </div><!-- end of col -->
-    }
-</div><!-- end of row -->
-
+<div class="row row-cols-1 row-cols-md-3 g-4 mt-3" id="enrolled" style="display: @(Model.ActiveTab == "enrolled" ? "flex" : "none")"></div>
+<div class="row row-cols-1 row-cols-md-1 g-4 mt-3" id="posted" style="display: @(Model.ActiveTab == "posted" ? "flex" : "none")"></div>
+<div class="row row-cols-1 row-cols-md-3 g-4 mt-3" id="saved" style="display: @(Model.ActiveTab == "saved" ? "flex" : "none")"></div>
 
 @section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-            @*
-               function confirmAssociate() {
-                var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
-                if (!isAdmin) {
-                    return true; // Proceed with form submission without confirmation
-                }
+       
 
-                var confirmed = confirm("Congratulations! You're in! Can't wait to see you there!");
-                return confirmed;
-            }
-
-            function confirmUnAssociate() {
-                var isAdmin = @User.IsInRole("Admin").ToString().ToLower();
-                if (!isAdmin) {
-                    return true; // Proceed with form submission without confirmation
-                }
-
-                var confirmed = confirm("What a pity! Hope to see you in another event!");
-                return confirmed;
-            }
-           function confirmAssociate(eventId) {
-            let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/AssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
-            console.log('assoc url', url);
-            fetch(url, { method: 'POST' }).then(res => {
-                if (res.ok) {
-                    alert("Congratulations! You're in !Can't wait to see you there!");
+        $(document).ready(function () {
+            const enrolledLink = $('a[href="#enrolledLink"]');
+            const postedLink = $('a[href="#postedLink"]');
+            const savedLink = $('a[href="#savedLink"]');
+            const enrolled = $('#enrolled');
+            const posted = $('#posted');
+            const saved = $('#saved');
+            const footer = $('#footer')
+           
+            function checkEmpty(container) {
+                if (container.html().trim() === '') {
+                    console.log("footer empty for", container.attr('id'));
+                    footer.css({
+                        'position': 'absolute',
+                        'bottom': '0'
+                    });
                 } else {
-                    alert("Sorry!Event is Full")
-                }
-            });
-           }*@
-            document.addEventListener("DOMContentLoaded", function () {
-                const enrolledLink = document.querySelector('a[href="#enrolledLink"]');
-                const postedLink = document.querySelector('a[href="#postedLink"]');
-                const savedLink = document.querySelector('a[href="#savedLink"]');
-                const enrolled = document.getElementById('enrolled');
-                const posted = document.getElementById('posted');
-                const saved = document.getElementById('saved')
-
-
-
-
-                const unassoc = document.getElementById('unassoc');
-                if (unassoc) {
-                    unassoc.addEventListener("click", function () {
-                        const eventId = this.getAttribute('data-event-id');
-
-                        @* Uncomment and adjust if you want to use server - side variables
-                        var isAdmin = @(User.IsInRole("Admin").ToString().ToLower());
-                        if (!isAdmin) {
-                            return true; // Proceed with form submission without confirmation
-                        }
-                        *@
-
-                        let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
-                        console.log('unassoc url', url);
-                        fetch(url, { method: 'POST' }).then(res => {
-                            if (res.ok) {
-                                alert("What a pity! Hope to see you in another event!");
-                                location.reload();
-                            } else {
-                                alert("Something went wrong, please try later!")
-                            }
-                        });
+                    console.log("footer not empty for", container.attr('id'));
+                    footer.css({
+                        'position': 'relative',
+                        'bottom': '0'
                     });
                 }
-                enrolledLink.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    enrolledLink.classList.add('active');
-                    postedLink.classList.remove('active');
-                    savedLink.classList.remove('active');
-                    saved.style.display = "none";
-                    posted.style.display = "none";
-                    enrolled.style.display = "flex";
-                });
+            }
+            checkEmpty(enrolled);
+            checkEmpty(posted);
+            checkEmpty(saved);
+            
+            function showTab(tabToShow, linkToActivate) {
+                [enrolled, posted, saved].forEach(tab => tab.hide());
+                [enrolledLink, postedLink, savedLink].forEach(link => link.removeClass('active'));
+                tabToShow.show();
+                linkToActivate.addClass('active');
+                
+            }
 
-                postedLink.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    postedLink.classList.add('active');
-                    enrolledLink.classList.remove('active');
-                    savedLink.classList.remove('active');
-                    saved.style.display = "none";
-                    enrolled.style.display = "none";
-                    posted.style.display = "flex";
+            function loadContent(url, container) {
+                $.get(url, function(data) {
+                    container.html(data);
+                    checkEmpty(container);  
                 });
-                savedLink.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    savedLink.classList.add('active');
-                    enrolledLink.classList.remove('active');
-                    postedLink.classList.remove('active');
-                    posted.style.display = "none";
-                    enrolled.style.display = "none";
-                    saved.style.display = "flex";
-                });
+               
+            }
 
+            enrolledLink.click(function (event) {
+                event.preventDefault();
+                showTab(enrolled, enrolledLink);
+                loadContent('@Url.Action("EnrolledEventsPartial", "Home")', enrolled);
+                checkEmpty(enrolled);
             });
 
+            postedLink.click(function (event) {
+                event.preventDefault();
+                showTab(posted, postedLink);
+                loadContent('@Url.Action("PostedEventsPartial", "Home")', posted);
+                checkEmpty(posted)
+            });
 
+            savedLink.click(function (event) {
+                event.preventDefault();
+                showTab(saved, savedLink);
+                loadContent('@Url.Action("SavedEventsPartial", "Home")', saved);
+                checkEmpty(saved)
+            });
+
+            // Load content for the active tab
+            loadContent('@Url.Action(Model.ActiveTab + "EventsPartial", "Home")', $('#@Model.ActiveTab'));
+        });
     </script>
 }

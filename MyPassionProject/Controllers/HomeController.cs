@@ -20,6 +20,8 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using static System.Net.Mime.MediaTypeNames;
 using System.Net;
+using MyPassionProject.Migrations;
+using Microsoft.AspNet.Identity.Owin;
 
 
 namespace MyPassionProject.Controllers
@@ -122,23 +124,12 @@ namespace MyPassionProject.Controllers
 
             return View();
         }
-        // GET: Home/Account
+        
         [HttpGet]
         [Authorize(Roles = "Admin,Guest")]
-        public ActionResult MyEvents()
+        public ActionResult EnrolledEventsPartial()
         {
-            //use HTTP client to access infomation
-            //objective: communicate with our event data api to retrieve a list of event
-            //curl https://localhost:44317/api/EventData/ListEventsForApplicationUser
-            //string CurrentUserId = User.Identity.GetUserId();
-
-            //string url = "EventData/ListEventsForApplicationUser?CurrentUserId={CurrentUserId}";
-            //HttpResponseMessage response = client.GetAsync(url).Result;//According to your method, use GetAsync,PostAsync,or ReadAsAsync.
-            //List<EventDto> Events = response.Content.ReadAsAsync<List<EventDto>>().Result;
-
-
-            //return View(Events);
-
+        
             string CurrentUserId = User.Identity.GetUserId();
             Debug.WriteLine("what is " + CurrentUserId);
             string url = $"EventData/ListEventsForApplicationUser?CurrentUserId={CurrentUserId}";
@@ -148,13 +139,46 @@ namespace MyPassionProject.Controllers
             response = client.GetAsync(url).Result;
             response.EnsureSuccessStatusCode(); // Ensure HTTP 200 OK status
             Events = response.Content.ReadAsAsync<List<EventDto>>().Result;
+            var findEvent = new FindEvent
+            {
+                CurrentUserId = CurrentUserId,
+                RelatedEvents = Events,
+               
+            };
+         
+            return PartialView("_EnrolledEventsPartial", findEvent);
 
-            Debug.WriteLine("Again, what is " + CurrentUserId);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Guest")]
+        public ActionResult PostedEventsPartial()
+        {
+            string CurrentUserId = User.Identity.GetUserId();
+            Debug.WriteLine("what is " + CurrentUserId);
             string listcreatedUrl = $"EventData/ListCreatedEventForUser?CurrentUserId={CurrentUserId}";
             Debug.WriteLine("It is going to" + listcreatedUrl);
             HttpResponseMessage listcreatedUrlResponse = client.GetAsync(listcreatedUrl).Result;
+            Debug.WriteLine(listcreatedUrlResponse);
             List<EventDto> CreatedEvents = listcreatedUrlResponse.Content.ReadAsAsync<List<EventDto>>().Result;
 
+            var findEvent = new FindEvent
+            {
+                CurrentUserId = CurrentUserId,
+                CreatedEvents = CreatedEvents,
+
+            };
+
+            return PartialView("_PostedEventsPartial", findEvent);
+
+
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin,Guest")]
+        public ActionResult SavedEventsPartial()
+        {
+            string CurrentUserId = User.Identity.GetUserId();
+            Debug.WriteLine("what is " + CurrentUserId);
             string listsavedUrl = $"EventData/ListSavedEventsForUser/{CurrentUserId}";
             Debug.WriteLine("It is going to" + listsavedUrl);
             HttpResponseMessage listsavedUrlResponse = client.GetAsync(listsavedUrl).Result;
@@ -164,12 +188,26 @@ namespace MyPassionProject.Controllers
             var findEvent = new FindEvent
             {
                 CurrentUserId = CurrentUserId,
-                RelatedEvent = Events,
-                CreatedEvents = CreatedEvents,
-                SavedEvents = SavedEvents
+                SavedEvents = SavedEvents,
+
             };
+
+            return PartialView("_SavedEventsPartial", findEvent);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Guest")]
+        public ActionResult MyEvents(string activeTab = "enrolled")
+        {
+            var findEvent = new FindEvent
+            {
+                ActiveTab = activeTab,
+                CurrentUserId = User.Identity.GetUserId()
+        };
+
             return View(findEvent);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]

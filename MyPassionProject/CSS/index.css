@@ -353,6 +353,34 @@ h3 {
     background-color: #1abc9c;
     color: white;
 }
+#animatedBanner {
+    overflow: hidden;
+    white-space: nowrap;  
+
+}
+
+    #animatedBanner p {
+        font-weight:900;
+        font-family:'Comic Sans MS';      
+        font-size:large;
+        color: #34495e;
+        opacity: 0;
+        animation: slideIn 3s forwards;
+    }
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
 
 /*
 @media (max-width: 768px) {

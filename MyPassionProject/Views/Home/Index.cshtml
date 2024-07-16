@@ -4,6 +4,7 @@
 
     @*<a href="~/Content/bootstrap-utilities.min.css.map">~/Content/bootstrap-utilities.min.css.map</a>*@
     <link href="~/CSS/index.css" rel="stylesheet" />
+
 }
 
 <nav class="mainnav">
@@ -11,8 +12,11 @@
     <a href="#Fare">Services</a>
     <div class="animation"></div>
 </nav>
+<div id="animatedBanner">
+    <p>Know what happen in your neiboughhood . Glow Your Influence And Ask For Warm Help</p>
+</div>
 <div class="dropdown">
-    <a class="btn btn-success dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="btn  bg-success-subtle dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         Sort (@(string.IsNullOrEmpty(ViewBag.SortType) ? "Default" : ViewBag.SortType))
     </a>
     <ul class="dropdown-menu">
@@ -52,6 +56,9 @@
             </div>
         }
     </div>
+    <footer id="funFooter" style="display:block">
+        <p>&copy; @DateTime.Now.Year - Community Booster</p>
+    </footer>
     <div class="row row-cols-md-3 g-4 mt-3" name="Fare" style="display:none">
         @foreach (var Event in Model.FareEvents)
         {
@@ -83,6 +90,10 @@
             </div>
         }
     </div>
+
+    <footer id="fareFooter" style="display: none;">
+        <p>&copy; @DateTime.Now.Year - Community Booster</p>
+    </footer>
 </div>
 
 @*<div class="list">
@@ -100,6 +111,9 @@
 
 @section scripts {
     <script>
+       
+
+        
         document.addEventListener("DOMContentLoaded", function () {
             const funLink = document.querySelector('a[href="#Fun"]');
             const fareLink = document.querySelector('a[href="#Fare"]');
@@ -109,6 +123,29 @@
             const animation = document.querySelector('.animation');
             const dropdownItems = document.querySelectorAll('.dropdown-item');
             let visibleCategory;
+            
+            const footer = document.getElementById('footer');
+            footer.style.display = 'none';
+
+            const funFooter = document.getElementById('funFooter');
+            const fareFooter = document.getElementById('fareFooter');
+          
+            function checkEmpty() {
+                if (funSection.innerHTML.trim() === '') {
+                    console.log("footer1");
+                    funFooter.style.setProperty('position', 'absolute', 'important');
+                    funFooter.style.setProperty('bottom', '0', 'important');
+
+                } else if (fareSection.innerHTML.trim() === '') {
+                    console.log("footer2")
+                    fareFooter.style.setProperty('position', 'absolute', 'important');
+                    fareFooter.style.setProperty('bottom', '0', 'important');
+                }
+                else {
+                    console.log("footer3")
+                }
+            }
+            checkEmpty();
 
             links.forEach(function (link, index) {
                 link.addEventListener("click", function () {
@@ -121,12 +158,21 @@
                 event.preventDefault();
                 funSection.style.display = "none";
                 fareSection.style.display = "flex";
+                funFooter.style.display="none"
+                fareFooter.style.display = "block";
+                checkEmpty()
+               
+                
             });
 
             funLink.addEventListener("click", function (event) {
                 event.preventDefault();
                 fareSection.style.display = "none";
                 funSection.style.display = "flex";
+                fareFooter.style.display = "none"
+                funFooter.style.display = "block";
+                checkEmpty()
+                
             });
             dropdownItems.forEach(item => {
                 item.addEventListener('click', function (event) {
@@ -171,6 +217,15 @@
             // Trim details for Fare events
             const fareDetailElements = fareSection.querySelectorAll('.trimmedDetails');
             fareDetailElements.forEach(trimText);
+
+
+            var paragraphs = document.querySelectorAll('#animatedBanner p');
+
+            paragraphs.forEach(function (paragraph, index) {
+                setTimeout(function () {
+                    paragraph.style.opacity = '1';
+                }, index * 1000); // Adjust the delay as needed
+            });
         });
     </script>
 }

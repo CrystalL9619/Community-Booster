@@ -6014,6 +6014,7 @@ textarea.form-control-lg {
 }
 
 .modal-footer {
+   
     display: flex;
     flex-shrink: 0;
     flex-wrap: wrap;

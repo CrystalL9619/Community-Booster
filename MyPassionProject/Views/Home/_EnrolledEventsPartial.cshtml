@@ -1,0 +1,63 @@
+﻿
+@foreach (var relatedEvent in Model.RelatedEvents)
+{
+    <div class="col">
+        <div>
+            <div class="eachone">
+                <div class="event">
+                    <div class="card" style="background-image: url('@relatedEvent.ImagePath');">
+                        <div class="content">
+                            <h4 id="eventTitle">@relatedEvent.Title</h4>
+                            <h5>Location:</h5>
+                            <p id="eventLocation">@relatedEvent.Location</p>
+                            <h5>Date:</h5>
+                            <p id="eventDate">@relatedEvent.EventDateTime</p>
+                            <h5>Capacity:</h5>
+                            <p id="eventCapacity">@relatedEvent.Capacity</p>
+                        </div>
+                    </div>
+                    <div class="details">
+                        <p class="threeD">Details:</p>
+                        <p class="breakdown threeD">
+                            <span class="trimmedDetails">@relatedEvent.Details</span>
+                            <a href="/Event/Find/@relatedEvent.EventId">See More</a>
+                        </p>
+                    </div><!-- end of details -->
+                </div><!-- end of event -->
+            </div><!-- end of eachone -->
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="button-container">
+                    <button class="button-no" id="unassoc" data-event-id="@relatedEvent.EventId">Cancel</button>
+                </div>
+            }
+        </div><!-- end of card -->
+    </div><!-- end of col -->
+}
+<script>
+               const unassoc = document.getElementById('unassoc');
+               if (unassoc) {
+                   unassoc.addEventListener("click", function () {
+                       const eventId = this.getAttribute('data-event-id');
+
+                       @* Uncomment and adjust if you want to use server - side variables
+                       var isAdmin = @(User.IsInRole("Admin").ToString().ToLower());
+                       if (!isAdmin) {
+                           return true; // Proceed with form submission without confirmation
+                       }
+                       *@
+
+                       let url = "@MyPassionProject.Models.Constant.BaseUrl" + "EventData/UnAssociateEventWithApplicationUser/" + eventId + "/" + "@Model.CurrentUserId";
+                       console.log('unassoc url', url);
+                       fetch(url, { method: 'POST' }).then(res => {
+                           if (res.ok) {
+                               alert("What a pity! Hope to see you in another event!");
+                               location.reload();
+                           } else {
+                               alert("Something went wrong, please try later!")
+                           }
+                       });
+                   });
+               }
+</script>

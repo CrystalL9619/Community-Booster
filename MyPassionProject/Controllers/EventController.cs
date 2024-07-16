@@ -126,13 +126,13 @@ namespace MyPassionProject.Controllers
             content.Headers.ContentType.MediaType = "application/json";
             HttpResponseMessage response = client.PostAsync(url, content).Result;
 
-           
+
             //if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             //{
-              //  return View("AssociationResult");
+            //  return View("AssociationResult");
             //}
-            return RedirectToAction("MyEvents","Home");
-           
+            return RedirectToAction("MyEvents", "Home", new { activeTab = "enrolled" });
+
         }
 
 
@@ -174,10 +174,8 @@ namespace MyPassionProject.Controllers
             return View(ViewModel);
         }
 
-
-        // POST: Event/Create
         [HttpPost]
-       
+
         public ActionResult Create(Event newEvent, HttpPostedFileBase EventImage)
         {
             Debug.WriteLine("the json payload is :");
@@ -191,7 +189,7 @@ namespace MyPassionProject.Controllers
             HttpContent jsoncontent = new StringContent(jsonpayload);
             jsoncontent.Headers.ContentType.MediaType = "application/json";
             Debug.WriteLine(jsonpayload);
-  
+
 
 
             HttpResponseMessage response = client.PostAsync(url, jsoncontent).Result;
@@ -200,7 +198,7 @@ namespace MyPassionProject.Controllers
             //update request is successful, and we have image data
             if (response.IsSuccessStatusCode && EventImage != null)
             {
-                
+
                 // Read the response content as a string
                 var responseData = response.Content.ReadAsAsync<Event>().Result;
 
@@ -226,20 +224,20 @@ namespace MyPassionProject.Controllers
                 {
                     Debug.WriteLine(ex.Message);
                 }
-                
 
-                return RedirectToAction("MyEvents","Home");
+                return RedirectToAction("MyEvents", "Home", new { activeTab = "posted" });
             }
             else if (response.IsSuccessStatusCode)
             {
                 //No image upload, but update still successful
-                return RedirectToAction("MyEvents", "Home");
+                return RedirectToAction("MyEvents", "Home", new { activeTab = "posted" });
             }
             else
             {
                 return RedirectToAction("Error");
             }
         }
+
 
 
         // GET: Event/Edit/9
@@ -331,12 +329,12 @@ namespace MyPassionProject.Controllers
                 }
 
 
-                return RedirectToAction("MyEvents","Home");
+                return RedirectToAction("MyEvents","Home", new { activeTab = "posted" });
             }
             else if (response.IsSuccessStatusCode)
             {
                 //No image upload, but update still successful
-                return RedirectToAction("MyEvents", "Home");
+                return RedirectToAction("MyEvents", "Home", new { activeTab = "posted" });
             }
             else
             {
@@ -396,7 +394,7 @@ namespace MyPassionProject.Controllers
               
                  if (response.IsSuccessStatusCode)
                  {
-                     return RedirectToAction("MyEvents","Home");
+                     return RedirectToAction("MyEvents","Home", new { activeTab = "posted" });
                  }
                  else
                  {

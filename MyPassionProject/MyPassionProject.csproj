@@ -517,6 +517,9 @@
     <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Shared\_Map.cshtml" />
     <Content Include="Views\Shared\_Sort.cshtml" />
+    <Content Include="Views\Home\_EnrolledEventsPartial.cshtml" />
+    <Content Include="Views\Home\_PostedEventsPartial.cshtml" />
+    <Content Include="Views\Home\_SavedEventsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Images\" />

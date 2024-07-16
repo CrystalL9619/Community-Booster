@@ -1,0 +1,29 @@
+﻿@foreach (var savedEvent in Model.SavedEvents)
+{
+    <div class="col">
+        <div>
+            <div class="eachone">
+                <div class="event">
+                    <div class="card" style="background-image: url('@savedEvent.ImagePath');">
+                        <div class="content">
+                            <h4 id="eventTitle">@savedEvent.Title</h4>
+                            <h5>Location:</h5>
+                            <p id="eventLocation">@savedEvent.Location</p>
+                            <h5>Date:</h5>
+                            <p id="eventDate">@savedEvent.EventDateTime</p>
+                            <h5>Capacity:</h5>
+                            <p id="eventCapacity">@savedEvent.Capacity</p>
+                        </div>
+                    </div>
+                    <div class="details">
+                        <p class="threeD">Details:</p>
+                        <p class="breakdown threeD">
+                            <span class="trimmedDetails">@savedEvent.Details</span>
+                            <a href="/Event/Find/@savedEvent.EventId">See More</a>
+                        </p>
+                    </div><!-- end of details -->
+                </div><!-- end of event -->
+            </div><!-- end of eachone -->
+        </div><!-- end of card -->
+    </div><!-- end of col -->
+}
