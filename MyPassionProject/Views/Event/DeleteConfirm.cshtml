@@ -1,6 +1,8 @@
 ﻿﻿@model MyPassionProject.Models.EventDto
 @{
     ViewBag.Title = "DeleteConfirm";
+
+
 }
 
 <div>
@@ -16,3 +18,11 @@
     </form>
     <br />
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const footer = document.getElementById('footer');
+
+        footer.style.setProperty('position', 'absolute', 'important');
+        footer.style.setProperty('bottom', '0', 'important');
+    });
+</script>
