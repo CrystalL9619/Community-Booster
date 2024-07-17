@@ -18,10 +18,11 @@
 <div class="row row-cols-1 row-cols-md-1 g-4 mt-3" id="posted" style="display: @(Model.ActiveTab == "posted" ? "flex" : "none")"></div>
 <div class="row row-cols-1 row-cols-md-3 g-4 mt-3" id="saved" style="display: @(Model.ActiveTab == "saved" ? "flex" : "none")"></div>
 
+
 @section scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-       
+
 
         $(document).ready(function () {
             const enrolledLink = $('a[href="#enrolledLink"]');
@@ -30,66 +31,58 @@
             const enrolled = $('#enrolled');
             const posted = $('#posted');
             const saved = $('#saved');
-            const footer = $('#footer')
+         
+
            
-            function checkEmpty(container) {
-                if (container.html().trim() === '') {
-                    console.log("footer empty for", container.attr('id'));
-                    footer.css({
-                        'position': 'absolute',
-                        'bottom': '0'
-                    });
-                } else {
-                    console.log("footer not empty for", container.attr('id'));
-                    footer.css({
-                        'position': 'relative',
-                        'bottom': '0'
-                    });
-                }
-            }
-            checkEmpty(enrolled);
-            checkEmpty(posted);
-            checkEmpty(saved);
-            
+
             function showTab(tabToShow, linkToActivate) {
                 [enrolled, posted, saved].forEach(tab => tab.hide());
                 [enrolledLink, postedLink, savedLink].forEach(link => link.removeClass('active'));
                 tabToShow.show();
                 linkToActivate.addClass('active');
-                
+
             }
 
             function loadContent(url, container) {
-                $.get(url, function(data) {
+                $.get(url, function (data) {
                     container.html(data);
-                    checkEmpty(container);  
+                    console.log(data);
+                    console.log(container)
+
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log("Error loading content:", textStatus, errorThrown);
                 });
-               
             }
 
             enrolledLink.click(function (event) {
                 event.preventDefault();
                 showTab(enrolled, enrolledLink);
                 loadContent('@Url.Action("EnrolledEventsPartial", "Home")', enrolled);
-                checkEmpty(enrolled);
+
+
             });
 
             postedLink.click(function (event) {
                 event.preventDefault();
                 showTab(posted, postedLink);
                 loadContent('@Url.Action("PostedEventsPartial", "Home")', posted);
-                checkEmpty(posted)
+
+
             });
 
             savedLink.click(function (event) {
                 event.preventDefault();
                 showTab(saved, savedLink);
                 loadContent('@Url.Action("SavedEventsPartial", "Home")', saved);
-                checkEmpty(saved)
+
             });
 
             // Load content for the active tab
             loadContent('@Url.Action(Model.ActiveTab + "EventsPartial", "Home")', $('#@Model.ActiveTab'));
+
+
+            
+
         });
     </script>
 }

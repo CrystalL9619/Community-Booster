@@ -27,3 +27,20 @@
         </div><!-- end of card -->
     </div><!-- end of col -->
 }
+<script>
+    // Text trimming function
+    function trimText(element) {
+        const fullText = element.innerText;
+        const words = fullText.trim().split(/\s+/);
+        if (words.length > 10) {
+            const trimmedText = words.slice(0, 10).join(' ') + '...';
+            element.innerText = trimmedText;
+        }
+    }
+
+    // Apply text trimming to elements
+    $('.trimmedDetails').each(function () {
+        trimText(this);
+    });
+
+</script>
