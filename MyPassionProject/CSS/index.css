@@ -138,7 +138,7 @@ h3 {
     top: 0;
     left: 50px;
     width: 300px;
-    height: 200px;
+    height:fit-content;
     display: flex;
     flex-direction: column;
     text-align: center;

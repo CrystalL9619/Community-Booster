@@ -276,6 +276,7 @@ namespace MyPassionProject.Controllers
                     EventDateTime = SelectedEvent.EventDateTime,
                     Capacity = SelectedEvent.Capacity,
                     Details = SelectedEvent.Details,
+                    ImagePath = SelectedEvent.ImagePath,
                     CategoryId = SelectedEvent.Category.CategoryId,
                     CategoryName = SelectedEvent.Category.CategoryName,
                     CreatorId = SelectedEvent.CreatorId,
@@ -354,6 +355,7 @@ namespace MyPassionProject.Controllers
                 EventDateTime = Event.EventDateTime,
                 Capacity = Event.Capacity,
                 Details = Event.Details,
+                ImagePath = Event.ImagePath,
                 CategoryId = Event.Category.CategoryId,
                 CategoryName = Event.Category.CategoryName,
                 CreatorId = Event.CreatorId,
@@ -419,19 +421,23 @@ namespace MyPassionProject.Controllers
                         //Check the extension of the file
                         if (valtypes.Contains(extension))
                         {
+                            Debug.WriteLine("Add pic");
                             try
-                            {
+                            {    //for cache cleaning
+
                                 //file name is the id of the image
                                 string fn = id + "." + extension;
 
                                 //get a direct file path to ~/Content/animals/{id}.{extension}
                                 string folderPath = HttpContext.Current.Server.MapPath("~/Content/Images/Events/");
+                                Debug.WriteLine($"{fn} {folderPath}");
+
                                 if (!Directory.Exists(folderPath))
                                 {
                                     Directory.CreateDirectory(folderPath);
                                 }
                                 string path = Path.Combine(folderPath, fn);
-
+                                Debug.WriteLine(path);
                                 //save the file
                                 eventImage.SaveAs(path);
 
@@ -446,7 +452,7 @@ namespace MyPassionProject.Controllers
                                 db.Entry(SelectedEvent).State = EntityState.Modified;
 
                                 db.SaveChanges();
-
+                                Debug.WriteLine("update img successfully");
                             }
                             catch (Exception ex)
                             {

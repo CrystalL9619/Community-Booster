@@ -412,6 +412,56 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\Images\Events\1.jpg" />
+    <Content Include="Content\Images\Events\10.jpg" />
+    <Content Include="Content\Images\Events\11.jpg" />
+    <Content Include="Content\Images\Events\12.jpg" />
+    <Content Include="Content\Images\Events\13.jpg" />
+    <Content Include="Content\Images\Events\14.jpg" />
+    <Content Include="Content\Images\Events\15.jpg" />
+    <Content Include="Content\Images\Events\16.jpg" />
+    <Content Include="Content\Images\Events\17.jpg" />
+    <Content Include="Content\Images\Events\18.jpg" />
+    <Content Include="Content\Images\Events\19.jpg" />
+    <Content Include="Content\Images\Events\2.jpg" />
+    <Content Include="Content\Images\Events\20.jpg" />
+    <Content Include="Content\Images\Events\21.jpg" />
+    <Content Include="Content\Images\Events\22.jpg" />
+    <Content Include="Content\Images\Events\23.jpg" />
+    <Content Include="Content\Images\Events\24.jpg" />
+    <Content Include="Content\Images\Events\25.jpg" />
+    <Content Include="Content\Images\Events\26.jpg" />
+    <Content Include="Content\Images\Events\27.jpg" />
+    <Content Include="Content\Images\Events\28.jpg" />
+    <Content Include="Content\Images\Events\29.jpg" />
+    <Content Include="Content\Images\Events\3.jpg" />
+    <Content Include="Content\Images\Events\30.jpg" />
+    <Content Include="Content\Images\Events\31.jpg" />
+    <Content Include="Content\Images\Events\32.jpg" />
+    <Content Include="Content\Images\Events\33.jpg" />
+    <Content Include="Content\Images\Events\34.jpg" />
+    <Content Include="Content\Images\Events\35.jpg" />
+    <Content Include="Content\Images\Events\36.jpg" />
+    <Content Include="Content\Images\Events\37.jpg" />
+    <Content Include="Content\Images\Events\38.jpg" />
+    <Content Include="Content\Images\Events\39.jpg" />
+    <Content Include="Content\Images\Events\4.jpg" />
+    <Content Include="Content\Images\Events\40.jpg" />
+    <Content Include="Content\Images\Events\41.jpg" />
+    <Content Include="Content\Images\Events\42.jpg" />
+    <Content Include="Content\Images\Events\43.jpg" />
+    <Content Include="Content\Images\Events\44.jpg" />
+    <Content Include="Content\Images\Events\45.jpg" />
+    <Content Include="Content\Images\Events\5.jpg" />
+    <Content Include="Content\Images\Events\6.jpg" />
+    <Content Include="Content\Images\Events\7.jpg" />
+    <Content Include="Content\Images\Events\8.jpg" />
+    <Content Include="Content\Images\Events\9.jpg" />
+    <Content Include="Content\Images\Google Map Icons\car-front-fillCar.svg" />
+    <Content Include="Content\Images\Google Map Icons\person-raised-hand.svg" />
+    <Content Include="Content\Images\Google Map Icons\person-walking.svg" />
+    <Content Include="Content\Images\Google Map Icons\scooter.svg" />
+    <Content Include="Content\Images\Google Map Icons\truck-front.svg" />
     <Content Include="CSS\index.css" />
     <Content Include="CSS\theme.css" />
     <Content Include="favicon.ico" />
@@ -522,7 +572,6 @@
     <Content Include="Views\Home\_SavedEventsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\Images\" />
     <Folder Include="Views\Email\" />
   </ItemGroup>
   <ItemGroup>

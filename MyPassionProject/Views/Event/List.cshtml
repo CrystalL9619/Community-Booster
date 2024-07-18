@@ -13,7 +13,7 @@
     {
         <div class="eachone">
             <div class="event">
-                <div class="card" style="background-image: url('@Event.ImagePath');">
+                <div class="card"style="background-image: url('@(Event.ImagePath)?v=@DateTime.UtcNow.Ticks');">
                     <div class="content">
                         <h2 id="eventTitle">
                             @Event.Title
