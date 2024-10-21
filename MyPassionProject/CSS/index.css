@@ -16,6 +16,19 @@ h1 {
     margin: 0;
     padding: 0;
 }
+h5 {
+    background-color: #F5F5F5;
+    color: #34495e;
+    font-family:Arial, Helvetica, sans-serif;
+    border-radius: 10px;
+    text-align: center;
+    margin: 0;
+    font-weight:500;
+}
+#eventTitle {
+    text-align:center;
+    margin-bottom:10px;
+}
 
 #headernav {
     margin-top: 2em;
@@ -123,6 +136,7 @@ a:nth-child(2):hover ~ .animation {
     position: relative;
     top: 0;
     left: 0;
+   
 }
 
 #eventTitle {
@@ -204,12 +218,13 @@ h3 {
     width: 200px;
     max-height:250px;
     top: 48%;
-    left: 55%;
+    left: 50%;
     transform: translateX(-50%) translateY(-50%) translateZ(60px);
 }
 .content p {
-    margin:0;
+    margin-bottom:10px;
     padding:0;
+    text-align:center;
 }
 
 .event .details {
@@ -380,12 +395,9 @@ h3 {
         opacity: 1;
     }
 }
-
-
-
-
-@media (max-width: 768px) {
-    .header {
+/*
+    @media (max-width: 768px) {
+        .header {
         flex-direction: column;
         align-items: center;
     }
@@ -433,7 +445,94 @@ h3 {
         margin: 0;
         padding: 0
     }
+*/
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
 
-
+/* For screens less than 992px */
+@media (max-width: 992px) {
+    #enrolled,
+    #saved {
+        display: flex; 
+        flex-wrap: wrap; 
     }
+
+        #enrolled > div,
+        #saved > div {
+            flex: 0 0 50%; 
+            max-width: 50%; 
+        }
+}
+
+/* For screens less than 768px */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .searchBar {
+        padding-top: 20px;
+    }
+
+    ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .list {
+        height: fit-content;
+    }
+    #enrolled,
+    #saved {
+        display: flex; 
+        flex-wrap: wrap; 
+    }
+
+        #enrolled > div,
+        #saved > div {
+            flex: 0 0 100%;
+            max-width: 100%; 
+        }
+}
+
+/* For screens less than 480px */
+@media (max-width: 480px) {
+    .header,
+    ul,
+    .main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .list {
+        left: 0;
+        margin-top: 20px;
+    }
+
+   
+
+    .event .details .breakdown {
+        margin: 0;
+        padding: 0;
+    }
+
+    .eachone {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .list {
+        left: 0;
+        margin-top: 20px;
+    }
+}
+
 
