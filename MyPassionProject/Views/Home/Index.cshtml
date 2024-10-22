@@ -25,7 +25,7 @@
     </ul>
 </div>
 <div id="eventContainer">
-    <div class="row row-cols-md-3 g-4 mt-3" name="Fun">
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3" name="Fun">
         @foreach (var Event in Model.FunEvents)
         {
             <div class="col">
@@ -59,7 +59,7 @@
     <footer id="funFooter" style="display:block">
         <p>&copy; @DateTime.Now.Year - Community Booster</p>
     </footer>
-    <div class="row row-cols-md-3 g-4 mt-3" name="Fare" style="display:none">
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3" name="Fare" style="display:none">
         @foreach (var Event in Model.FareEvents)
         {
             <div class="col">

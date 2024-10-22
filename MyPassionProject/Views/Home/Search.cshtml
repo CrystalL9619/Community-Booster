@@ -1,36 +1,61 @@
 ﻿@model IEnumerable<MyPassionProject.Models.EventDto>
 @{
     ViewBag.Title = "Search";
+    <link href="~/CSS/index.css" rel="stylesheet" />
 }
 
 <h2>Your Search Result:</h2>
 
-<div class="card-container">
+<div id="eventContainer">
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3" id="searchitem">
 
-    @foreach (var Event in Model)
-    {
-        <div class="eachone">
-            <div class="event">
-                <div class="card" style="background-image: url('@(Event.ImagePath)?v=@DateTime.UtcNow.Ticks');">
-                    <div class="content">
-                        <h2 id="eventTitle">
-                            @Event.Title
-                        </h2>
-                        <h3> Location : </h3>
-                        <p id="eventLocation">@Event.Location</p>
-                        <h3>Date: </h3>
-                        <p id="eventDate">@Event.EventDateTime</p>
-                        <p id="eventCapacity">@Event.Capacity</p>
+        @foreach (var Event in Model)
+        {
+            <div class="eachone">
+                <div class="event">
+                    <div class="card" style="background-image: url('@(Event.ImagePath)?v=@DateTime.UtcNow.Ticks');">
+                        <div class="content">
+                            <h4 id="eventTitle">@Event.Title</h4>
+                            <h5> Location : </h5>
+                            <p id="eventLocation">@Event.Location</p>
+                            <h5>Date: </h5>
+                            <p id="eventDate">@Event.EventDateTime</p>
+                            <h5> Capacity:</h5>
+                            <p id="eventCapacity">@Event.Capacity</p>
+                        </div>
                     </div>
-                </div>
-                <div class="details">
-                    <p class="threeD">Details:</p>
-                    <p class="breakdown threeD">
-                        <a href="/Event/Find/@Event.EventId">See More:</a> @Event.Details
-                    </p>
-                </div><!--end of details-->
-            </div><!--end of event-->
-        </div><!--end of eachone-->
-    }
+                    <div class="details">
+                        <p class="threeD">Details:</p>
+                        <p class="breakdown threeD">
+                            <span class="trimmedDetails">@Event.Details</span>
+                            <a href="/Event/Find/@Event.EventId">See More</a>
+                        </p>
+                    </div><!--end of details-->
+                </div><!--end of event-->
+            </div><!--end of eachone-->
+        }
 
-</div><!--end of card-container-->
+    </div>
+</div><!--end of container-->
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Text trimming function
+            function trimText(element) {
+                const fullText = element.innerText;
+                const words = fullText.trim().split(/\s+/);
+                if (words.length > 10) {
+                    const trimmedText = words.slice(0, 10).join(' ') + '...';
+                    element.innerText = trimmedText;
+                }
+            }
+
+            // Apply text trimming to elements
+            $('.trimmedDetails').each(function () {
+                trimText(this);
+            });
+        });
+    </script>
+}

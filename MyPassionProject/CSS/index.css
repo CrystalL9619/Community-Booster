@@ -124,9 +124,10 @@ a:nth-child(2):hover ~ .animation {
 
 .eachone {
     display: flex;
-    flex-direction: row;
+    flex-direction:row;
+    flex-wrap: wrap; 
     gap: 0;
-    margin:0 0 20px 0;
+    margin: 0 0 20px 0;
     padding: 0;
 }
 
@@ -136,6 +137,7 @@ a:nth-child(2):hover ~ .animation {
     position: relative;
     top: 0;
     left: 0;
+    margin-right:50px;
    
 }
 
@@ -150,15 +152,16 @@ h3 {
 .list {
     position: relative;
     top: 0;
-    left: 50px;
+    margin-top: 20px;
     width: 300px;
-    height:fit-content;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     text-align: center;
     font-weight: bold;
     background-color: #1abc9c;
     border-radius: 15px;
+    
 }
 
     .list h2 {
@@ -214,9 +217,10 @@ h3 {
     }
 
 .content {
+ 
     position: absolute;
     width: 200px;
-    max-height:250px;
+    max-height: 250px;
     top: 48%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%) translateZ(60px);
@@ -453,16 +457,26 @@ h3 {
 
 /* For screens less than 992px */
 @media (max-width: 992px) {
+    .eachone {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center items */
+    }
+
+    .event {
+        margin-right: 0; /* Remove margin on smaller screens */
+        max-width: 100%; /* Full width on smaller screens */
+    }
+    #searchitem,
     #enrolled,
     #saved {
         display: flex; 
         flex-wrap: wrap; 
     }
-
+        #searchitem > div,
         #enrolled > div,
         #saved > div {
-            flex: 0 0 50%; 
-            max-width: 50%; 
+            flex: 0 0 50%;
+            max-width: 50%;
         }
 }
 
@@ -490,17 +504,27 @@ h3 {
     .list {
         height: fit-content;
     }
+    #searchitem,
     #enrolled,
     #saved {
-        display: flex; 
-        flex-wrap: wrap; 
+        display: flex;
+        flex-wrap: wrap;
     }
-
+        #searchitem > div,
         #enrolled > div,
         #saved > div {
             flex: 0 0 100%;
-            max-width: 100%; 
+            max-width: 100%;
         }
+    .eachone {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center items */
+    }
+
+    .event {
+        margin-right: 0; /* Remove margin on smaller screens */
+        max-width: 50%; /* Full width on smaller screens */
+    }
 }
 
 /* For screens less than 480px */
@@ -508,30 +532,55 @@ h3 {
     .header,
     ul,
     .main {
+        display: flex;
+        flex-wrap: wrap;
         flex-direction: column;
         align-items: center;
+        padding: 10px;
     }
 
     .list {
         left: 0;
         margin-top: 20px;
+        width: 100%; /* Full width */
+        box-sizing: border-box;
     }
 
-   
+
 
     .event .details .breakdown {
         margin: 0;
         padding: 0;
     }
-
+   
     .eachone {
+        display: flex;
+        flex-wrap: wrap;
         flex-direction: column;
         align-items: center;
+        width: 100%; /* Full width */
+        margin-bottom: 20px;
     }
 
-    .list {
-        left: 0;
-        margin-top: 20px;
+    .event {
+        margin-right: 0;
+        min-width:250px;
+        width: 100%; /* Ensure events take full width */
+        padding: 10px; /* Add padding for spacing */
+        box-sizing: border-box; /* Include padding in width */
+    }
+
+    h4, h5 {
+        font-size: 1.2em; /* Adjust font size for readability */
+    }
+
+    .register
+    .button-no {
+        text-align:center;
+        font-size: 1.2em; /* Larger font size */
+        width: 100%; /* Full width buttons */
+        box-sizing: border-box;
+
     }
 }
 
